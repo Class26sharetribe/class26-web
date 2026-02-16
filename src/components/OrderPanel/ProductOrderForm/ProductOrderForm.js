@@ -250,14 +250,14 @@ const renderForm = formRenderProps => {
         </FieldSelect>
       )}
 
-      <DeliveryMethodMaybe
+      {/* <DeliveryMethodMaybe
         displayDeliveryMethod={displayDeliveryMethod}
         hasMultipleDeliveryMethods={hasMultipleDeliveryMethods}
         deliveryMethod={values?.deliveryMethod}
         hasStock={hasStock}
         formId={formId}
         intl={intl}
-      />
+      /> */}
 
       {showBreakdown ? (
         <div className={css.breakdownWrapper}>
@@ -338,13 +338,13 @@ const ProductOrderForm = props => {
 
   // Should not happen for listings that go through EditListingWizard.
   // However, this might happen for imported listings.
-  if (displayDeliveryMethod && !pickupEnabled && !shippingEnabled) {
-    return (
-      <p className={css.error}>
-        <FormattedMessage id="ProductOrderForm.noDeliveryMethodSet" />
-      </p>
-    );
-  }
+  // if (displayDeliveryMethod && !pickupEnabled && !shippingEnabled) {
+  //   return (
+  //     <p className={css.error}>
+  //       <FormattedMessage id="ProductOrderForm.noDeliveryMethodSet" />
+  //     </p>
+  //   );
+  // }
 
   const hasOneItemLeft = currentStock && currentStock === 1;
   const hasOneItemMode = !allowOrdersOfMultipleItems && currentStock > 0;
