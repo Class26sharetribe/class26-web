@@ -1416,5 +1416,22 @@
   "UserNav.accountSettings": "Account settings",
   "UserNav.profileSettings": "Profile settings",
   "UserNav.screenreader.userNav": "User profile navigation",
-  "UserNav.yourListings": "Your listings"
+  "UserNav.yourListings": "Your listings",
+  "EditListingDeliveryForm.digitalAssetsTitle": "Digital assets",
+  "EditListingDeliveryForm.number": "No.",
+  "EditListingDeliveryForm.name": "Name",
+  "EditListingDeliveryForm.type": "Type",
+  "EditListingDeliveryForm.file": "File",
+  "EditListingDeliveryForm.actions": "Actions",
+  "EditListingDeliveryForm.noDigitalAssets": "No digital assets added yet. Click 'Add Row' to get started.",
+  "EditListingDeliveryForm.addRow": "Add Row",
+  "EditListingDeliveryForm.chooseFile": "Choose file",
+  "EditListingDeliveryForm.uploading": "Uploading...",
+  "EditListingDeliveryForm.namePlaceholder": "Enter digital asset name",
+  "EditListingDeliveryForm.selectType": "Select type",
+  "EditListingDeliveryForm.nameRequired": "Digital asset name is required",
+  "EditListingDeliveryForm.typeRequired": "Digital asset type is required",
+  "EditListingDeliveryForm.fileRequired": "Digital asset file is required",
+  "TransactionPanel.securedAssetsHeading": "Secured assets",
+  "TransactionPanel.securedAssetsNote": "The assets are only available for {validFor} days."
 }

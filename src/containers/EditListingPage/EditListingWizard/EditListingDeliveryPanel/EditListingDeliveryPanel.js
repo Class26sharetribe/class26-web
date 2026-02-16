@@ -41,38 +41,40 @@ const getInitialValues = props => {
     pickupEnabled,
     shippingPriceInSubunitsOneItem,
     shippingPriceInSubunitsAdditionalItems,
+    digitalAssets = [],
   } = publicData;
-  const deliveryOptions = [];
+  // const deliveryOptions = [];
 
-  if (shippingEnabled || (!displayMultipleDelivery && displayShipping)) {
-    deliveryOptions.push('shipping');
-  }
-  if (pickupEnabled || (!displayMultipleDelivery && displayPickup)) {
-    deliveryOptions.push('pickup');
-  }
+  // if (shippingEnabled || (!displayMultipleDelivery && displayShipping)) {
+  //   deliveryOptions.push('shipping');
+  // }
+  // if (pickupEnabled || (!displayMultipleDelivery && displayPickup)) {
+  //   deliveryOptions.push('pickup');
+  // }
 
-  const currency = price?.currency || marketplaceCurrency;
-  const shippingOneItemAsMoney =
-    shippingPriceInSubunitsOneItem != null
-      ? new Money(shippingPriceInSubunitsOneItem, currency)
-      : null;
-  const shippingAdditionalItemsAsMoney =
-    shippingPriceInSubunitsAdditionalItems != null
-      ? new Money(shippingPriceInSubunitsAdditionalItems, currency)
-      : null;
+  // const currency = price?.currency || marketplaceCurrency;
+  // const shippingOneItemAsMoney =
+  //   shippingPriceInSubunitsOneItem != null
+  //     ? new Money(shippingPriceInSubunitsOneItem, currency)
+  //     : null;
+  // const shippingAdditionalItemsAsMoney =
+  //   shippingPriceInSubunitsAdditionalItems != null
+  //     ? new Money(shippingPriceInSubunitsAdditionalItems, currency)
+  //     : null;
 
   // Initial values for the form
   return {
-    building,
-    location: locationFieldsPresent
-      ? {
-          search: address,
-          selectedPlace: { address, origin: geolocation },
-        }
-      : { search: undefined, selectedPlace: undefined },
-    deliveryOptions,
-    shippingPriceInSubunitsOneItem: shippingOneItemAsMoney,
-    shippingPriceInSubunitsAdditionalItems: shippingAdditionalItemsAsMoney,
+    digitalAssets,
+    // building,
+    // location: locationFieldsPresent
+    //   ? {
+    //       search: address,
+    //       selectedPlace: { address, origin: geolocation },
+    //     }
+    //   : { search: undefined, selectedPlace: undefined },
+    // deliveryOptions,
+    // shippingPriceInSubunitsOneItem: shippingOneItemAsMoney,
+    // shippingPriceInSubunitsAdditionalItems: shippingAdditionalItemsAsMoney,
   };
 };
 
@@ -160,48 +162,56 @@ const EditListingDeliveryPanel = props => {
               shippingPriceInSubunitsOneItem,
               shippingPriceInSubunitsAdditionalItems,
               deliveryOptions,
+              digitalAssets,
             } = values;
 
-            const shippingEnabled = deliveryOptions.includes('shipping');
-            const pickupEnabled = deliveryOptions.includes('pickup');
-            const address = location?.selectedPlace?.address || null;
-            const origin = location?.selectedPlace?.origin || null;
-
-            const pickupDataMaybe =
-              pickupEnabled && address ? { location: { address, building } } : {};
-
-            const shippingDataMaybe =
-              shippingEnabled && shippingPriceInSubunitsOneItem != null
-                ? {
-                    // Note: we only save the "amount" because currency should not differ from listing's price.
-                    // Money is always dealt in subunits (e.g. cents) to avoid float calculations.
-                    shippingPriceInSubunitsOneItem: shippingPriceInSubunitsOneItem.amount,
-                    shippingPriceInSubunitsAdditionalItems:
-                      shippingPriceInSubunitsAdditionalItems?.amount,
-                  }
-                : {};
-
-            // New values for listing attributes
             const updateValues = {
-              geolocation: origin,
               publicData: {
-                pickupEnabled,
-                ...pickupDataMaybe,
-                shippingEnabled,
-                ...shippingDataMaybe,
+                digitalAssets,
               },
             };
+
+            // const shippingEnabled = deliveryOptions.includes('shipping');
+            // const pickupEnabled = deliveryOptions.includes('pickup');
+            // const address = location?.selectedPlace?.address || null;
+            // const origin = location?.selectedPlace?.origin || null;
+
+            // const pickupDataMaybe =
+            //   pickupEnabled && address ? { location: { address, building } } : {};
+
+            // const shippingDataMaybe =
+            //   shippingEnabled && shippingPriceInSubunitsOneItem != null
+            //     ? {
+            //         // Note: we only save the "amount" because currency should not differ from listing's price.
+            //         // Money is always dealt in subunits (e.g. cents) to avoid float calculations.
+            //         shippingPriceInSubunitsOneItem: shippingPriceInSubunitsOneItem.amount,
+            //         shippingPriceInSubunitsAdditionalItems:
+            //           shippingPriceInSubunitsAdditionalItems?.amount,
+            //       }
+            //     : {};
+
+            // New values for listing attributes
+            // const updateValues = {
+            //   geolocation: origin,
+            //   publicData: {
+            //     pickupEnabled,
+            //     ...pickupDataMaybe,
+            //     shippingEnabled,
+            //     ...shippingDataMaybe,
+            //   },
+            // };
 
             // Save the initialValues to state
             // LocationAutocompleteInput doesn't have internal state
             // and therefore re-rendering would overwrite the values during XHR call.
             setState({
               initialValues: {
-                building,
-                location: { search: address, selectedPlace: { address, origin } },
-                shippingPriceInSubunitsOneItem,
-                shippingPriceInSubunitsAdditionalItems,
-                deliveryOptions,
+                digitalAssets,
+                // building,
+                // location: { search: address, selectedPlace: { address, origin } },
+                // shippingPriceInSubunitsOneItem,
+                // shippingPriceInSubunitsAdditionalItems,
+                // deliveryOptions,
               },
             });
             onSubmit(updateValues);
@@ -215,7 +225,7 @@ const EditListingDeliveryPanel = props => {
           updated={panelUpdated}
           updateInProgress={updateInProgress}
           fetchErrors={errors}
-          autoFocus
+          listingId={listing.id.uuid}
         />
       ) : (
         <div className={css.priceCurrencyInvalid}>

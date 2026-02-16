@@ -6,7 +6,7 @@ const mediaConfig = require('../../config/media');
 // Configuration
 const CONFIG = {
   BUCKET_NAME: mediaConfig.r2.bucketName,
-  URL_EXPIRATION: mediaConfig.r2.urlExpiration,
+  URL_EXPIRATION: mediaConfig.r2.deliveryUrlExpiration,
 };
 
 /**

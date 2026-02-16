@@ -231,8 +231,9 @@ const tabCompleted = (tab, listing, config) => {
     shippingEnabled,
     pickupEnabled,
     cardStyle,
+    digitalAssets,
   } = publicData || {};
-  const deliveryOptionPicked = publicData && (shippingEnabled || pickupEnabled);
+  // const deliveryOptionPicked = publicData && (shippingEnabled || pickupEnabled);
 
   switch (tab) {
     case DETAILS:
@@ -249,7 +250,8 @@ const tabCompleted = (tab, listing, config) => {
     case PRICING_AND_STOCK:
       return !!price;
     case DELIVERY:
-      return !!deliveryOptionPicked;
+      // return !!deliveryOptionPicked;
+      return Array.isArray(digitalAssets) && digitalAssets?.length > 0;
     case LOCATION:
       return !!(geolocation && publicData?.location?.address);
     case AVAILABILITY:

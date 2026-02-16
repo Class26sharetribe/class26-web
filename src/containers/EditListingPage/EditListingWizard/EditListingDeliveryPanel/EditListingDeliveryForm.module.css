@@ -88,3 +88,339 @@
     margin-top: 100px;
   }
 }
+
+/* Digital Assets Table Styles */
+.digitalAssetsSection {
+  margin-top: 32px;
+  margin-bottom: 32px;
+
+  @media (--viewportMedium) {
+    margin-top: 48px;
+    margin-bottom: 48px;
+  }
+}
+
+.sectionTitle {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 24px;
+  margin: 0 0 16px 0;
+  color: var(--colorGrey700);
+
+  @media (--viewportMedium) {
+    font-size: 20px;
+    line-height: 28px;
+    margin-bottom: 24px;
+  }
+}
+
+.tableWrapper {
+  border: 1px solid var(--colorGrey100);
+  border-radius: var(--borderRadius);
+  overflow: hidden;
+  margin-bottom: 16px;
+
+  @media (--viewportMedium) {
+    margin-bottom: 24px;
+  }
+}
+
+.table {
+  width: 100%;
+  background-color: var(--colorWhite);
+
+  /* Mobile: Display as block */
+  @media (max-width: 767px) {
+    display: block;
+  }
+
+  /* Medium+: Normal table */
+  @media (--viewportMedium) {
+    display: table;
+    border-collapse: collapse;
+  }
+}
+
+.table tbody {
+  /* Mobile: Display as block */
+  @media (max-width: 767px) {
+    display: block;
+  }
+
+  /* Medium+: Normal table body */
+  @media (--viewportMedium) {
+    display: table-row-group;
+  }
+}
+
+.tableHeader {
+  background-color: var(--colorGrey50);
+  border-bottom: 1px solid var(--colorGrey100);
+
+  /* Hide on mobile, show on medium+ */
+  @media (max-width: 767px) {
+    display: none;
+  }
+}
+
+.tableHeaderCell {
+  padding: 16px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--colorGrey700);
+  border-bottom: 1px solid var(--colorGrey100);
+
+  /* Number column */
+  &:first-child {
+    width: 50px;
+    text-align: center;
+  }
+
+  /* Type column */
+  &:nth-child(3) {
+    width: 180px;
+  }
+
+  /* File column */
+  &:nth-child(4) {
+    width: 200px;
+  }
+
+  /* Actions column */
+  &:last-child {
+    width: 45px;
+    text-align: center;
+  }
+}
+
+.tableRow {
+  border-bottom: 1px solid var(--colorGrey100);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  /* Mobile: Convert to grid layout */
+  @media (max-width: 767px) {
+    display: grid;
+    grid-template-columns: 40px 1fr 100px;
+    grid-template-rows: auto auto;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  /* Medium+: Normal table layout */
+  @media (--viewportMedium) {
+    display: table-row;
+  }
+}
+
+.tableCell {
+  vertical-align: middle;
+
+  /* Mobile: Remove default padding, handled by grid */
+  @media (max-width: 767px) {
+    padding: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Medium+: Table cell with padding */
+  @media (--viewportMedium) {
+    padding: 16px;
+    display: table-cell;
+  }
+
+  /* Number cell */
+  &:first-child {
+    font-weight: 600;
+    color: var(--colorGrey700);
+    text-align: center;
+
+    @media (max-width: 767px) {
+      grid-column: 1;
+      grid-row: 1;
+      justify-content: center;
+    }
+
+    @media (--viewportMedium) {
+      width: 50px;
+    }
+  }
+
+  /* Name cell */
+  &:nth-child(2) {
+    @media (max-width: 767px) {
+      grid-column: 2;
+      grid-row: 1;
+    }
+  }
+
+  /* Type cell */
+  &:nth-child(3) {
+    @media (max-width: 767px) {
+      grid-column: 3;
+      grid-row: 1;
+    }
+
+    @media (--viewportMedium) {
+      width: 180px;
+    }
+  }
+
+  /* File cell - moves to second row on mobile */
+  &:nth-child(4) {
+    @media (max-width: 767px) {
+      grid-column: 1 / 3;
+      grid-row: 2;
+      padding-left: 52px; /* Align with name field */
+    }
+
+    @media (--viewportMedium) {
+      width: 200px;
+      max-width: 200px;
+    }
+  }
+
+  /* Actions cell - moves to second row on mobile */
+  &:nth-child(5) {
+    @media (max-width: 767px) {
+      grid-column: 3;
+      grid-row: 2;
+      justify-content: center;
+    }
+
+    @media (--viewportMedium) {
+      text-align: center;
+      width: 45px;
+    }
+  }
+}
+
+.emptyState {
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--colorGrey300);
+  font-size: 14px;
+
+  @media (max-width: 767px) {
+    display: block;
+    grid-column: 1 / -1;
+  }
+
+  @media (--viewportMedium) {
+    padding: 48px 24px;
+    font-size: 15px;
+    display: table-cell;
+  }
+}
+
+.fileUploadWrapper {
+  width: 100%;
+  position: relative;
+}
+
+.fileInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  white-space: nowrap;
+  clip-path: inset(100%);
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+}
+
+.fileLabel {
+  display: block;
+  padding: 8px 12px;
+  background-color: var(--colorGrey50);
+  border: 1px solid var(--colorGrey100);
+  border-radius: var(--borderRadius);
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--colorGrey700);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+
+  &:hover {
+    background-color: var(--colorGrey100);
+  }
+
+  &:active {
+    background-color: var(--colorGrey200);
+  }
+
+  @media (--viewportMedium) {
+    padding: 10px 16px;
+    font-size: 15px;
+  }
+}
+
+.fileLabel.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  background-color: var(--colorGrey50);
+
+  &:hover {
+    background-color: var(--colorGrey50);
+  }
+}
+
+.removeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  color: var(--colorFail);
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  @media (--viewportMedium) {
+    padding: 10px;
+  }
+}
+
+.deleteIcon {
+  width: 16px;
+  height: 16px;
+
+  stroke: var(--colorFail);
+
+  @media (--viewportMedium) {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+/* Mobile-specific field styling */
+@media (max-width: 767px) {
+  /* Make Name and Type fields take full width of their grid cells */
+  .tableCell:nth-child(2) > div,
+  .tableCell:nth-child(3) > div {
+    width: 100%;
+  }
+
+  /* Ensure select dropdown is full width */
+  .tableCell:nth-child(3) select {
+    width: 100%;
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  /* Ensure text input is full width */
+  .tableCell:nth-child(2) input {
+    width: 100%;
+    font-size: 14px;
+    padding: 8px;
+  }
+}

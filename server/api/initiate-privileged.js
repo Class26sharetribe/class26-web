@@ -101,6 +101,7 @@ module.exports = (req, res) => {
           securedAssets.push({
             url,
             name: asset.name,
+            type: asset.type,
           });
         }
 

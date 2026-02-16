@@ -26,6 +26,7 @@ import DiminishedActionButtonMaybe from './DiminishedActionButtonMaybe';
 import PanelHeading from './PanelHeading';
 
 import css from './TransactionPanel.module.css';
+import SecuredAssets from './SecuredAssets';
 
 // Helper function to get display names for different roles
 const displayNames = (currentUser, provider, customer, intl) => {
@@ -315,6 +316,8 @@ export class TransactionPanelComponent extends Component {
                     onOpenDisputeModal={onOpenDisputeModal}
                   />
                 </div>
+
+                <SecuredAssets className={css.deliveryInfoSection} protectedData={protectedData} />
 
                 {savePaymentMethodFailed ? (
                   <p className={css.genericError}>
