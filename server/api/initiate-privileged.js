@@ -8,6 +8,7 @@ const {
   serialize,
   fetchCommission,
 } = require('../api-util/sdk');
+const { generateSecuredUrl } = require('../services/media');
 
 const { Money } = sharetribeSdk.types;
 
@@ -54,11 +55,17 @@ module.exports = (req, res) => {
   const sdk = getSdk(req, res);
   let lineItems = null;
   let metadataMaybe = {};
+  let assetsMaybe = null;
 
   Promise.all([listingPromise(sdk, bodyParams?.params?.listingId), fetchCommission(sdk)])
     .then(([showListingResponse, fetchAssetsResponse]) => {
       const listing = showListingResponse.data.data;
+      const { digitalAssets } = listing.attributes.publicData;
       const commissionAsset = fetchAssetsResponse.data.data[0];
+
+      if (!!digitalAssets) {
+        assetsMaybe = digitalAssets;
+      }
 
       const currency = listing.attributes.price?.currency || orderData.currency;
       const { providerCommission, customerCommission } =
@@ -74,7 +81,7 @@ module.exports = (req, res) => {
 
       return getTrustedSdk(req);
     })
-    .then(trustedSdk => {
+    .then(async trustedSdk => {
       const { params } = bodyParams;
 
       // Add lineItems to the body params
@@ -86,6 +93,19 @@ module.exports = (req, res) => {
           ...metadataMaybe,
         },
       };
+
+      if (!isSpeculative && !!assetsMaybe) {
+        const securedAssets = [];
+        for (const asset of assetsMaybe) {
+          const { url } = await generateSecuredUrl(asset.file.key);
+          securedAssets.push({
+            url,
+            name: asset.name,
+          });
+        }
+
+        params.protectedData.digitalAssets = securedAssets;
+      }
 
       if (isSpeculative) {
         return trustedSdk.transactions.initiateSpeculative(body, queryParams);
