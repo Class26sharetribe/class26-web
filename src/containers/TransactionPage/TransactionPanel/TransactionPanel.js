@@ -192,6 +192,7 @@ export class TransactionPanelComponent extends Component {
       config,
       hasViewingRights,
       transactionFieldsComponent,
+      onManageDisableScrolling,
     } = this.props;
 
     const hasTransitions = transitions.length > 0;
@@ -304,7 +305,11 @@ export class TransactionPanelComponent extends Component {
                   />
                 </div>
 
-                <SecuredAssets className={css.deliveryInfoSection} protectedData={protectedData} />
+                <SecuredAssets
+                  className={css.deliveryInfoSection}
+                  protectedData={protectedData}
+                  onManageDisableScrolling={onManageDisableScrolling}
+                />
 
                 {savePaymentMethodFailed ? (
                   <p className={css.genericError}>

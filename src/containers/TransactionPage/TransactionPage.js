@@ -676,6 +676,7 @@ export const TransactionPageComponent = props => {
   // that currently handles showing everything inside layout's main view area.
   const panel = isDataAvailable ? (
     <TransactionPanel
+      onManageDisableScrolling={onManageDisableScrolling}
       className={detailsClassName}
       currentUser={currentUser}
       transactionId={transaction?.id}
@@ -993,10 +994,7 @@ const mapDispatchToProps = dispatch => {
 
 const TransactionPage = compose(
   withRouter,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
+  connect(mapStateToProps, mapDispatchToProps)
 )(TransactionPageComponent);
 
 export default TransactionPage;

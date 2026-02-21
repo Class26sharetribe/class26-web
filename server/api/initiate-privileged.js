@@ -7,12 +7,20 @@ const {
   handleError,
   serialize,
   fetchCommission,
+  getIntegrationSdk,
 } = require('../api-util/sdk');
-const { generateSecuredUrl } = require('../services/media');
 
 const { Money } = sharetribeSdk.types;
 
-const listingPromise = (sdk, id) => sdk.listings.show({ id });
+const listingPromise = (sdk, id) =>
+  sdk.listings.show({
+    id,
+  });
+
+const listingPrivatePromise = (sdk, id) =>
+  sdk.listings.show({
+    id: id?.uuid,
+  });
 
 const getFullOrderData = (orderData, bodyParams, currency) => {
   const { offerInSubunits } = orderData || {};
@@ -53,14 +61,19 @@ module.exports = (req, res) => {
   const { isSpeculative, orderData, bodyParams, queryParams } = req.body || {};
   const transitionName = bodyParams.transition;
   const sdk = getSdk(req, res);
+  const iSdk = getIntegrationSdk();
   let lineItems = null;
   let metadataMaybe = {};
   let assetsMaybe = null;
 
-  Promise.all([listingPromise(sdk, bodyParams?.params?.listingId), fetchCommission(sdk)])
-    .then(([showListingResponse, fetchAssetsResponse]) => {
+  Promise.all([
+    listingPromise(sdk, bodyParams?.params?.listingId),
+    fetchCommission(sdk),
+    listingPrivatePromise(iSdk, bodyParams?.params?.listingId),
+  ])
+    .then(([showListingResponse, fetchAssetsResponse, showListingPrivateResponse]) => {
       const listing = showListingResponse.data.data;
-      const { digitalAssets } = listing.attributes.publicData;
+      const { digitalAssets } = showListingPrivateResponse.data.data.attributes.privateData || {};
       const commissionAsset = fetchAssetsResponse.data.data[0];
 
       if (!!digitalAssets) {
@@ -97,9 +110,10 @@ module.exports = (req, res) => {
       if (!isSpeculative && !!assetsMaybe) {
         const securedAssets = [];
         for (const asset of assetsMaybe) {
-          const { url } = await generateSecuredUrl(asset.file.key);
+          const { url, playback_id } = asset.file;
           securedAssets.push({
-            url,
+            ...(url && { url }),
+            ...(playback_id && { playback_id }),
             name: asset.name,
             type: asset.type,
           });
