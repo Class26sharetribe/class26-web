@@ -1434,6 +1434,15 @@
   "EditListingDeliveryForm.nameRequired": "Digital asset name is required",
   "EditListingDeliveryForm.typeRequired": "Digital asset type is required",
   "EditListingDeliveryForm.fileRequired": "Digital asset file is required",
+  "EditListingDeliveryForm.reuploadAsset": "Re-upload asset",
   "TransactionPanel.securedAssetsHeading": "Secured assets",
-  "TransactionPanel.securedAssetsNote": "The assets are only available for {validFor} days."
+  "TransactionPanel.securedAssetsNote": "The assets are only available for {validFor} days.",
+   "EditListingDeliveryForm.replaceVideo": "Replace video",
+  "EditListingDeliveryForm.removeVideo": "Remove video",
+  "EditListingDeliveryForm.replaceImage": "Replace image",
+  "EditListingDeliveryForm.removeImage": "Remove image",
+  "EditListingDeliveryForm.uploadingProgress": "Uploading... {progress}%",
+
+  "MuxPlayerModal.close": "Close video player",
+  "MuxPlayerModal.tokenError": "Failed to load the video. Please try again."
 }

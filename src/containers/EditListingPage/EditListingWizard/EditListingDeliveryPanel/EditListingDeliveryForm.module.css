@@ -177,9 +177,14 @@
     text-align: center;
   }
 
+  /* Name column */
+  &:nth-child(2) {
+    width: 190px;
+  }
+
   /* Type column */
   &:nth-child(3) {
-    width: 180px;
+    width: 120px;
   }
 
   /* File column */
@@ -255,6 +260,11 @@
       grid-column: 2;
       grid-row: 1;
     }
+
+    @media (--viewportMedium) {
+      width: 190px;
+      max-width: 190px;
+    }
   }
 
   /* Type cell */
@@ -265,7 +275,7 @@
     }
 
     @media (--viewportMedium) {
-      width: 180px;
+      width: 120px;
     }
   }
 
@@ -318,6 +328,10 @@
 
 .fileUploadWrapper {
   width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
   position: relative;
 }
 
@@ -402,6 +416,45 @@
   }
 }
 
+.reuploadButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--colorGrey500);
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: var(--colorGrey700);
+  }
+}
+
+.reuploadIcon {
+  width: 16px;
+  height: 16px;
+
+  stroke: currentColor;
+
+  @media (--viewportMedium) {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.actionsCell {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+
+  @media (--viewportMedium) {
+    display: table-cell;
+    white-space: nowrap;
+  }
+}
+
 /* Mobile-specific field styling */
 @media (max-width: 767px) {
   /* Make Name and Type fields take full width of their grid cells */
@@ -422,5 +475,223 @@
     width: 100%;
     font-size: 14px;
     padding: 8px;
+  }
+}
+
+/* ── Media preview (image + video) ── */
+
+.mediaPreviewContainer {
+  position: relative;
+  width: 100%;
+  border-radius: var(--borderRadius);
+  overflow: hidden;
+  background-color: var(--colorGrey50);
+}
+
+/* Image preview */
+.imagePreview {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 160px;
+  object-fit: cover;
+  border-radius: var(--borderRadius);
+
+  @media (--viewportMedium) {
+    max-height: 140px;
+  }
+}
+
+/* MuxPlayer sizing */
+.muxPlayer {
+  width: 100%;
+  height: 160px;
+  display: block;
+  border-radius: var(--borderRadius);
+
+  @media (--viewportMedium) {
+    height: 140px;
+  }
+}
+
+/* Overlay buttons (replace / remove) shown on hover */
+.mediaOverlayButtons {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: flex;
+  gap: 6px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+
+  .mediaPreviewContainer:hover & {
+    opacity: 1;
+  }
+
+  @media (--viewportMedium) {
+    top: 8px;
+    right: 8px;
+    gap: 8px;
+  }
+}
+
+.mediaOverlayButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.55);
+  color: var(--colorWhite);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.75);
+  }
+
+  @media (--viewportMedium) {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+.mediaOverlayIcon {
+  width: 16px;
+  height: 16px;
+  stroke: var(--colorWhite);
+
+  @media (--viewportMedium) {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+/* ── Existing saved image (no local preview URL) ── */
+
+.existingFileInfo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  background-color: var(--colorGrey50);
+  border: 1px solid var(--colorGrey100);
+  border-radius: var(--borderRadius);
+
+  @media (--viewportMedium) {
+    padding: 10px 16px;
+  }
+}
+
+.existingFileName {
+  font-size: 14px;
+  color: var(--colorGrey700);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+
+  @media (--viewportMedium) {
+    font-size: 15px;
+  }
+}
+
+.uploadedFileLink {
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* button reset so it looks like a link */
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  color: var(--colorPrimary, #4a90e2);
+  text-align: left;
+  text-decoration: underline;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  @media (--viewportMedium) {
+    font-size: 15px;
+  }
+}
+
+.existingFileActions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.existingFileButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--colorGrey500);
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: var(--colorGrey700);
+  }
+}
+
+.existingFileIcon {
+  width: 15px;
+  height: 15px;
+  stroke: currentColor;
+}
+
+/* ── Video upload progress ── */
+
+.uploadProgressContainer {
+  padding: 12px;
+  background-color: var(--colorGrey50);
+  border: 1px solid var(--colorGrey100);
+  border-radius: var(--borderRadius);
+
+  @media (--viewportMedium) {
+    padding: 16px;
+  }
+}
+
+.progressBar {
+  width: 100%;
+  height: 6px;
+  background-color: var(--colorGrey100);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progressBarFill {
+  height: 100%;
+  background-color: var(--marketplaceColor);
+  border-radius: 3px;
+  transition: width 0.2s ease;
+}
+
+.uploadingText {
+  display: block;
+  font-size: 13px;
+  color: var(--colorGrey500);
+  text-align: center;
+
+  @media (--viewportMedium) {
+    font-size: 14px;
   }
 }

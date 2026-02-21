@@ -22,59 +22,14 @@ import css from './EditListingDeliveryPanel.module.css';
 const { Money } = sdkTypes;
 
 const getInitialValues = props => {
-  const { listing, listingTypes, marketplaceCurrency } = props;
-  const { geolocation, publicData, price } = listing?.attributes || {};
+  const { listing } = props;
+  const { privateData } = listing?.attributes || {};
 
-  const listingType = listing?.attributes?.publicData?.listingType;
-  const listingTypeConfig = listingTypes.find(conf => conf.listingType === listingType);
-  const displayShipping = displayDeliveryShipping(listingTypeConfig);
-  const displayPickup = displayDeliveryPickup(listingTypeConfig);
-  const displayMultipleDelivery = displayShipping && displayPickup;
-
-  // Only render current search if full place object is available in the URL params
-  // TODO bounds are missing - those need to be queried directly from Google Places
-  const locationFieldsPresent = publicData?.location?.address && geolocation;
-  const location = publicData?.location || {};
-  const { address, building } = location;
-  const {
-    shippingEnabled,
-    pickupEnabled,
-    shippingPriceInSubunitsOneItem,
-    shippingPriceInSubunitsAdditionalItems,
-    digitalAssets = [],
-  } = publicData;
-  // const deliveryOptions = [];
-
-  // if (shippingEnabled || (!displayMultipleDelivery && displayShipping)) {
-  //   deliveryOptions.push('shipping');
-  // }
-  // if (pickupEnabled || (!displayMultipleDelivery && displayPickup)) {
-  //   deliveryOptions.push('pickup');
-  // }
-
-  // const currency = price?.currency || marketplaceCurrency;
-  // const shippingOneItemAsMoney =
-  //   shippingPriceInSubunitsOneItem != null
-  //     ? new Money(shippingPriceInSubunitsOneItem, currency)
-  //     : null;
-  // const shippingAdditionalItemsAsMoney =
-  //   shippingPriceInSubunitsAdditionalItems != null
-  //     ? new Money(shippingPriceInSubunitsAdditionalItems, currency)
-  //     : null;
+  const { digitalAssets = [] } = privateData;
 
   // Initial values for the form
   return {
     digitalAssets,
-    // building,
-    // location: locationFieldsPresent
-    //   ? {
-    //       search: address,
-    //       selectedPlace: { address, origin: geolocation },
-    //     }
-    //   : { search: undefined, selectedPlace: undefined },
-    // deliveryOptions,
-    // shippingPriceInSubunitsOneItem: shippingOneItemAsMoney,
-    // shippingPriceInSubunitsAdditionalItems: shippingAdditionalItemsAsMoney,
   };
 };
 
@@ -95,6 +50,7 @@ const getInitialValues = props => {
  * @param {boolean} props.panelUpdated - Whether the panel is updated
  * @param {boolean} props.updateInProgress - Whether the update is in progress
  * @param {Object} props.errors - The errors object
+ * @param {Function} props.onManageDisableScrolling - Required by Modal children for scroll management
  * @returns {JSX.Element}
  */
 const EditListingDeliveryPanel = props => {
@@ -115,6 +71,7 @@ const EditListingDeliveryPanel = props => {
     panelUpdated,
     updateInProgress,
     errors,
+    onManageDisableScrolling,
     updatePageTitle: UpdatePageTitle,
     intl,
   } = props;
@@ -156,50 +113,19 @@ const EditListingDeliveryPanel = props => {
           className={css.form}
           initialValues={state.initialValues}
           onSubmit={values => {
-            const {
-              building = '',
-              location,
-              shippingPriceInSubunitsOneItem,
-              shippingPriceInSubunitsAdditionalItems,
-              deliveryOptions,
-              digitalAssets,
-            } = values;
+            const { digitalAssets } = values;
 
             const updateValues = {
               publicData: {
+                digitalAssetsInfo: digitalAssets.map(asset => ({
+                  name: asset.name,
+                  type: asset.type,
+                })),
+              },
+              privateData: {
                 digitalAssets,
               },
             };
-
-            // const shippingEnabled = deliveryOptions.includes('shipping');
-            // const pickupEnabled = deliveryOptions.includes('pickup');
-            // const address = location?.selectedPlace?.address || null;
-            // const origin = location?.selectedPlace?.origin || null;
-
-            // const pickupDataMaybe =
-            //   pickupEnabled && address ? { location: { address, building } } : {};
-
-            // const shippingDataMaybe =
-            //   shippingEnabled && shippingPriceInSubunitsOneItem != null
-            //     ? {
-            //         // Note: we only save the "amount" because currency should not differ from listing's price.
-            //         // Money is always dealt in subunits (e.g. cents) to avoid float calculations.
-            //         shippingPriceInSubunitsOneItem: shippingPriceInSubunitsOneItem.amount,
-            //         shippingPriceInSubunitsAdditionalItems:
-            //           shippingPriceInSubunitsAdditionalItems?.amount,
-            //       }
-            //     : {};
-
-            // New values for listing attributes
-            // const updateValues = {
-            //   geolocation: origin,
-            //   publicData: {
-            //     pickupEnabled,
-            //     ...pickupDataMaybe,
-            //     shippingEnabled,
-            //     ...shippingDataMaybe,
-            //   },
-            // };
 
             // Save the initialValues to state
             // LocationAutocompleteInput doesn't have internal state
@@ -207,11 +133,6 @@ const EditListingDeliveryPanel = props => {
             setState({
               initialValues: {
                 digitalAssets,
-                // building,
-                // location: { search: address, selectedPlace: { address, origin } },
-                // shippingPriceInSubunitsOneItem,
-                // shippingPriceInSubunitsAdditionalItems,
-                // deliveryOptions,
               },
             });
             onSubmit(updateValues);
@@ -225,6 +146,7 @@ const EditListingDeliveryPanel = props => {
           updated={panelUpdated}
           updateInProgress={updateInProgress}
           fetchErrors={errors}
+          onManageDisableScrolling={onManageDisableScrolling}
           listingId={listing.id.uuid}
         />
       ) : (

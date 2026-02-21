@@ -100,6 +100,15 @@ const post = (path, body, options = {}) => {
   return request(path, requestOptions);
 };
 
+const get = (path, options = {}) => {
+  const requestOptions = {
+    ...options,
+    method: methods.GET,
+  };
+
+  return request(path, requestOptions);
+};
+
 // Fetch transaction line items from the local API endpoint.
 //
 // See `server/api/transaction-line-items.js` to see what data should
@@ -154,4 +163,16 @@ export const deleteUserAccount = body => {
 
 export const generatePresignedUrl = body => {
   return post('/api/presigned-url', body);
+};
+
+export const getMuxUploadUrl = () => {
+  return get('/api/mux/upload-url');
+};
+
+export const getMuxAsset = (queryParams = {}) => {
+  return get('/api/mux/get-asset?' + new URLSearchParams(queryParams).toString());
+};
+
+export const getMuxJwtToken = (queryParams = {}) => {
+  return get('/api/mux/jwt-token?' + new URLSearchParams(queryParams).toString());
 };

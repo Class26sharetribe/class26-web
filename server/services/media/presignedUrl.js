@@ -131,12 +131,12 @@ const create = async (fileData, storagePath) => {
     });
 
     // Construct public URL
-    // const publicUrl = `${CONFIG.PUBLIC_URL}/${key}`;
+    const publicUrl = `${CONFIG.PUBLIC_URL}/${key}`;
 
     return {
       success: true,
       url: signedUrl, // Presigned URL for uploading
-      // publicUrl, // Public URL for accessing the file after upload
+      publicUrl, // Public URL for accessing the file after upload
       key,
     };
   } catch (error) {

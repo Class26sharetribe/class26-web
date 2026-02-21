@@ -1,49 +1,43 @@
-import React, { useEffect, useState } from 'react';
-import { Form as FinalForm, Field } from 'react-final-form';
-import { FieldArray } from 'react-final-form-arrays';
-import arrayMutators from 'final-form-arrays';
+import * as UpChunk from '@mux/upchunk';
 import classNames from 'classnames';
-
-// Import configs and util modules
-import appSettings from '../../../../config/settings';
+import arrayMutators from 'final-form-arrays';
+import { useEffect, useRef, useState } from 'react';
+import { Field, Form as FinalForm } from 'react-final-form';
+import { FieldArray } from 'react-final-form-arrays';
+import { generatePresignedUrl, getMuxAsset, getMuxUploadUrl } from '../../../../util/api';
+import { displayDeliveryPickup, displayDeliveryShipping } from '../../../../util/configHelpers';
 import { FormattedMessage, useIntl } from '../../../../util/reactIntl';
 import { propTypes } from '../../../../util/types';
-import { displayDeliveryPickup, displayDeliveryShipping } from '../../../../util/configHelpers';
-import {
-  autocompleteSearchRequired,
-  autocompletePlaceSelected,
-  composeValidators,
-  required,
-} from '../../../../util/validators';
-import { generatePresignedUrl } from '../../../../util/api';
-
+import { required } from '../../../../util/validators';
 // Import shared components
 import {
-  Form,
-  FieldLocationAutocompleteInput,
   Button,
-  FieldCurrencyInput,
-  FieldTextInput,
-  FieldCheckbox,
   FieldSelect,
+  FieldTextInput,
+  Form,
   IconDelete,
+  IconSynchronize,
   InlineTextButton,
+  MuxPlayerModal,
   ValidationError,
 } from '../../../../components';
-
 // Import modules from this directory
 import css from './EditListingDeliveryForm.module.css';
 
-const identity = v => v;
-
 /**
- * File upload field component for the dynamic table
+ * File upload field component for the dynamic table.
+ * - Images: upload to R2, show public URL as a link once uploaded.
+ * - Videos: upload to Mux via UpChunk, show HLS stream URL as a link once ready.
+ * - Documents: upload to R2, show filename label.
  */
 const FileUploadField = props => {
-  const { name, type, disabled, onChange, validate, listingId } = props;
+  const { name, type, disabled, onChange, validate, listingId, onVideoClick } = props;
   const intl = useIntl();
+
+  const fileInputRef = useRef(null);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const accept =
     type === 'document'
@@ -54,12 +48,73 @@ const FileUploadField = props => {
       ? 'video/*'
       : '';
 
-  const uploadFile = async (file, input) => {
+  /** Upload a video to Mux using UpChunk */
+  const uploadVideoToMux = async (file, input) => {
+    try {
+      setUploading(true);
+      setUploadError(null);
+      setUploadProgress(0);
+
+      const uploadData = await getMuxUploadUrl();
+
+      if (!uploadData || !uploadData.url || !uploadData.id) {
+        throw new Error('Failed to get upload URL from server');
+      }
+
+      const upload = UpChunk.createUpload({
+        endpoint: uploadData.url,
+        file,
+        chunkSize: 5120,
+      });
+
+      upload.on('error', err => {
+        console.error('Mux upload error:', err.detail);
+        setUploadError('Upload failed. Please try again.');
+        setUploading(false);
+        setUploadProgress(0);
+      });
+
+      upload.on('progress', progress => {
+        setUploadProgress(Math.round(progress.detail));
+      });
+
+      upload.on('success', async () => {
+        try {
+          let assetData = await getMuxAsset({ uploadId: uploadData.id });
+
+          // if (assetData.state !== 'completed') {
+          //   assetData = await waitForAssetReady(uploadData.id);
+          // }
+
+          const videoData = {
+            asset_id: assetData.asset_id,
+            playback_id: assetData.playback_id,
+          };
+
+          input.onChange(videoData);
+          if (onChange) onChange(videoData);
+          setUploading(false);
+          setUploadProgress(0);
+        } catch (err) {
+          console.error('Error processing Mux asset:', err);
+          setUploadError('Failed to process video. Please try again.');
+          setUploading(false);
+          setUploadProgress(0);
+        }
+      });
+    } catch (error) {
+      console.error('Error starting Mux upload:', error);
+      setUploadError(error.message || 'Failed to upload video');
+      setUploading(false);
+    }
+  };
+
+  /** Upload an image (or document) to R2 via presigned URL */
+  const uploadToR2 = async (file, input, isImage) => {
     try {
       setUploading(true);
       setUploadError(null);
 
-      // Step 1: Get presigned URL from backend
       const response = await generatePresignedUrl({
         storagePath: `listings/${listingId}`,
         files: [{ name: file.name, type: file.type }],
@@ -69,34 +124,27 @@ const FileUploadField = props => {
         throw new Error('Failed to get presigned URL');
       }
 
-      const { url: presignedUrl, key } = response.data[0];
+      const { url: presignedUrl, publicUrl, key } = response.data[0];
 
-      // Step 2: Upload file to presigned URL
       const uploadResponse = await fetch(presignedUrl, {
         method: 'PUT',
         body: file,
-        headers: {
-          'Content-Type': file.type,
-        },
+        headers: { 'Content-Type': file.type },
       });
 
       if (!uploadResponse.ok) {
         throw new Error('Failed to upload file');
       }
 
-      // Step 3: Store file metadata in form
       const fileData = {
         name: file.name,
         type: file.type,
         size: file.size,
-        key,
+        url: publicUrl,
       };
 
       input.onChange(fileData);
-      if (onChange) {
-        onChange(fileData);
-      }
-
+      if (onChange) onChange(fileData);
       setUploading(false);
     } catch (error) {
       console.error('Error uploading file:', error);
@@ -110,14 +158,168 @@ const FileUploadField = props => {
       {({ input, meta }) => {
         const handleFileChange = e => {
           const file = e.target.files[0];
-          if (file) {
-            uploadFile(file, input);
+          if (!file) return;
+          // Clear the previous asset so the uploading state renders immediately
+          input.onChange(null);
+          if (type === 'video') {
+            uploadVideoToMux(file, input);
+          } else if (type === 'image') {
+            uploadToR2(file, input, true);
+          } else {
+            uploadToR2(file, input, false);
           }
         };
 
         const hasError = (meta.touched && meta.error) || uploadError;
-        const fileName = input.value?.name || '';
         const isDisabled = disabled || uploading;
+        const triggerFileInput = () => fileInputRef.current?.click();
+
+        // ── Video: show URL when playback_id is available ──
+        const hasUploadedVideo = type === 'video' && input.value?.playback_id;
+        if (hasUploadedVideo) {
+          return (
+            <div className={css.fileUploadWrapper}>
+              <button
+                type="button"
+                className={css.uploadedFileLink}
+                onClick={() => onVideoClick && onVideoClick(input.value.playback_id)}
+              >
+                {`https://stream.mux.com/${input.value.playback_id}.m3u8`}
+              </button>
+              {!disabled && (
+                <button
+                  type="button"
+                  className={css.reuploadButton}
+                  onClick={triggerFileInput}
+                  title={intl.formatMessage({ id: 'EditListingDeliveryForm.reuploadAsset' })}
+                >
+                  <IconSynchronize rootClassName={css.reuploadIcon} />
+                </button>
+              )}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept={accept}
+                onChange={handleFileChange}
+                disabled={isDisabled}
+                className={css.fileInput}
+                aria-hidden="true"
+                tabIndex={-1}
+              />
+              {hasError && (
+                <div className={css.error}>
+                  {uploadError || <ValidationError fieldMeta={meta} />}
+                </div>
+              )}
+            </div>
+          );
+        }
+
+        // ── Video: uploading state (progress bar) ──
+        if (type === 'video' && uploading) {
+          return (
+            <div className={css.fileUploadWrapper}>
+              <div className={css.uploadProgressContainer}>
+                <div className={css.progressBar}>
+                  <div className={css.progressBarFill} style={{ width: `${uploadProgress}%` }} />
+                </div>
+                <span className={css.uploadingText}>
+                  {intl.formatMessage(
+                    { id: 'EditListingDeliveryForm.uploadingProgress' },
+                    { progress: uploadProgress }
+                  )}
+                </span>
+              </div>
+            </div>
+          );
+        }
+
+        // ── Image: show URL when url is available ──
+        const hasUploadedImage = type === 'image' && input.value?.url;
+        if (hasUploadedImage) {
+          return (
+            <div className={css.fileUploadWrapper}>
+              <a
+                href={input.value.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={css.uploadedFileLink}
+              >
+                {input.value.url}
+              </a>
+              {!disabled && (
+                <button
+                  type="button"
+                  className={css.reuploadButton}
+                  onClick={triggerFileInput}
+                  title={intl.formatMessage({ id: 'EditListingDeliveryForm.reuploadAsset' })}
+                >
+                  <IconSynchronize rootClassName={css.reuploadIcon} />
+                </button>
+              )}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept={accept}
+                onChange={handleFileChange}
+                disabled={isDisabled}
+                className={css.fileInput}
+                aria-hidden="true"
+                tabIndex={-1}
+              />
+              {hasError && (
+                <div className={css.error}>
+                  {uploadError || <ValidationError fieldMeta={meta} />}
+                </div>
+              )}
+            </div>
+          );
+        }
+
+        // ── Document: show filename as a link when url is available ──
+        const hasUploadedDocument = type === 'document' && input.value?.url;
+        if (hasUploadedDocument) {
+          return (
+            <div className={css.fileUploadWrapper}>
+              <a
+                href={input.value.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={css.uploadedFileLink}
+              >
+                {input.value.name || input.value.url}
+              </a>
+              {!disabled && (
+                <button
+                  type="button"
+                  className={css.reuploadButton}
+                  onClick={triggerFileInput}
+                  title={intl.formatMessage({ id: 'EditListingDeliveryForm.reuploadAsset' })}
+                >
+                  <IconSynchronize rootClassName={css.reuploadIcon} />
+                </button>
+              )}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept={accept}
+                onChange={handleFileChange}
+                disabled={isDisabled}
+                className={css.fileInput}
+                aria-hidden="true"
+                tabIndex={-1}
+              />
+              {hasError && (
+                <div className={css.error}>
+                  {uploadError || <ValidationError fieldMeta={meta} />}
+                </div>
+              )}
+            </div>
+          );
+        }
+
+        // ── Document (and empty image/video): default file picker ──
+        const fileName = input.value?.name || '';
 
         return (
           <div className={css.fileUploadWrapper}>
@@ -152,7 +354,7 @@ const FileUploadField = props => {
  * Dynamic row component for the documents table
  */
 const DocumentRow = props => {
-  const { name, index, onRemove, fields, listingId } = props;
+  const { name, index, onRemove, fields, formApi, listingId, onVideoClick } = props;
   const intl = useIntl();
   const rowValues = fields.value[index] || {};
   const selectedType = rowValues.type;
@@ -181,6 +383,7 @@ const DocumentRow = props => {
           id={`${name}.type`}
           name={`${name}.type`}
           validate={required(intl.formatMessage({ id: 'EditListingDeliveryForm.typeRequired' }))}
+          onChange={() => formApi.change(`${name}.file`, null)}
         >
           {typeOptions.map(option => (
             <option key={option.key} value={option.key}>
@@ -194,11 +397,12 @@ const DocumentRow = props => {
           name={`${name}.file`}
           type={selectedType}
           disabled={!selectedType}
+          onVideoClick={onVideoClick}
           validate={required(intl.formatMessage({ id: 'EditListingDeliveryForm.fileRequired' }))}
           listingId={listingId}
         />
       </td>
-      <td className={css.tableCell}>
+      <td className={classNames(css.tableCell, css.actionsCell)}>
         <InlineTextButton type="button" onClick={onRemove} className={css.removeButton}>
           <IconDelete rootClassName={css.deleteIcon} />
         </InlineTextButton>
@@ -230,7 +434,20 @@ const DocumentRow = props => {
  * @returns {JSX.Element} The EditListingDeliveryForm component
  */
 export const EditListingDeliveryForm = props => {
+  const { onManageDisableScrolling, ...formProps } = props;
   const [digitalAssetsComplete, setDigitalAssetsComplete] = useState(true);
+  const [muxPlayerOpen, setMuxPlayerOpen] = useState(false);
+  const [activePlaybackId, setActivePlaybackId] = useState(null);
+
+  const handleVideoClick = playbackId => {
+    setActivePlaybackId(playbackId);
+    setMuxPlayerOpen(true);
+  };
+
+  const handlePlayerClose = () => {
+    setMuxPlayerOpen(false);
+    setActivePlaybackId(null);
+  };
 
   return (
     <FinalForm
@@ -258,6 +475,7 @@ export const EditListingDeliveryForm = props => {
           listingId,
         } = formRenderProps;
         const intl = useIntl();
+        // handleVideoClick comes from the outer component scope
 
         // Track if all digital assets are complete
         useEffect(() => {
@@ -314,176 +532,17 @@ export const EditListingDeliveryForm = props => {
           hasIncompleteDigitalAssets ||
           digitalAssets.length === 0;
 
-        console.log('submitDisabled', submitDisabled, hasIncompleteDigitalAssets);
-        const shippingLabel = intl.formatMessage({ id: 'EditListingDeliveryForm.shippingLabel' });
-        const pickupLabel = intl.formatMessage({ id: 'EditListingDeliveryForm.pickupLabel' });
-
-        const pickupClasses = classNames({
-          [css.deliveryOption]: displayMultipleDelivery,
-          [css.disabled]: !pickupEnabled,
-          [css.hidden]: !displayPickup,
-        });
-        const shippingClasses = classNames({
-          [css.deliveryOption]: displayMultipleDelivery,
-          [css.disabled]: !shippingEnabled,
-          [css.hidden]: !displayShipping,
-        });
-        const currencyConfig = appSettings.getCurrencyFormatting(marketplaceCurrency);
-
         return (
           <Form className={classes} onSubmit={handleSubmit}>
-            {/* <FieldCheckbox
-            id={formId ? `${formId}.pickup` : 'pickup'}
-            className={classNames(css.deliveryCheckbox, { [css.hidden]: !displayMultipleDelivery })}
-            name="deliveryOptions"
-            label={pickupLabel}
-            value="pickup"
-          />
-          <div className={pickupClasses}>
-            {updateListingError ? (
-              <p className={css.error}>
-                <FormattedMessage id="EditListingDeliveryForm.updateFailed" />
-              </p>
-            ) : null}
-
-            {showListingsError ? (
-              <p className={css.error}>
-                <FormattedMessage id="EditListingDeliveryForm.showListingFailed" />
-              </p>
-            ) : null}
-
-            <FieldLocationAutocompleteInput
-              disabled={!pickupEnabled}
-              rootClassName={css.input}
-              inputClassName={css.locationAutocompleteInput}
-              iconClassName={css.locationAutocompleteInputIcon}
-              predictionsClassName={css.predictionsRoot}
-              validClassName={css.validLocation}
-              autoFocus={autoFocus}
-              name="location"
-              id={`${formId}.location`}
-              label={intl.formatMessage({ id: 'EditListingDeliveryForm.address' })}
-              placeholder={intl.formatMessage({
-                id: 'EditListingDeliveryForm.addressPlaceholder',
-              })}
-              useDefaultPredictions={false}
-              format={identity}
-              valueFromForm={values.location}
-              validate={
-                pickupEnabled
-                  ? composeValidators(
-                      autocompleteSearchRequired(addressRequiredMessage),
-                      autocompletePlaceSelected(addressNotRecognizedMessage)
-                    )
-                  : () => {}
-              }
-              hideErrorMessage={!pickupEnabled}
-              // Whatever parameters are being used to calculate
-              // the validation function need to be combined in such
-              // a way that, when they change, this key prop
-              // changes, thus reregistering this field (and its
-              // validation function) with Final Form.
-              // See example: https://codesandbox.io/s/changing-field-level-validators-zc8ei
-              key={pickupEnabled ? 'locationValidation' : 'noLocationValidation'}
-            />
-
-            <FieldTextInput
-              className={css.input}
-              type="text"
-              name="building"
-              id={formId ? `${formId}.building` : 'building'}
-              label={intl.formatMessage(
-                { id: 'EditListingDeliveryForm.building' },
-                { optionalText }
-              )}
-              placeholder={intl.formatMessage({
-                id: 'EditListingDeliveryForm.buildingPlaceholder',
-              })}
-              disabled={!pickupEnabled}
-            />
-          </div>
-
-          <FieldCheckbox
-            id={formId ? `${formId}.shipping` : 'shipping'}
-            className={classNames(css.deliveryCheckbox, { [css.hidden]: !displayMultipleDelivery })}
-            name="deliveryOptions"
-            label={shippingLabel}
-            value="shipping"
-          />
-
-          <div className={shippingClasses}>
-            <FieldCurrencyInput
-              id={
-                formId
-                  ? `${formId}.shippingPriceInSubunitsOneItem`
-                  : 'shippingPriceInSubunitsOneItem'
-              }
-              name="shippingPriceInSubunitsOneItem"
-              className={css.input}
-              label={intl.formatMessage({
-                id: 'EditListingDeliveryForm.shippingOneItemLabel',
-              })}
-              placeholder={intl.formatMessage({
-                id: 'EditListingDeliveryForm.shippingOneItemPlaceholder',
-              })}
-              currencyConfig={currencyConfig}
-              disabled={!shippingEnabled}
-              validate={
-                shippingEnabled
-                  ? required(
-                      intl.formatMessage({
-                        id: 'EditListingDeliveryForm.shippingOneItemRequired',
-                      })
-                    )
-                  : null
-              }
-              hideErrorMessage={!shippingEnabled}
-              // Whatever parameters are being used to calculate
-              // the validation function need to be combined in such
-              // a way that, when they change, this key prop
-              // changes, thus reregistering this field (and its
-              // validation function) with Final Form.
-              // See example: https://codesandbox.io/s/changing-field-level-validators-zc8ei
-              key={shippingEnabled ? 'oneItemValidation' : 'noOneItemValidation'}
-            />
-
-            {allowOrdersOfMultipleItems ? (
-              <FieldCurrencyInput
-                id={
-                  formId
-                    ? `${formId}.shippingPriceInSubunitsAdditionalItems`
-                    : 'shippingPriceInSubunitsAdditionalItems'
-                }
-                name="shippingPriceInSubunitsAdditionalItems"
-                className={css.input}
-                label={intl.formatMessage({
-                  id: 'EditListingDeliveryForm.shippingAdditionalItemsLabel',
-                })}
-                placeholder={intl.formatMessage({
-                  id: 'EditListingDeliveryForm.shippingAdditionalItemsPlaceholder',
-                })}
-                currencyConfig={currencyConfig}
-                disabled={!shippingEnabled}
-                validate={
-                  shippingEnabled
-                    ? required(
-                        intl.formatMessage({
-                          id: 'EditListingDeliveryForm.shippingAdditionalItemsRequired',
-                        })
-                      )
-                    : null
-                }
-                hideErrorMessage={!shippingEnabled}
-                // Whatever parameters are being used to calculate
-                // the validation function need to be combined in such
-                // a way that, when they change, this key prop
-                // changes, thus reregistering this field (and its
-                // validation function) with Final Form.
-                // See example: https://codesandbox.io/s/changing-field-level-validators-zc8ei
-                key={shippingEnabled ? 'additionalItemsValidation' : 'noAdditionalItemsValidation'}
+            {muxPlayerOpen && (
+              <MuxPlayerModal
+                id="delivery-form-mux-player-modal"
+                playbackId={activePlaybackId}
+                isOpen={muxPlayerOpen}
+                onClose={handlePlayerClose}
+                onManageDisableScrolling={onManageDisableScrolling}
               />
-            ) : null}
-          </div> */}
+            )}
 
             {/* Dynamic Digital Assets Table */}
             <div className={css.digitalAssetsSection}>
@@ -532,6 +591,7 @@ export const EditListingDeliveryForm = props => {
                                 formApi={form}
                                 onRemove={() => fields.remove(index)}
                                 listingId={listingId}
+                                onVideoClick={handleVideoClick}
                               />
                             ))
                           )}

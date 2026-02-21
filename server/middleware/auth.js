@@ -7,8 +7,6 @@ const { getTrustedSdk, handleError } = require('../api-util/sdk');
  * @throws {Error} Throws error if authentication fails
  */
 async function authenticateUser(req) {
-  console.log('Authenticating user with request:', req.method, req.url);
-  
   const trustedSdk = await getTrustedSdk(req);
   const userResponse = await trustedSdk.currentUser.show();
   const currentUser = userResponse?.data?.data;
