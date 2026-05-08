@@ -87,16 +87,23 @@ const FieldTextInputComponent = props => {
       ...rest,
     }
     : isUncontrolled
-      ? {
+    ? {
         className: inputClasses,
         id,
-        type: effectiveType,
         defaultValue,
         ...refMaybe,
         ...inputWithoutValue,
         ...rest,
+        type: effectiveType,
       }
-      : { className: inputClasses, id, type: effectiveType, ...refMaybe, ...input, ...rest };
+    : {
+        className: inputClasses,
+        id,
+        ...refMaybe,
+        ...inputWithoutType,
+        ...rest,
+        type: effectiveType,
+      };
 
   const labelClassMaybe = labelClassName ? { className: labelClassName } : {};
   const classes = classNames(rootClassName || css.root, className);
