@@ -12,9 +12,9 @@ import css from './EditListingPhotosForm.module.css';
 
 const itemId = item => item?.id;
 
-const buildMuxThumbnailUrl = (playbackId, token) =>
-  playbackId && token
-    ? `https://image.mux.com/${playbackId}/thumbnail.jpg?width=640&height=360&fit_mode=crop&token=${token}`
+const buildMuxThumbnailUrl = playbackId =>
+  playbackId
+    ? `https://image.mux.com/${playbackId}/thumbnail.jpg?width=640&height=360&fit_mode=crop`
     : null;
 
 /**
@@ -122,10 +122,10 @@ const SortableMediaItem = props => {
             </>
           ) : (
             <>
-              {buildMuxThumbnailUrl(item.playbackId, thumbnailToken) && !thumbnailError ? (
+              {buildMuxThumbnailUrl(item.playbackId) && !thumbnailError ? (
                 <img
                   className={css.videoThumbnail}
-                  src={buildMuxThumbnailUrl(item.playbackId, thumbnailToken)}
+                  src={buildMuxThumbnailUrl(item.playbackId)}
                   alt=""
                 />
               ) : null}

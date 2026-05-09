@@ -83,6 +83,7 @@ export const EditListingFaqForm = props => {
   return (
     <FinalForm
       {...props}
+      keepDirtyOnReinitialize
       mutators={{ ...arrayMutators }}
       render={formRenderProps => {
         const {
@@ -102,9 +103,7 @@ export const EditListingFaqForm = props => {
         const faqs = values.faqs || [];
 
         // FAQs are optional, but if any are added every item must be fully filled
-        const hasPendingFaqs = faqs.some(
-          faq => !faq?.question?.trim() || !faq?.answer?.trim()
-        );
+        const hasPendingFaqs = faqs.some(faq => !faq?.question?.trim() || !faq?.answer?.trim());
 
         const submitReady = updated || ready;
         const submitInProgress = updateInProgress;

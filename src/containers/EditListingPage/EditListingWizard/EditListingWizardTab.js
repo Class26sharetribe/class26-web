@@ -232,6 +232,7 @@ const EditListingWizardTab = props => {
           {...panelProps(PRICING)}
           marketplaceCurrency={config.currency}
           listingMinimumPriceSubUnits={config.listingMinimumPriceSubUnits}
+          commission={config.commission}
         />
       );
     }

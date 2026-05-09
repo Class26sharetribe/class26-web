@@ -32,6 +32,7 @@ import css from './MuxPlayerModal.module.css';
  * @param {boolean}  props.isOpen                    - Whether the modal is visible
  * @param {Function} props.onClose                   - Called when the modal is closed
  * @param {Function} props.onManageDisableScrolling  - Required by Modal to manage body scroll
+ * @param {boolean}  [props.skipJwt]                 - When true the video is public; skip JWT fetch and play without tokens
  * @returns {JSX.Element}
  */
 const MuxPlayerModal = props => {
@@ -42,6 +43,7 @@ const MuxPlayerModal = props => {
     isOpen,
     onClose,
     onManageDisableScrolling,
+    skipJwt = false,
   } = props;
   const intl = useIntl();
 
@@ -49,12 +51,20 @@ const MuxPlayerModal = props => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fetch a new JWT token whenever the modal opens with a new playbackId
+  // Fetch a new JWT token whenever the modal opens with a new playbackId.
+  // When skipJwt is true the video is public – skip the fetch entirely.
   useEffect(() => {
     if (!isOpen || !playbackId) {
       // Reset state when closed
       setToken(null);
       setError(null);
+      return;
+    }
+
+    if (skipJwt) {
+      setToken(null);
+      setError(null);
+      setLoading(false);
       return;
     }
 
@@ -82,7 +92,7 @@ const MuxPlayerModal = props => {
     return () => {
       cancelled = true;
     };
-  }, [isOpen, playbackId]);
+  }, [isOpen, playbackId, skipJwt]);
 
   return (
     <Modal
@@ -99,11 +109,11 @@ const MuxPlayerModal = props => {
           </div>
         ) : error ? (
           <p className={css.error}>{error}</p>
-        ) : token && playbackId ? (
+        ) : (skipJwt || token) && playbackId ? (
           <MuxPlayer
             className={css.player}
             playbackId={playbackId}
-            tokens={{ playback: token }}
+            {...(!skipJwt && token ? { tokens: { playback: token } } : {})}
             streamType="on-demand"
             autoPlay={false}
             controls

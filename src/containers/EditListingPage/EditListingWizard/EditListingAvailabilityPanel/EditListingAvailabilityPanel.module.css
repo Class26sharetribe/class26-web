@@ -71,6 +71,69 @@
   }
 }
 
+.totalSessionsWrapper {
+  margin-bottom: 24px;
+
+  @media (--viewportMedium) {
+    margin-bottom: 32px;
+  }
+}
+
+.totalSessionsLabel {
+  composes: h4 from global;
+  display: block;
+  margin: 0 0 12px 0;
+  font-weight: var(--fontWeightSemiBold);
+}
+
+.totalSessionsStepper {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--colorGrey300);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.stepperButton {
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--colorGrey700);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 80ms ease;
+
+  &:hover {
+    background-color: var(--colorGrey100);
+  }
+
+  &:active {
+    background-color: var(--colorGrey200);
+  }
+}
+
+.stepperValue {
+  width: 40px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: var(--fontWeightMedium);
+  border-left: 1px solid var(--colorGrey300);
+  border-right: 1px solid var(--colorGrey300);
+  line-height: 40px;
+}
+
+.totalSessionsHelp {
+  margin: 0;
+  font-size: 14px;
+  color: var(--colorGrey400);
+}
+
 .goToNextTabButton {
   margin-top: auto;
   margin-bottom: 24px;

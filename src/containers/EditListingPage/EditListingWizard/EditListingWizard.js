@@ -275,6 +275,7 @@ const tabCompleted = (tab, listing, config) => {
     pickupEnabled,
     cardStyle,
     digitalAssets,
+    courseModules,
   } = publicData || {};
   const listingTypeConfig = config.listing.listingTypes.find(
     config => config.listingType === listingType
@@ -311,10 +312,16 @@ const tabCompleted = (tab, listing, config) => {
     case STYLE:
       return !!cardStyle;
     case CONTENT:
-      return true;
-    // return Array.isArray(digitalAssets) && digitalAssets?.length > 0;
+      return (
+        (Array.isArray(digitalAssets) && digitalAssets?.length > 0) ||
+        (Array.isArray(courseModules) && courseModules?.length > 0)
+      );
     case FAQ:
-      return true;
+      return (
+        (Array.isArray(digitalAssets) && digitalAssets?.length > 0) ||
+        (Array.isArray(courseModules) && courseModules?.length > 0) ||
+        !!availabilityPlan
+      );
     case READY:
       return true;
     default:

@@ -42,6 +42,7 @@ export const EditListingReadyForm = props => {
   return (
     <FinalForm
       {...props}
+      keepDirtyOnReinitialize
       render={formRenderProps => {
         const {
           className,

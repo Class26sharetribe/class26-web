@@ -98,7 +98,7 @@ const pollMuxAsset = async uploadId => {
   for (let i = 0; i < MUX_ASSET_POLL_ATTEMPTS; i += 1) {
     try {
       const assetData = await getMuxAsset({ uploadId });
-      if (assetData?.asset_id && assetData?.playback_id) {
+      if (assetData?.state === 'completed') {
         return assetData;
       }
     } catch (e) {
@@ -267,25 +267,6 @@ export const EditListingPhotosForm = props => {
     }
   };
 
-  const prefetchThumbnailToken = playbackId => {
-    if (
-      !playbackId ||
-      thumbnailTokensByPlaybackId[playbackId] ||
-      thumbnailErrorsByPlaybackId[playbackId]
-    ) {
-      return Promise.resolve();
-    }
-
-    return fetchMuxThumbnailToken(playbackId)
-      .then(token => {
-        setThumbnailTokensByPlaybackId(prev => ({ ...prev, [playbackId]: token }));
-      })
-      .catch(err => {
-        console.error('Failed to fetch Mux thumbnail token', err);
-        setThumbnailErrorsByPlaybackId(prev => ({ ...prev, [playbackId]: true }));
-      });
-  };
-
   const onMediaUploadHandler = (file, form) => {
     const { listingImageConfig, onImageUpload, onVideoUploaded } = props;
     if (!file) return;
@@ -329,7 +310,7 @@ export const EditListingPhotosForm = props => {
       });
       setVideoUploadError(null);
 
-      getMuxUploadUrl({ playback_policy: ['signed'] })
+      getMuxUploadUrl({})
         .then(uploadData => {
           if (!uploadData?.url || !uploadData?.id) {
             throw new Error('Failed to get upload URL from server');
@@ -365,8 +346,9 @@ export const EditListingPhotosForm = props => {
                   name: file.name,
                   uploading: false,
                   progress: 100,
+                  duration: assetData.duration,
                 });
-                prefetchThumbnailToken(playbackId);
+
                 if (onVideoUploaded) {
                   onVideoUploaded(assetId);
                 }
@@ -464,11 +446,7 @@ export const EditListingPhotosForm = props => {
         useEffect(() => {
           if (!mediaMode) return;
 
-          mediaGallery
-            .filter(item => item.type === 'video' && !item.uploading && item.playbackId)
-            .forEach(item => {
-              prefetchThumbnailToken(item.playbackId);
-            });
+          mediaGallery.filter(item => item.type === 'video' && !item.uploading && item.playbackId);
         }, [mediaMode, mediaGallery, thumbnailTokensByPlaybackId, thumbnailErrorsByPlaybackId]);
 
         const onDragEnd = event => {
@@ -623,6 +601,7 @@ export const EditListingPhotosForm = props => {
                 }}
                 onManageDisableScrolling={onManageDisableScrolling}
                 videoTitle={activeVideoTitle}
+                skipJwt={true}
               />
             )}
 

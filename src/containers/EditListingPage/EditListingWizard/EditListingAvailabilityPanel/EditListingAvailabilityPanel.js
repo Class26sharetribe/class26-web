@@ -183,6 +183,9 @@ const EditListingAvailabilityPanel = props => {
   const [isEditPlanModalOpen, setIsEditPlanModalOpen] = useState(false);
   const [isEditExceptionsModalOpen, setIsEditExceptionsModalOpen] = useState(false);
   const [valuesFromLastSubmit, setValuesFromLastSubmit] = useState(null);
+  const [totalSessions, setTotalSessions] = useState(
+    listing?.attributes?.publicData?.totalSessions ?? 1
+  );
 
   const firstDayOfWeek = config.localization.firstDayOfWeek;
   const classes = classNames(rootClassName || css.root, className);
@@ -212,6 +215,14 @@ const EditListingAvailabilityPanel = props => {
   const initialPlanValues = valuesFromLastSubmit
     ? valuesFromLastSubmit
     : createInitialPlanValues(availabilityPlan);
+
+  const handleNextTab = () => {
+    onSubmit({ publicData: { totalSessions } }).then(() => {
+      if (!isPublished) {
+        onNextTab();
+      }
+    });
+  };
 
   const handlePlanSubmit = values => {
     setValuesFromLastSubmit(values);
@@ -286,6 +297,37 @@ const EditListingAvailabilityPanel = props => {
         <FormattedMessage id={panelHeadingProps.id} values={{ ...panelHeadingProps.values }} />
       </H3>
 
+      <div className={css.totalSessionsWrapper}>
+        <label className={css.totalSessionsLabel}>
+          <FormattedMessage id="EditListingAvailabilityPanel.totalSessionsLabel" />
+        </label>
+        <div className={css.totalSessionsStepper}>
+          <button
+            type="button"
+            className={css.stepperButton}
+            onClick={() => setTotalSessions(v => Math.max(1, v - 1))}
+            aria-label="Decrease sessions"
+          >
+            &minus;
+          </button>
+          <span className={css.stepperValue}>{totalSessions}</span>
+          <button
+            type="button"
+            className={css.stepperButton}
+            onClick={() => setTotalSessions(v => v + 1)}
+            aria-label="Increase sessions"
+          >
+            +
+          </button>
+        </div>
+        <p className={css.totalSessionsHelp}>
+          <FormattedMessage id="EditListingAvailabilityPanel.totalSessionsHelp" />
+        </p>
+      </div>
+
+      <span>
+        <h4>Availability</h4>
+      </span>
       <div className={css.planInfo}>
         {!hasAvailabilityPlan ? (
           <p>
@@ -347,15 +389,14 @@ const EditListingAvailabilityPanel = props => {
         </p>
       ) : null}
 
-      {!isPublished ? (
-        <Button
-          className={css.goToNextTabButton}
-          onClick={onNextTab}
-          disabled={!hasAvailabilityPlan}
-        >
-          {submitButtonText}
-        </Button>
-      ) : null}
+      <Button
+        className={css.goToNextTabButton}
+        onClick={handleNextTab}
+        disabled={!hasAvailabilityPlan}
+        inProgress={updateInProgress}
+      >
+        {submitButtonText}
+      </Button>
 
       {onManageDisableScrolling && isEditPlanModalOpen ? (
         <Modal

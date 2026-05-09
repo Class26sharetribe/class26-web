@@ -53,6 +53,7 @@ const sanitizeMediaGallery = mediaGallery =>
             assetId: item.assetId,
             playbackId: item.playbackId,
             name: item.name,
+            duration: item.duration,
           }
     );
 

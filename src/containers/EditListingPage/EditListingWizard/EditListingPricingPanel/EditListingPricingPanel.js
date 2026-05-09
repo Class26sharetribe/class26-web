@@ -42,12 +42,13 @@ const getInitialValues = props => {
   // Note: publicData contains priceVariationsEnabled if listing is created with priceVariations enabled.
   const isPriceVariationsInUse = isPriceVariationsEnabled(publicData, listingTypeConfig);
 
-  return unitType === FIXED || isPriceVariationsInUse
-    ? {
-        ...getInitialValuesForPriceVariants(props, isPriceVariationsInUse),
-        ...getInitialValuesForStartTimeInterval(props),
-      }
-    : { price: listing?.attributes?.price };
+  return { price: listing?.attributes?.price };
+  // return unitType === FIXED || isPriceVariationsInUse
+  //   ? {
+  //       ...getInitialValuesForPriceVariants(props, isPriceVariationsInUse),
+  //       ...getInitialValuesForStartTimeInterval(props),
+  //     }
+  //   : { price: listing?.attributes?.price };
 };
 
 // This is needed to show the listing's price consistently over XHR calls.
@@ -107,6 +108,7 @@ const EditListingPricingPanel = props => {
     errors,
     updatePageTitle: UpdatePageTitle,
     intl,
+    commission,
   } = props;
 
   const classes = classNames(rootClassName || css.root, className);
@@ -157,6 +159,21 @@ const EditListingPricingPanel = props => {
       <H3 as="h1">
         <FormattedMessage id={panelHeadingProps.id} values={{ ...panelHeadingProps.values }} />
       </H3>
+
+      <p className={css.description}>
+        <FormattedMessage
+          id="EditListingPricingAndStockPanel.description"
+          values={{
+            commission: commission?.providerCommission?.percentage ?? 20,
+            stripeLink: (
+              <a href="https://stripe.com/nl/pricing" target="_blank" rel="noopener noreferrer">
+                <FormattedMessage id="EditListingPricingAndStockPanel.stripeFees" />
+              </a>
+            ),
+          }}
+        />
+      </p>
+
       {priceCurrencyValid ? (
         <EditListingPricingForm
           className={css.form}
@@ -174,27 +191,40 @@ const EditListingPricingPanel = props => {
               // This is a tentative approach to contain logic in one place.
               // We might remove or improve this setup in the future.
 
-              // This adds startTimeInterval to publicData
-              const startTimeIntervalChanges = handleSubmitValuesForStartTimeInterval(
-                values,
-                publicDataUpdates
-              );
-              // This adds lowest price variant to the listing.attributes.price and priceVariants to listing.attributes.publicData
-              const priceVariantChanges = handleSubmitValuesForPriceVariants(
-                values,
-                publicDataUpdates,
-                unitType,
-                listingTypeConfig
-              );
               updateValues = {
-                ...priceVariantChanges,
-                ...startTimeIntervalChanges,
+                price,
                 publicData: {
-                  priceVariationsEnabled: isPriceVariationsInUse,
-                  ...startTimeIntervalChanges.publicData,
-                  ...priceVariantChanges.publicData,
+                  startTimeInterval: 'hour',
+                  priceVariants: [
+                    {
+                      bookingLengthInMinutes: 60,
+                      priceInSubunits: price.amount,
+                    },
+                  ],
                 },
               };
+
+              // This adds startTimeInterval to publicData
+              // const startTimeIntervalChanges = handleSubmitValuesForStartTimeInterval(
+              //   newVal,
+              //   publicDataUpdates
+              // );
+              // // This adds lowest price variant to the listing.attributes.price and priceVariants to listing.attributes.publicData
+              // const priceVariantChanges = handleSubmitValuesForPriceVariants(
+              //   newVal,
+              //   publicDataUpdates,
+              //   unitType,
+              //   listingTypeConfig
+              // );
+              // updateValues = {
+              //   ...priceVariantChanges,
+              //   ...startTimeIntervalChanges,
+              //   publicData: {
+              //     priceVariationsEnabled: isPriceVariationsInUse,
+              //     ...startTimeIntervalChanges.publicData,
+              //     ...priceVariantChanges.publicData,
+              //   },
+              // };
             } else {
               const priceVariationsEnabledMaybe = isBooking
                 ? {

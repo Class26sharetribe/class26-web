@@ -206,7 +206,7 @@
   "EditListingAvailabilityPanel.WeeklyCalendar.screenreader.weekNavigation": "{direction, select, next {Next week} other {Previous week}}",
   "EditListingAvailabilityPanel.WeeklyCalendar.seats": "{seats, plural, one {{seats} seat} other {{seats} seats}}",
   "EditListingAvailabilityPanel.addException": "Add an availability exception",
-  "EditListingAvailabilityPanel.availabilityPlanInfo": "When is this listing available for booking? Start by setting a default weekly schedule. After that you can adjust the availability for specific dates.",
+  "EditListingAvailabilityPanel.availabilityPlanInfo": "Set your availability for the introductory meeting only. Students will book this slot to kick off their coaching journey. Upcoming sessions within this class will be arranged privately between you and the student after the first meeting.",
   "EditListingAvailabilityPanel.createListingTitle": "Availability",
   "EditListingAvailabilityPanel.editAvailabilityPlan": "Edit default schedule",
   "EditListingAvailabilityPanel.exceptionAvailable": "Available",
@@ -365,7 +365,7 @@
   "EditListingWizard.default-booking.new.saveAvailability": "Next",
   "EditListingWizard.default-booking.new.saveDetails": "Next",
   "EditListingWizard.default-booking.new.saveLocation": "Next",
-  "EditListingWizard.default-booking.new.savePhotos": "Publish listing",
+  "EditListingWizard.default-booking.new.savePhotos": "Next",
   "EditListingWizard.default-booking.new.savePricing": "Next",
   "EditListingWizard.default-booking.new.saveStyle": "Publish listing",
   "EditListingWizard.default-inquiry.new.saveDetails": "Next",
@@ -1635,5 +1635,14 @@
   "EditListingReadyForm.previewListing": "Preview Class",
   "EditListingContentPanel.classStructureTitle": "Class Structure",
   "EditListingContentPanel.classStructureDescription": "Organise your class into Modules (thematic sections) and Lessons (individual videos or resources). Start by creating a Module, then add Lessons inside it. You can drag and drop to reorder or move content anytime.",
-  "EditListingContentPanel.videoClassTitle": "Edit the class structure of {listingTitle}"
+  "EditListingContentPanel.videoClassTitle": "Edit the class structure of {listingTitle}",
+  "EditListingContentForm.clickToUpload": "Click to upload",
+  "EditListingContentForm.assetTypes": "PDF, DOCX, XLS, PPT, ZIP, JPG, PNG (Max 2 GB per file)",
+  "EditListingContentForm.assetUploadFailed": "Upload failed. Please try again.",
+  "EditListingContentForm.deleteAsset": "Delete {name}",
+  "EditListingContentForm.viewAsset": "View asset",
+  "EditListingAvailabilityPanel.totalSessionsLabel": "Total sessions included",
+  "EditListingAvailabilityPanel.totalSessionsHelp": "This includes the introductory meeting plus future sessions.",
+  "EditListingWizard.default-booking.new.saveFaq": "Next",
+  "EditListingWizard.default-booking.new.saveReady": "Submit for Approval"
 }

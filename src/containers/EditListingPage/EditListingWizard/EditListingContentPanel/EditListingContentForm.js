@@ -21,7 +21,13 @@ import classNames from 'classnames';
 
 // Import configs and util modules
 import { FormattedMessage, useIntl } from '../../../../util/reactIntl';
-import { getMuxAsset, getMuxJwtToken, getMuxUploadUrl } from '../../../../util/api';
+import {
+  generatePresignedUrl,
+  getSecuredUrl,
+  getMuxAsset,
+  getMuxJwtToken,
+  getMuxUploadUrl,
+} from '../../../../util/api';
 
 // Import shared components
 import {
@@ -34,6 +40,7 @@ import {
   InlineTextButton,
   IconPlay,
   IconPlaySolid,
+  IconSpinner,
   IconTrash,
   IconVideo,
   IconZap,
@@ -56,8 +63,10 @@ const formatFileSize = size => {
   if (!size) {
     return '';
   }
-  const sizeInMb = size / (1024 * 1024);
-  return `${Math.round(sizeInMb)} Mb`;
+  if (size < 1024 * 1024) {
+    return `${(size / 1024).toFixed(1)} KB`;
+  }
+  return `${(size / (1024 * 1024)).toFixed(1)} MB`;
 };
 
 const formatDuration = duration => {
@@ -83,7 +92,7 @@ const pollMuxAsset = async uploadId => {
   for (let i = 0; i < MUX_ASSET_POLL_ATTEMPTS; i += 1) {
     try {
       const assetData = await getMuxAsset({ uploadId });
-      if (assetData?.asset_id && assetData?.playback_id) {
+      if (assetData?.state === 'completed') {
         return assetData;
       }
     } catch (e) {
@@ -229,7 +238,7 @@ const VideoUploadField = props => {
             onChange={handleFileChange}
           />
         </label>
-        <button className={css.lessonAssetButton} type="button" disabled>
+        {/* <button className={css.lessonAssetButton} type="button" disabled>
           <span className={css.assetIcon}>
             <IconFilePlus />
           </span>
@@ -244,7 +253,7 @@ const VideoUploadField = props => {
           <span>
             <FormattedMessage id="EditListingContentForm.quiz" />
           </span>
-        </button>
+        </button> */}
       </div>
 
       {hasVideo ? (
@@ -886,9 +895,281 @@ const CourseBuilder = props => {
   );
 };
 
-const GenericContent = () => (
-  <FieldTextInput id="description" name="description" type="textarea" className={css.field} />
-);
+const ACCEPTED_ASSET_TYPES =
+  'image/jpeg,image/jpg,image/png,image/gif,image/webp,image/svg+xml,audio/mpeg,audio/mp3,audio/wav,audio/ogg,audio/aac,audio/flac,audio/x-m4a,application/pdf,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip,application/zip';
+
+const DigitalAssetUploader = props => {
+  const { assets, onChange, onUploadingChange, listingId, disabled } = props;
+  const intl = useIntl();
+  const fileInputRef = useRef(null);
+  // uploadingFiles: [{ id, name, size, progress, error }]
+  const [uploadingFiles, setUploadingFiles] = useState([]);
+
+  const handleFiles = async files => {
+    if (!files?.length) return;
+
+    const fileArray = Array.from(files);
+
+    const entries = fileArray.map((f, i) => ({
+      id: `uploading-${Date.now()}-${i}`,
+      name: f.name,
+      size: f.size,
+      progress: 0,
+      error: false,
+    }));
+
+    setUploadingFiles(prev => [...prev, ...entries]);
+    onUploadingChange(true);
+
+    try {
+      const response = await generatePresignedUrl({
+        storagePath: `listings/${listingId}`,
+        files: fileArray.map(f => ({ name: f.name, type: f.type })),
+      });
+
+      if (!response.success || !response.data?.length) {
+        throw new Error('Failed to get upload URLs');
+      }
+
+      const uploaded = await Promise.all(
+        response.data.map(
+          (urlData, i) =>
+            new Promise((resolve, reject) => {
+              const xhr = new XMLHttpRequest();
+              xhr.open('PUT', urlData.url);
+              xhr.setRequestHeader('Content-Type', fileArray[i].type);
+
+              xhr.upload.onprogress = e => {
+                if (e.lengthComputable) {
+                  const pct = Math.round((e.loaded / e.total) * 100);
+
+                  setUploadingFiles(prev =>
+                    prev.map(f => (f.id === entries[i].id ? { ...f, progress: pct } : f))
+                  );
+                }
+              };
+
+              xhr.onload = () => {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                  setUploadingFiles(prev =>
+                    prev.map(f => (f.id === entries[i].id ? { ...f, progress: 100 } : f))
+                  );
+                  resolve({
+                    key: urlData.key,
+                    name: fileArray[i].name,
+                    type: fileArray[i].type,
+                    size: fileArray[i].size,
+                  });
+                } else {
+                  reject(new Error('Upload failed'));
+                }
+              };
+
+              xhr.onerror = () => reject(new Error('Network error'));
+              xhr.send(fileArray[i]);
+            })
+        )
+      );
+
+      // Move from uploading → saved
+      setUploadingFiles(prev => prev.filter(f => !entries.find(e => e.id === f.id)));
+      onChange([...(assets || []), ...uploaded]);
+    } catch (err) {
+      console.error('Digital asset upload error:', err);
+      setUploadingFiles(prev =>
+        prev.map(f => (entries.find(e => e.id === f.id) ? { ...f, error: true, progress: 0 } : f))
+      );
+    } finally {
+      onUploadingChange(false);
+    }
+  };
+
+  const handleInputChange = e => {
+    const files = Array.from(e.target.files).filter(f => !f.type.startsWith('video/'));
+    handleFiles(files);
+    e.target.value = '';
+  };
+
+  const dismissError = id => {
+    setUploadingFiles(prev => prev.filter(f => f.id !== id));
+  };
+
+  const removeAsset = key => {
+    onChange((assets || []).filter(a => a.key !== key));
+  };
+
+  const viewAsset = async key => {
+    setLoadingKey(key);
+    try {
+      const result = await getSecuredUrl(key);
+      if (result?.data?.url) {
+        window.open(result.data.url, '_blank', 'noopener,noreferrer');
+      }
+    } catch (err) {
+      console.error('Failed to fetch secured URL:', err);
+    } finally {
+      setLoadingKey(null);
+    }
+  };
+
+  const allItems = assets || [];
+  const isUploading = uploadingFiles.some(f => !f.error);
+  const [loadingKey, setLoadingKey] = useState(null);
+
+  return (
+    <div className={css.assetUploader}>
+      <button
+        type="button"
+        className={css.uploadZone}
+        onClick={() => fileInputRef.current?.click()}
+        disabled={disabled || isUploading}
+      >
+        <span className={css.uploadZoneIconWrapper}>
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polyline points="16 16 12 12 8 16" />
+            <line x1="12" y1="12" x2="12" y2="21" />
+            <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" />
+          </svg>
+        </span>
+        <span className={css.uploadZoneLabel}>
+          <FormattedMessage id="EditListingContentForm.clickToUpload" />
+        </span>
+        <span className={css.uploadZoneHint}>
+          <FormattedMessage id="EditListingContentForm.assetTypes" />
+        </span>
+      </button>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept={ACCEPTED_ASSET_TYPES}
+        multiple
+        className={css.fileInput}
+        onChange={handleInputChange}
+        disabled={disabled || isUploading}
+      />
+
+      {uploadingFiles.length > 0 || allItems.length > 0 ? (
+        <ul className={css.assetList}>
+          {/* In-progress / errored uploads */}
+          {uploadingFiles.map(f => (
+            <li key={f.id} className={css.assetItem}>
+              <div className={css.assetItemBody}>
+                <div className={css.assetItemInfo}>
+                  <span className={css.assetItemName}>{f.name}</span>
+                  <div className={css.assetProgressBar}>
+                    {f.error ? (
+                      <div className={css.progressBarFillError} style={{ width: '100%' }} />
+                    ) : (
+                      <div className={css.progressBarFill} style={{ width: `${f.progress}%` }} />
+                    )}
+                  </div>
+                  <span className={css.assetItemSize}>
+                    {f.error ? (
+                      <FormattedMessage id="EditListingContentForm.assetUploadFailed" />
+                    ) : (
+                      formatFileSize(f.size)
+                    )}
+                  </span>
+                </div>
+                <div className={css.assetItemActions}>
+                  {f.error ? (
+                    <button
+                      type="button"
+                      className={css.assetItemDelete}
+                      onClick={() => dismissError(f.id)}
+                      aria-label="Dismiss"
+                    >
+                      <IconTrash className={css.deleteIcon} />
+                    </button>
+                  ) : null}
+                </div>
+              </div>
+            </li>
+          ))}
+
+          {/* Saved assets */}
+          {allItems.map(asset => (
+            <li key={asset.key} className={css.assetItem}>
+              <div className={css.assetItemBody}>
+                <div className={css.assetItemInfo}>
+                  <span className={css.assetItemName}>{asset.name}</span>
+                  {asset.size ? (
+                    <span className={css.assetItemSize}>{formatFileSize(asset.size)}</span>
+                  ) : null}
+                </div>
+                <div className={css.assetItemActions}>
+                  <button
+                    type="button"
+                    className={css.assetItemView}
+                    onClick={() => viewAsset(asset.key)}
+                    disabled={disabled || loadingKey === asset.key}
+                    aria-label={intl.formatMessage({ id: 'EditListingContentForm.viewAsset' })}
+                  >
+                    {loadingKey === asset.key ? (
+                      <IconSpinner className={css.viewSpinner} />
+                    ) : (
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    className={css.assetItemDelete}
+                    onClick={() => removeAsset(asset.key)}
+                    disabled={disabled}
+                    aria-label={intl.formatMessage(
+                      { id: 'EditListingContentForm.deleteAsset' },
+                      { name: asset.name }
+                    )}
+                  >
+                    <IconTrash className={css.deleteIcon} />
+                  </button>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </div>
+  );
+};
+
+const GenericContent = props => {
+  const { listingId, onUploadingChange, disabled } = props;
+  return (
+    <Field name="digitalAssets">
+      {({ input }) => (
+        <DigitalAssetUploader
+          assets={input.value || []}
+          onChange={input.onChange}
+          onUploadingChange={onUploadingChange}
+          listingId={listingId}
+          disabled={disabled}
+        />
+      )}
+    </Field>
+  );
+};
 
 /**
  * The EditListingContentForm component.
@@ -904,6 +1185,7 @@ export const EditListingContentForm = props => {
   return (
     <FinalForm
       {...props}
+      keepDirtyOnReinitialize
       render={formRenderProps => {
         const {
           className,
@@ -915,11 +1197,14 @@ export const EditListingContentForm = props => {
           updateInProgress,
           isVideoCourse,
           onVideoUploaded,
+          listingId,
+          values,
         } = formRenderProps;
 
         const { publishListingError, updateListingError } = fetchErrors || {};
         const submitReady = updated || ready;
         const submitInProgress = updateInProgress;
+        const content = values?.courseModules || values?.digitalAssets || [];
         const submitDisabled = submitInProgress || uploading;
         const classes = classNames(css.root, className);
 
@@ -938,7 +1223,11 @@ export const EditListingContentForm = props => {
                 )}
               </Field>
             ) : (
-              <GenericContent />
+              <GenericContent
+                listingId={listingId}
+                onUploadingChange={setUploading}
+                disabled={submitDisabled}
+              />
             )}
 
             <PublishListingError error={publishListingError} />
@@ -948,7 +1237,7 @@ export const EditListingContentForm = props => {
               className={css.submitButton}
               inProgress={submitInProgress}
               ready={submitReady}
-              disabled={submitDisabled}
+              disabled={submitDisabled || content.length === 0}
               type="submit"
             >
               {saveActionMsg}

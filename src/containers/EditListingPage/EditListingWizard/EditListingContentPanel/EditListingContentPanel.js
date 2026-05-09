@@ -16,9 +16,9 @@ import css from './EditListingContentPanel.module.css';
 const getInitialValues = params => {
   const { publicData = {}, privateData = {} } = params.listing.attributes || {};
   const isVideoCourse = publicData.listingType === 'video-course';
-  const { description = '' } = publicData;
+  const { courseModules = [], digitalAssets = [] } = publicData;
 
-  return isVideoCourse ? { courseModules: privateData.courseModules || [] } : { description };
+  return isVideoCourse ? { courseModules } : { digitalAssets };
 };
 
 const courseStructureInfo = courseModules => {
@@ -124,20 +124,20 @@ const EditListingContentPanel = props => {
         isVideoCourse={isVideoCourse}
         onManageDisableScrolling={props.onManageDisableScrolling}
         onSubmit={values => {
-          const { description, courseModules = [] } = values;
+          const { digitalAssets = [], courseModules = [] } = values;
           const finalVideoAssetIds = courseVideoAssetIds(courseModules);
           const removedVideoAssetIds = Array.from(
             new Set(initialVideoAssetIds.concat(uploadedVideoAssetIds.current))
           ).filter(assetId => !finalVideoAssetIds.includes(assetId));
           const updateValues = isVideoCourse
             ? {
-                privateData: { courseModules },
                 publicData: {
                   courseStructureInfo: courseStructureInfo(courseModules),
+                  courseModules,
                 },
               }
             : {
-                publicData: { description },
+                publicData: { digitalAssets },
               };
           return onSubmit(updateValues).then(response => {
             if (isVideoCourse) {
@@ -157,6 +157,7 @@ const EditListingContentPanel = props => {
             return response;
           });
         }}
+        listingId={listing?.id?.uuid}
         onVideoUploaded={assetId => {
           uploadedVideoAssetIds.current = uploadedVideoAssetIds.current.concat(assetId);
         }}
