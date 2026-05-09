@@ -205,6 +205,10 @@ propTypes.user = shape({
   profileImage: propTypes.image,
 });
 
+export const LISTING_TYPE_INDIVIDUAL_COACHING = 'individual-coaching';
+export const LISTING_TYPE_GROUP_COACHING = 'group-coaching';
+export const LISTING_TYPE_VIDEO_COURSE = 'video-course';
+
 export const LISTING_STATE_DRAFT = 'draft';
 export const LISTING_STATE_PENDING_APPROVAL = 'pendingApproval';
 export const LISTING_STATE_PUBLISHED = 'published';

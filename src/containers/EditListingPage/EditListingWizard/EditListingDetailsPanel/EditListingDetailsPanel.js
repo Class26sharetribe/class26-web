@@ -6,6 +6,7 @@ import { FormattedMessage } from '../../../../util/reactIntl';
 import {
   EXTENDED_DATA_SCHEMA_TYPES,
   LISTING_STATE_DRAFT,
+  LISTING_TYPE_GROUP_COACHING,
   SCHEMA_TYPE_ENUM,
   SCHEMA_TYPE_MULTI_ENUM,
 } from '../../../../util/types';
@@ -24,6 +25,7 @@ import { H3, ListingLink } from '../../../../components';
 import ErrorMessage from './ErrorMessage';
 import EditListingDetailsForm from './EditListingDetailsForm';
 import css from './EditListingDetailsPanel.module.css';
+import { defaultTimeZone } from '../EditListingAvailabilityPanel/EditListingAvailabilityPanel';
 
 /**
  * Get listing configuration. For existing listings, it is stored to publicData.
@@ -419,8 +421,21 @@ const EditListingDetailsPanel = props => {
               nestedCategories,
               listingFields
             );
+
+            let availabilityPlanMaybe = {};
+            if (listingType === LISTING_TYPE_GROUP_COACHING) {
+              availabilityPlanMaybe = {
+                availabilityPlan: {
+                  type: 'availability-plan/time',
+                  timezone: defaultTimeZone(),
+                  entries: [],
+                },
+              };
+            }
+
             // New values for listing attributes
             const updateValues = {
+              ...availabilityPlanMaybe,
               title: title.trim(),
               description,
               publicData: {

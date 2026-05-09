@@ -23,6 +23,12 @@ import IconCheckmark from '../IconCheckmark/IconCheckmark';
 import { getListingCardTranslations, resolveCourseCardContent } from './ListingCard.helpers';
 
 import css from './ListingCard.module.css';
+import { formatCourseDuration } from '../../util/courseHelpers';
+import {
+  LISTING_TYPE_INDIVIDUAL_COACHING,
+  LISTING_TYPE_GROUP_COACHING,
+  LISTING_TYPE_VIDEO_COURSE,
+} from '../../util/types';
 
 const LazyImage = lazyLoadWithDimensions(ResponsiveImage, { loadAfterInitialRendering: 3000 });
 
@@ -117,12 +123,17 @@ const ListingCardCourse = props => {
   const ImageComponent = lazyLoadImage ? LazyImage : ResponsiveImage;
 
   const categories = config.categoryConfiguration?.categories || [];
-  const categoryLevel1Value = publicData?.categoryLevel1;
+  const {
+    categoryLevel1: categoryLevel1Value,
+    totalSessions,
+    listingType,
+    courseModules,
+  } = publicData;
   const categoryLevel1Label = categoryLevel1Value
     ? categories.find(c => c.id === categoryLevel1Value)?.name || categoryLevel1Value
     : null;
-
   const authorId = author?.id?.uuid;
+  const durationText = !!courseModules ? formatCourseDuration(courseModules) : null;
 
   const onSaveClick = e => {
     e.preventDefault();
@@ -205,7 +216,23 @@ const ListingCardCourse = props => {
               />
             </svg>
 
-            <span className={css.courseHighlightText}>{highlight}</span>
+            <span className={css.courseHighlightText}>
+              {listingType === LISTING_TYPE_INDIVIDUAL_COACHING ? (
+                <FormattedMessage
+                  id="ListingCard.highlightIndividualCoaching"
+                  values={{ totalSessions }}
+                />
+              ) : listingType === LISTING_TYPE_GROUP_COACHING ? (
+                <FormattedMessage
+                  id="ListingCard.highlightGroupCoaching"
+                  values={{ totalSessions }}
+                />
+              ) : listingType === LISTING_TYPE_VIDEO_COURSE ? (
+                <FormattedMessage id="ListingCard.highlightVideoCourse" values={{ durationText }} />
+              ) : (
+                <FormattedMessage id="ListingCard.highlightDefault" />
+              )}
+            </span>
           </div>
 
           <p className={css.courseDescription}>{description}</p>

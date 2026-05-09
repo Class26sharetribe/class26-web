@@ -161,7 +161,7 @@ export const EditListingPricingForm = props => (
               autoFocus={autoFocus}
               label={intl.formatMessage(
                 { id: 'EditListingPricingForm.pricePerProduct' },
-                { unitType }
+                { unitType: '' }
               )}
               placeholder={intl.formatMessage({
                 id: 'EditListingPricingForm.priceInputPlaceholder',

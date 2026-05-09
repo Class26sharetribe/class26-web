@@ -276,6 +276,7 @@ const tabCompleted = (tab, listing, config) => {
     cardStyle,
     digitalAssets,
     courseModules,
+    totalSessions,
   } = publicData || {};
   const listingTypeConfig = config.listing.listingTypes.find(
     config => config.listingType === listingType
@@ -306,7 +307,7 @@ const tabCompleted = (tab, listing, config) => {
     case LOCATION:
       return !!(geolocation && publicData?.location?.address);
     case AVAILABILITY:
-      return !!availabilityPlan;
+      return  (!!availabilityPlan && totalSessions > 0)
     case PHOTOS:
       return images && images.length > 0;
     case STYLE:
@@ -320,7 +321,7 @@ const tabCompleted = (tab, listing, config) => {
       return (
         (Array.isArray(digitalAssets) && digitalAssets?.length > 0) ||
         (Array.isArray(courseModules) && courseModules?.length > 0) ||
-        !!availabilityPlan
+        (!!availabilityPlan && totalSessions > 0)
       );
     case READY:
       return true;
