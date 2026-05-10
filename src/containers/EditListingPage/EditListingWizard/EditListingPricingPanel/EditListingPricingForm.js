@@ -141,7 +141,7 @@ export const EditListingPricingForm = props => (
         <Form onSubmit={handleSubmit} className={classes}>
           <ErrorMessages fetchErrors={fetchErrors} />
 
-          {isUsingPriceVariants ? (
+          {false ? (
             <BookingPriceVariants
               formId={formId}
               formApi={formApi}
@@ -161,7 +161,7 @@ export const EditListingPricingForm = props => (
               autoFocus={autoFocus}
               label={intl.formatMessage(
                 { id: 'EditListingPricingForm.pricePerProduct' },
-                { unitType }
+                { unitType: '' }
               )}
               placeholder={intl.formatMessage({
                 id: 'EditListingPricingForm.priceInputPlaceholder',
@@ -171,7 +171,7 @@ export const EditListingPricingForm = props => (
             />
           )}
 
-          {isFixedLengthBooking ? (
+          {false ? (
             <StartTimeInterval
               name="startTimeInterval"
               idPrefix={`${formId}_startTimeInterval`}

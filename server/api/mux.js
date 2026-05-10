@@ -5,12 +5,14 @@ const mux = getMux();
 const marketplaceUrl = process.env.REACT_APP_MARKETPLACE_ROOT_URL;
 
 const getMuxUploadUrl = async (req, res) => {
+  const { playback_policy = ['public'] } = req.body || {};
+
   try {
     const upload = await mux.video.uploads.create({
       // Set the CORS origin to your application.
       cors_origin: marketplaceUrl,
       new_asset_settings: {
-        playback_policy: ['signed'],
+        playback_policy,
       },
     });
 
@@ -32,6 +34,7 @@ const getMuxAsset = async (req, res) => {
     res.status(200).json({
       playback_id: assetRes.playback_ids[0].id,
       asset_id: assetRes.id,
+      duration: assetRes.duration,
       state: assetRes.progress.state,
     });
   } catch (error) {
@@ -42,6 +45,10 @@ const getMuxAsset = async (req, res) => {
 const deleteMuxAsset = async (req, res) => {
   try {
     const { assetId } = req.body;
+    if (!assetId) {
+      return res.status(400).json({ error: 'assetId is required' });
+    }
+
     await mux.video.assets.delete(assetId);
     res.status(200).json({ success: true });
   } catch (error) {
@@ -57,7 +64,7 @@ const deleteMuxAsset = async (req, res) => {
  */
 const getMuxJwtToken = async (req, res) => {
   try {
-    const { playbackId } = req.query;
+    const { playbackId, type = 'video' } = req.query;
     const keyId = process.env.MUX_SIGNING_KEY_ID;
     const keySecret = process.env.MUX_SIGNING_KEY_SECRET;
 
@@ -73,7 +80,7 @@ const getMuxJwtToken = async (req, res) => {
       keyId,
       keySecret,
       expiration: '1h',
-      type: 'video',
+      type,
     });
 
     return res.status(200).json({ token });
@@ -86,5 +93,5 @@ module.exports = {
   getMuxUploadUrl,
   getMuxAsset,
   getMuxJwtToken,
-  // deleteMuxAsset,
+  deleteMuxAsset,
 };

@@ -28,25 +28,43 @@ import css from './MuxPlayerModal.module.css';
  * @param {Object}   props
  * @param {string}   props.id                        - Unique id passed to Modal (required for scroll management)
  * @param {string}   [props.playbackId]              - Mux signed playback ID
+ * @param {string}   [props.videoTitle]              - Optional video caption shown below the player
  * @param {boolean}  props.isOpen                    - Whether the modal is visible
  * @param {Function} props.onClose                   - Called when the modal is closed
  * @param {Function} props.onManageDisableScrolling  - Required by Modal to manage body scroll
+ * @param {boolean}  [props.skipJwt]                 - When true the video is public; skip JWT fetch and play without tokens
  * @returns {JSX.Element}
  */
 const MuxPlayerModal = props => {
-  const { id = 'mux-player-modal', playbackId, isOpen, onClose, onManageDisableScrolling } = props;
+  const {
+    id = 'mux-player-modal',
+    playbackId,
+    videoTitle,
+    isOpen,
+    onClose,
+    onManageDisableScrolling,
+    skipJwt = false,
+  } = props;
   const intl = useIntl();
 
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fetch a new JWT token whenever the modal opens with a new playbackId
+  // Fetch a new JWT token whenever the modal opens with a new playbackId.
+  // When skipJwt is true the video is public – skip the fetch entirely.
   useEffect(() => {
     if (!isOpen || !playbackId) {
       // Reset state when closed
       setToken(null);
       setError(null);
+      return;
+    }
+
+    if (skipJwt) {
+      setToken(null);
+      setError(null);
+      setLoading(false);
       return;
     }
 
@@ -74,7 +92,7 @@ const MuxPlayerModal = props => {
     return () => {
       cancelled = true;
     };
-  }, [isOpen, playbackId]);
+  }, [isOpen, playbackId, skipJwt]);
 
   return (
     <Modal
@@ -83,7 +101,6 @@ const MuxPlayerModal = props => {
       onClose={onClose}
       onManageDisableScrolling={onManageDisableScrolling}
       usePortal
-      closeButtonMessage={intl.formatMessage({ id: 'MuxPlayerModal.close' })}
     >
       <div className={css.content}>
         {loading ? (
@@ -92,16 +109,17 @@ const MuxPlayerModal = props => {
           </div>
         ) : error ? (
           <p className={css.error}>{error}</p>
-        ) : token && playbackId ? (
+        ) : (skipJwt || token) && playbackId ? (
           <MuxPlayer
             className={css.player}
             playbackId={playbackId}
-            tokens={{ playback: token }}
+            {...(!skipJwt && token ? { tokens: { playback: token } } : {})}
             streamType="on-demand"
             autoPlay={false}
             controls
           />
         ) : null}
+        {videoTitle && !loading && !error ? <p className={css.videoCaption}>{videoTitle}</p> : null}
       </div>
     </Modal>
   );

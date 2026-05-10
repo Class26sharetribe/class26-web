@@ -419,6 +419,7 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
       include: ['author', 'images'],
       'fields.listing': [
         'title',
+        'description',
         'geolocation',
         'price',
         'deleted',
@@ -426,7 +427,9 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
         'publicData.listingType',
         'publicData.transactionProcessAlias',
         'publicData.unitType',
-        'publicData.cardStyle',
+        'publicData.categoryLevel1',
+        'publicData.totalSessions',
+        'publicData.courseModules',
         // These help rendering of 'purchase' listings,
         // when transitioning from search page to listing page
         'publicData.pickupEnabled',

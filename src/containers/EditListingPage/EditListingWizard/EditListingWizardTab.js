@@ -18,6 +18,9 @@ import EditListingPhotosPanel from './EditListingPhotosPanel/EditListingPhotosPa
 import EditListingPricingPanel from './EditListingPricingPanel/EditListingPricingPanel';
 import EditListingPricingAndStockPanel from './EditListingPricingAndStockPanel/EditListingPricingAndStockPanel';
 import EditListingStylePanel from './EditListingStylePanel/EditListingStylePanel';
+import EditListingContentPanel from './EditListingContentPanel/EditListingContentPanel';
+import EditListingFaqPanel from './EditListingFaqPanel/EditListingFaqPanel';
+import EditListingReadyPanel from './EditListingReadyPanel/EditListingReadyPanel';
 
 import css from './EditListingWizardTab.module.css';
 
@@ -29,6 +32,10 @@ export const LOCATION = 'location';
 export const AVAILABILITY = 'availability';
 export const PHOTOS = 'photos';
 export const STYLE = 'style';
+export const CONTENT = 'content';
+export const FAQ = 'faq';
+export const READY = 'ready';
+const MIXED_MEDIA_LISTING_TYPES = ['video-course', 'digital-download'];
 
 // EditListingWizardTab component supports these tabs
 export const SUPPORTED_TABS = [
@@ -40,6 +47,9 @@ export const SUPPORTED_TABS = [
   AVAILABILITY,
   PHOTOS,
   STYLE,
+  CONTENT,
+  FAQ,
+  READY,
 ];
 
 const pathParamsToNextTab = (params, tab, marketplaceTabs) => {
@@ -121,6 +131,8 @@ const EditListingWizardTab = props => {
   const isNewListingFlow = isNewURI || isDraftURI;
 
   const currentListing = ensureListing(listing);
+  const listingType = currentListing?.attributes?.publicData?.listingType;
+  const mediaMode = MIXED_MEDIA_LISTING_TYPES.includes(listingType);
 
   // New listing flow has automatic redirects to new tab on the wizard
   // and the last panel calls publishListing API endpoint.
@@ -210,6 +222,7 @@ const EditListingWizardTab = props => {
           {...panelProps(PRICING_AND_STOCK)}
           marketplaceCurrency={config.currency}
           listingMinimumPriceSubUnits={config.listingMinimumPriceSubUnits}
+          commission={config.commission}
         />
       );
     }
@@ -219,6 +232,7 @@ const EditListingWizardTab = props => {
           {...panelProps(PRICING)}
           marketplaceCurrency={config.currency}
           listingMinimumPriceSubUnits={config.listingMinimumPriceSubUnits}
+          commission={config.commission}
         />
       );
     }
@@ -264,6 +278,7 @@ const EditListingWizardTab = props => {
           images={images}
           onImageUpload={onImageUpload}
           onRemoveImage={onRemoveImage}
+          mediaMode={mediaMode}
         />
       );
     }
@@ -275,6 +290,15 @@ const EditListingWizardTab = props => {
           images={images}
         />
       );
+    }
+    case CONTENT: {
+      return <EditListingContentPanel {...panelProps(CONTENT)} />;
+    }
+    case FAQ: {
+      return <EditListingFaqPanel {...panelProps(FAQ)} />;
+    }
+    case READY: {
+      return <EditListingReadyPanel {...panelProps(READY)} />;
     }
     default:
       return null;

@@ -71,6 +71,234 @@
   }
 }
 
+.totalSessionsWrapper {
+  margin-bottom: 24px;
+
+  @media (--viewportMedium) {
+    margin-bottom: 32px;
+  }
+}
+
+.totalSessionsLabel {
+  composes: h4 from global;
+  display: block;
+  margin: 0 0 12px 0;
+  font-weight: var(--fontWeightSemiBold);
+}
+
+.totalSessionsStepper {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--colorGrey300);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.stepperButton {
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--colorGrey700);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 80ms ease;
+
+  &:hover {
+    background-color: var(--colorGrey100);
+  }
+
+  &:active {
+    background-color: var(--colorGrey200);
+  }
+}
+
+.stepperValue {
+  width: 40px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: var(--fontWeightMedium);
+  border-left: 1px solid var(--colorGrey300);
+  border-right: 1px solid var(--colorGrey300);
+  line-height: 40px;
+}
+
+.totalSessionsHelp {
+  margin: 0;
+  font-size: 14px;
+  color: var(--colorGrey400);
+}
+
+/* ──────────────────────────────────────────────
+   Group-coaching session scheduler
+   ────────────────────────────────────────────── */
+
+.sessionScheduler {
+  margin-bottom: 32px;
+  padding: 20px;
+  border: 1px solid var(--colorGrey200);
+  border-radius: 8px;
+
+  @media (--viewportMedium) {
+    padding: 24px;
+  }
+}
+
+.sessionSchedulerTitle {
+  composes: h4 from global;
+  margin: 0 0 8px 0;
+  font-weight: var(--fontWeightSemiBold);
+}
+
+.sessionSchedulerHelp {
+  margin: 0 0 20px 0;
+  font-size: 14px;
+  color: var(--colorGrey400);
+}
+
+.sessionSlot {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+
+  @media (--viewportMedium) {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+}
+
+.sessionSlotLabel {
+  font-size: 14px;
+  font-weight: var(--fontWeightMedium);
+  color: var(--colorGrey700);
+  min-width: 72px;
+  flex-shrink: 0;
+}
+
+.sessionSlotInputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sessionDatePickerWrapper {
+  position: relative;
+  width: 180px;
+  flex-shrink: 0;
+}
+
+.sessionDateInput,
+.sessionTimeInput {
+  height: 40px;
+  padding: 0 10px;
+  border: 1px solid var(--colorGrey300);
+  border-radius: 6px;
+  font-size: 14px;
+  color: var(--colorGrey700);
+  background: var(--colorWhite);
+  outline: none;
+
+  &:focus {
+    border-color: var(--marketplaceColor);
+  }
+}
+
+.sessionDateInput {
+  min-width: 140px;
+}
+
+.sessionTimeInput {
+  min-width: 100px;
+}
+
+.sessionTimeSelect {
+  height: 40px;
+  padding: 0 10px;
+  border: 1px solid var(--colorGrey300);
+  border-radius: 6px;
+  font-size: 14px;
+  color: var(--colorGrey700);
+  background: var(--colorWhite);
+  cursor: pointer;
+  outline: none;
+
+  &:focus {
+    border-color: var(--marketplaceColor);
+  }
+}
+
+.sessionTimeSep {
+  font-size: 16px;
+  color: var(--colorGrey400);
+  flex-shrink: 0;
+}
+
+.sessionSeatsWrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+  margin-bottom: 16px;
+}
+
+.sessionSeatsLabel {
+  font-size: 14px;
+  font-weight: var(--fontWeightMedium);
+  color: var(--colorGrey700);
+}
+
+.sessionSeatsInput {
+  width: 80px;
+  height: 40px;
+  padding: 0 10px;
+  border: 1px solid var(--colorGrey300);
+  border-radius: 6px;
+  font-size: 14px;
+  color: var(--colorGrey700);
+  background: var(--colorWhite);
+  outline: none;
+  text-align: center;
+
+  &:focus {
+    border-color: var(--marketplaceColor);
+  }
+}
+
+.sessionError {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  color: var(--colorFail);
+}
+
+.saveSessionsButton {
+  display: inline-block;
+  width: auto;
+  min-width: 180px;
+  margin-bottom: 12px;
+
+  @media (--viewportLarge) {
+    width: auto;
+  }
+}
+
+.sessionSavedNote {
+  margin: 0;
+  font-size: 14px;
+  color: var(--colorSuccess, #00a069);
+}
+
+/* ──────────────────────────────────────────────
+   Next-tab button
+   ────────────────────────────────────────────── */
+
 .goToNextTabButton {
   margin-top: auto;
   margin-bottom: 24px;

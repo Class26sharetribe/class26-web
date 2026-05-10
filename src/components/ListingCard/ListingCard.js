@@ -20,12 +20,15 @@ import {
 import Avatar from '../Avatar/Avatar';
 import IconCheckmark from '../IconCheckmark/IconCheckmark';
 
-import {
-  getListingCardTranslations,
-  resolveCourseCardContent,
-} from './ListingCard.helpers';
+import { getListingCardTranslations, resolveCourseCardContent } from './ListingCard.helpers';
 
 import css from './ListingCard.module.css';
+import { formatCourseDuration } from '../../util/courseHelpers';
+import {
+  LISTING_TYPE_INDIVIDUAL_COACHING,
+  LISTING_TYPE_GROUP_COACHING,
+  LISTING_TYPE_VIDEO_COURSE,
+} from '../../util/types';
 
 const LazyImage = lazyLoadWithDimensions(ResponsiveImage, { loadAfterInitialRendering: 3000 });
 
@@ -56,7 +59,14 @@ const BookmarkIcon = () => (
 );
 
 const PlayIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 20 20"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
     <circle cx="10" cy="10" r="9" fill="rgba(255,255,255,0.88)" />
     <path d="M8 6.5v7l5.5-3.5L8 6.5Z" fill="#1a1a1a" />
   </svg>
@@ -87,29 +97,43 @@ const ListingCardCourse = props => {
     variantPrefix,
     cardAriaLabel,
     translations,
+    listingTypeLabel,
   } = props;
 
   const {
     priceLabel,
-    title,
     badgePrimary,
     badgeSecondary,
     authorDisplayName,
     highlight,
-    description,
     mediaLabel,
   } = courseContent;
 
   const { showPrice, priceMessage } = translations;
+  const {
+    author,
+    attributes: { title, description, publicData },
+  } = listing;
   const id = listing?.id?.uuid;
-  const slug = createSlug(listing?.attributes?.title || title);
+  const slug = createSlug(title);
   const firstImage = listing?.images?.[0] || null;
   const variants = firstImage
     ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
     : [];
   const ImageComponent = lazyLoadImage ? LazyImage : ResponsiveImage;
-  const author = listing?.author;
+
+  const categories = config.categoryConfiguration?.categories || [];
+  const {
+    categoryLevel1: categoryLevel1Value,
+    totalSessions,
+    listingType,
+    courseModules,
+  } = publicData;
+  const categoryLevel1Label = categoryLevel1Value
+    ? categories.find(c => c.id === categoryLevel1Value)?.name || categoryLevel1Value
+    : null;
   const authorId = author?.id?.uuid;
+  const durationText = !!courseModules ? formatCourseDuration(courseModules) : null;
 
   const onSaveClick = e => {
     e.preventDefault();
@@ -117,10 +141,7 @@ const ListingCardCourse = props => {
   };
 
   return (
-    <article
-      className={css.rootCourse}
-      aria-label={cardAriaLabel}
-    >
+    <article className={css.rootCourse} aria-label={cardAriaLabel}>
       <div className={css.courseLayout}>
         <div className={css.courseLeft}>
           <div className={css.coursePriceRow}>
@@ -133,11 +154,7 @@ const ListingCardCourse = props => {
             )}
           </div>
 
-          <NamedLink
-            className={css.courseTitleLink}
-            name="ListingPage"
-            params={{ id, slug }}
-          >
+          <NamedLink className={css.courseTitleLink} name="ListingPage" params={{ id, slug }}>
             <h3 className={css.courseTitle}>{title}</h3>
           </NamedLink>
 
@@ -154,9 +171,11 @@ const ListingCardCourse = props => {
               <div className={css.courseAvatarPlaceholder} />
             )}
             <div className={css.courseBadgeColumn}>
-              <span className={classNames(css.courseBadge, css.courseBadgeGreen)}>{badgePrimary}</span>
+              <span className={classNames(css.courseBadge, css.courseBadgeGreen)}>
+                {categoryLevel1Label}
+              </span>
               <span className={classNames(css.courseBadge, css.courseBadgeNeutral)}>
-                {badgeSecondary}
+                {listingTypeLabel}
               </span>
               <p className={css.courseByLine}>
                 <FormattedMessage
@@ -180,33 +199,50 @@ const ListingCardCourse = props => {
             </div>
           </div>
 
-
-
           <div className={css.courseHighlight}>
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg
+              width="28"
+              height="28"
+              viewBox="0 0 28 28"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <rect width="28" height="28" rx="14" fill="#A2F8CE" />
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M19.9457 8.62169L11.5923 16.6834L9.37568 14.315C8.96734 13.93 8.32568 13.9067 7.85901 14.2334C7.40401 14.5717 7.27568 15.1667 7.55568 15.645L10.1807 19.915C10.4373 20.3117 10.8807 20.5567 11.3823 20.5567C11.8607 20.5567 12.3157 20.3117 12.5723 19.915C12.9923 19.3667 21.0073 9.81169 21.0073 9.81169C22.0573 8.73836 20.7857 7.79336 19.9457 8.61002V8.62169Z" fill="#00A069" />
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M19.9457 8.62169L11.5923 16.6834L9.37568 14.315C8.96734 13.93 8.32568 13.9067 7.85901 14.2334C7.40401 14.5717 7.27568 15.1667 7.55568 15.645L10.1807 19.915C10.4373 20.3117 10.8807 20.5567 11.3823 20.5567C11.8607 20.5567 12.3157 20.3117 12.5723 19.915C12.9923 19.3667 21.0073 9.81169 21.0073 9.81169C22.0573 8.73836 20.7857 7.79336 19.9457 8.61002V8.62169Z"
+                fill="#00A069"
+              />
             </svg>
 
-            <span className={css.courseHighlightText}>{highlight}</span>
+            <span className={css.courseHighlightText}>
+              {listingType === LISTING_TYPE_INDIVIDUAL_COACHING ? (
+                <FormattedMessage
+                  id="ListingCard.highlightIndividualCoaching"
+                  values={{ totalSessions }}
+                />
+              ) : listingType === LISTING_TYPE_GROUP_COACHING ? (
+                <FormattedMessage
+                  id="ListingCard.highlightGroupCoaching"
+                  values={{ totalSessions }}
+                />
+              ) : listingType === LISTING_TYPE_VIDEO_COURSE ? (
+                <FormattedMessage id="ListingCard.highlightVideoCourse" values={{ durationText }} />
+              ) : (
+                <FormattedMessage id="ListingCard.highlightDefault" />
+              )}
+            </span>
           </div>
 
           <p className={css.courseDescription}>{description}</p>
 
           <div className={css.courseActions}>
-            <button
-              type="button"
-              className={css.courseBtnSecondary}
-              onClick={onSaveClick}
-            >
+            <button type="button" className={css.courseBtnSecondary} onClick={onSaveClick}>
               <BookmarkIcon />
               <FormattedMessage id="ListingCard.saveForLater" />
             </button>
-            <NamedLink
-              className={css.courseBtnPrimary}
-              name="ListingPage"
-              params={{ id, slug }}
-            >
+            <NamedLink className={css.courseBtnPrimary} name="ListingPage" params={{ id, slug }}>
               <FormattedMessage id="ListingCard.discoverMore" />
             </NamedLink>
           </div>
@@ -351,40 +387,27 @@ export const ListingCard = props => {
   const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
   const showListingImage = requireListingImage(foundListingTypeConfig);
 
-  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = config.layout.listingImage;
+  const {
+    aspectWidth = 1,
+    aspectHeight = 1,
+    variantPrefix = 'listing-card',
+  } = config.layout.listingImage;
 
   const cardAspectWidth = CARD_ASPECT_WIDTH;
   const cardAspectHeight = CARD_ASPECT_HEIGHT;
 
-  const pillsFromPublicData =
-    publicData?.cardPills || publicData?.pills || publicData?.tags || publicData?.keywords;
-  const pillsArray = Array.isArray(pillsFromPublicData) ? pillsFromPublicData : [];
-  const pills = [listingType, ...pillsArray].filter(Boolean).slice(0, 3);
+  const listingTypeLabel = foundListingTypeConfig?.label || null;
 
   const setActivePropsMaybe = setActiveListing
     ? {
-      onMouseEnter: () => setActiveListing(listing?.id),
-      onMouseLeave: () => setActiveListing(null),
-    }
+        onMouseEnter: () => setActiveListing(listing?.id),
+        onMouseLeave: () => setActiveListing(null),
+      }
     : null;
 
   const courseContent = resolveCourseCardContent(listing, config, intl, showPrice);
 
   if (cardVariant === LISTING_CARD_VARIANT_COURSE) {
-    if (!showListingImage) {
-      return (
-        <div className={classes}>
-          <ListingCardThumbnail
-            style={cardStyle}
-            listingTitle={title}
-            className={aspectRatioClassName}
-            width={aspectWidth}
-            height={aspectHeight}
-            setActivePropsMaybe={setActivePropsMaybe}
-          />
-        </div>
-      );
-    }
     return (
       <div className={classes}>
         <ListingCardCourse
@@ -396,6 +419,7 @@ export const ListingCard = props => {
           variantPrefix={variantPrefix}
           cardAriaLabel={cardAriaLabel}
           translations={translations}
+          listingTypeLabel={listingTypeLabel}
         />
       </div>
     );
@@ -422,12 +446,16 @@ export const ListingCard = props => {
         >
           <div className={css.info}>
             <div className={css.mainInfo}>
-              <div className={classNames(css.title, { [css.lightText]: darkMode })}>{titleFormatted}</div>
+              <div className={classNames(css.title, { [css.lightText]: darkMode })}>
+                {titleFormatted}
+              </div>
               {showAuthorInfo ? (
-                <div className={classNames(css.authorInfo, { [css.lightText]: darkMode })}>{authorName}</div>
+                <div className={classNames(css.authorInfo, { [css.lightText]: darkMode })}>
+                  {authorName}
+                </div>
               ) : null}
             </div>
-            {pills.length > 0 ? (
+            {/* {pills.length > 0 ? (
               <div className={css.pills}>
                 {pills.map(p => (
                   <div className={css.pill} key={String(p)}>
@@ -435,7 +463,7 @@ export const ListingCard = props => {
                   </div>
                 ))}
               </div>
-            ) : null}
+            ) : null} */}
           </div>
         </ListingCardImage>
       ) : (

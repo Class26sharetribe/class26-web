@@ -58,6 +58,9 @@ import EditListingWizardTab, {
   AVAILABILITY,
   PHOTOS,
   STYLE,
+  CONTENT,
+  FAQ,
+  READY,
 } from './EditListingWizardTab';
 import css from './EditListingWizard.module.css';
 
@@ -70,6 +73,7 @@ const MAX_HORIZONTAL_NAV_SCREEN_WIDTH = 1023;
 
 const STRIPE_ONBOARDING_RETURN_URL_SUCCESS = 'success';
 const STRIPE_ONBOARDING_RETURN_URL_FAILURE = 'failure';
+const MIXED_MEDIA_LISTING_TYPES = ['video-course', 'digital-download'];
 
 /**
  * Pick only allowed tabs for the given process and listing type configuration.
@@ -98,8 +102,24 @@ const tabsForListingType = (processName, listingTypeConfig) => {
   // Note 3: The first tab creates a draft listing and title is mandatory attribute for it.
   //         Details tab asks for "title" and is therefore the first tab in the wizard flow.
   const tabs = {
-    ['default-booking']: [DETAILS, ...locationMaybe, PRICING, AVAILABILITY, ...styleOrPhotosTab],
-    ['default-purchase']: [DETAILS, PRICING_AND_STOCK, ...deliveryMaybe, ...styleOrPhotosTab],
+    ['default-booking']: [
+      DETAILS,
+      ...styleOrPhotosTab,
+      AVAILABILITY,
+      FAQ,
+      ...locationMaybe,
+      PRICING,
+      READY,
+    ],
+    ['default-purchase']: [
+      DETAILS,
+      ...styleOrPhotosTab,
+      CONTENT,
+      FAQ,
+      PRICING_AND_STOCK,
+      ...deliveryMaybe,
+      READY,
+    ],
     ['default-negotiation']: [DETAILS, ...locationMaybe, ...pricingMaybe, ...styleOrPhotosTab],
     ['default-inquiry']: [DETAILS, ...locationMaybe, ...pricingMaybe, ...styleOrPhotosTab],
   };
@@ -115,7 +135,14 @@ const tabsForListingType = (processName, listingTypeConfig) => {
  * @param {boolean} isNewListingFlow
  * @param {string} processName
  */
-const tabLabelAndSubmit = (intl, tab, isNewListingFlow, isPriceDisabled, processName) => {
+const tabLabelAndSubmit = (
+  intl,
+  tab,
+  isNewListingFlow,
+  isPriceDisabled,
+  processName,
+  isMixedMediaListingType
+) => {
   const processNameString = isNewListingFlow ? `${processName}.` : '';
   const newOrEdit = isNewListingFlow ? 'new' : 'edit';
 
@@ -143,11 +170,22 @@ const tabLabelAndSubmit = (intl, tab, isNewListingFlow, isPriceDisabled, process
     labelKey = 'EditListingWizard.tabLabelAvailability';
     submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveAvailability`;
   } else if (tab === PHOTOS) {
-    labelKey = 'EditListingWizard.tabLabelPhotos';
+    labelKey = isMixedMediaListingType
+      ? 'EditListingWizard.tabLabelMedia'
+      : 'EditListingWizard.tabLabelPhotos';
     submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.savePhotos`;
   } else if (tab === STYLE) {
     labelKey = 'EditListingWizard.tabLabelStyle';
     submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveStyle`;
+  } else if (tab === CONTENT) {
+    labelKey = 'EditListingWizard.tabLabelContent';
+    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveContent`;
+  } else if (tab === FAQ) {
+    labelKey = 'EditListingWizard.tabLabelFaq';
+    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveFaq`;
+  } else if (tab === READY) {
+    labelKey = 'EditListingWizard.tabLabelReady';
+    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveReady`;
   }
 
   return {
@@ -237,6 +275,8 @@ const tabCompleted = (tab, listing, config) => {
     pickupEnabled,
     cardStyle,
     digitalAssets,
+    courseModules,
+    totalSessions,
   } = publicData || {};
   const listingTypeConfig = config.listing.listingTypes.find(
     config => config.listingType === listingType
@@ -267,11 +307,24 @@ const tabCompleted = (tab, listing, config) => {
     case LOCATION:
       return !!(geolocation && publicData?.location?.address);
     case AVAILABILITY:
-      return !!availabilityPlan;
+      return  (!!availabilityPlan && totalSessions > 0)
     case PHOTOS:
       return images && images.length > 0;
     case STYLE:
       return !!cardStyle;
+    case CONTENT:
+      return (
+        (Array.isArray(digitalAssets) && digitalAssets?.length > 0) ||
+        (Array.isArray(courseModules) && courseModules?.length > 0)
+      );
+    case FAQ:
+      return (
+        (Array.isArray(digitalAssets) && digitalAssets?.length > 0) ||
+        (Array.isArray(courseModules) && courseModules?.length > 0) ||
+        (!!availabilityPlan && totalSessions > 0)
+      );
+    case READY:
+      return true;
     default:
       return false;
   }
@@ -529,6 +582,9 @@ class EditListingWizard extends Component {
       config
     );
     const existingListingType = currentListing.attributes?.publicData?.listingType;
+    const currentListingType =
+      existingListingType || this.state.selectedListingType?.listingType || null;
+    const isMixedMediaListingType = MIXED_MEDIA_LISTING_TYPES.includes(currentListingType);
     const invalidExistingListingType = existingListingType && !listingTypeConfig;
     // TODO: displayPrice aka config.defaultListingFields?.price with false value is only available with inquiry process
     //       if it's enabled with other processes, translations for "new" flow needs to be updated.
@@ -673,7 +729,8 @@ class EditListingWizard extends Component {
               tab,
               isNewListingFlow,
               isPriceDisabled,
-              resolveLatestProcessName(processName)
+              resolveLatestProcessName(processName),
+              isMixedMediaListingType
             );
             return (
               <EditListingWizardTab

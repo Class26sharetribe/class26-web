@@ -294,9 +294,9 @@ export class SearchPageComponent extends Component {
                         />
                       );
                     })}
-                    <button className={css.resetAllButton} onClick={e => this.handleResetAll(e)}>
+                    {/* <button className={css.resetAllButton} onClick={e => this.handleResetAll(e)}>
                       <FormattedMessage id={'SearchFiltersMobile.resetAll'} />
-                    </button>
+                    </button> */}
                   </div>
                 </aside>
                 <MainPanelHeader
