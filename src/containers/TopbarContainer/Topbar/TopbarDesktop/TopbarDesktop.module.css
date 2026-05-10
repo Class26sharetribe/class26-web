@@ -13,14 +13,12 @@
   align-items: flex-start;
   padding: 0 12px 0 0;
 
-  /* fill */
-  background-color: var(--colorWhite);
 
-  /* shadows */
-  box-shadow: var(--boxShadowLight);
 
   @media (--viewportLarge) {
-    padding: 0 24px 0 0;
+    padding: 0 32px 0 0px;
+    max-width: 1280px;
+    margin: 0 auto;
   }
 }
 
@@ -29,11 +27,11 @@
   border-bottom: 0px solid;
   transition: var(--transitionStyleButton);
 }
-
+/* 
 .logoLink:hover {
   border-bottom: 4px solid var(--marketplaceColor);
   border-radius: 0;
-}
+} */
 
 /* Search */
 .searchLink {

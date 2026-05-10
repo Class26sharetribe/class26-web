@@ -160,7 +160,11 @@
 
 .desktop {
   display: none;
+  /* fill */
+  background-color: var(--colorWhite);
 
+  /* shadows */
+  box-shadow: var(--boxShadowLight);
   @media (--viewportLarge) {
     display: block;
   }
