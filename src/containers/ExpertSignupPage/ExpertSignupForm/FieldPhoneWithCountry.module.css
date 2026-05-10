@@ -6,11 +6,11 @@
 
 .label {
   display: block;
-  font-weight: var(--fontWeightSemiBold);
+  /* font-weight: var(--fontWeightSemiBold);
   font-size: 14px;
   line-height: 20px;
-  color: var(--colorGrey700);
-  margin-bottom: 6px;
+  color: var(--colorGrey700); */
+  margin-bottom: 0px;
 }
 
 /* ================ Phone row — matches input height & border exactly ================ */
@@ -53,16 +53,24 @@
 .dialCodeSegment {
   display: flex;
   align-items: center;
-  background-color: var(--colorGrey50);
+  background-color: #F5F5F5;
   border-right: 1px solid #d5d7da;
   padding: 0 10px;
   flex-shrink: 0;
 }
 
 .dialCodeText {
-  font-size: 14px;
-  font-weight: var(--fontWeightSemiBold);
-  color: var(--colorGrey700);
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0%;
+  text-align: center;
+  vertical-align: middle;
+  
+  color: #A4A7AE;
   white-space: nowrap;
 }
 

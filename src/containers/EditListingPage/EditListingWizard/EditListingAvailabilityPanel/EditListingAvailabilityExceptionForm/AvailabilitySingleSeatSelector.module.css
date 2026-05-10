@@ -4,12 +4,13 @@
 }
 
 .checkedAvailable {
-  display: none;
-  stroke: var(--colorSuccess);
-  fill: var(--colorSuccess);
+  --FieldRadioButton-checkedBg: var(--colorSuccessSubtle);
+  --FieldRadioButton-checkedRing: var(--colorSuccess);
+  --FieldRadioButton-checkedDot: var(--colorSuccess);
 }
+
 .checkedNotAvailable {
-  display: none;
-  stroke: var(--colorFail);
-  fill: var(--colorFail);
+  --FieldRadioButton-checkedBg: var(--colorFailSubtle);
+  --FieldRadioButton-checkedRing: var(--colorFail);
+  --FieldRadioButton-checkedDot: var(--colorFail);
 }

@@ -10,22 +10,22 @@
   height: 0;
   width: 0;
 
-  /* Display the "check" when checked */
+  /* Swap unchecked / checked artwork */
   &:checked + label .checked {
     display: inline;
   }
 
-  /* Highlight the borders if the checkbox is hovered, focused or checked */
-  &:hover + label .notChecked,
-  &:hover + label .required,
-  &:focus + label .notChecked,
-  &:focus + label .required,
-  &:checked + label .required {
-    stroke: var(--colorBlack);
+  &:checked + label .unchecked {
+    display: none;
   }
 
-  &:checked + label .notChecked {
-    stroke: none;
+  /* Highlight the ring if hovered, focused, or checked while required */
+  &:hover + label .uncheckedRing.notChecked,
+  &:hover + label .uncheckedRing.required,
+  &:focus + label .uncheckedRing.notChecked,
+  &:focus + label .uncheckedRing.required,
+  &:checked + label .uncheckedRing.required {
+    stroke: var(--colorBlack);
   }
 
   /* Hightlight the text on checked, hover and focus */
@@ -69,32 +69,58 @@
   cursor: pointer;
 }
 
+/* Checked artwork colors; override via --FieldRadioButton-checked* on the same <g> */
 .checkedStyle {
-  stroke: var(--marketplaceColor);
-  fill: var(--marketplaceColor);
+  --FieldRadioButton-checkedBg: #cefde4;
+  --FieldRadioButton-checkedRing: #008057;
+  --FieldRadioButton-checkedDot: #008057;
+}
+
+.checkedStyle .checkedBg {
+  fill: var(--FieldRadioButton-checkedBg);
+}
+
+.checkedStyle .checkedRing {
+  fill: none;
+  stroke: var(--FieldRadioButton-checkedRing);
+  stroke-width: 1;
+}
+
+.checkedStyle .checkedDot {
+  fill: var(--FieldRadioButton-checkedDot);
 }
 
 .checked {
   display: none;
 }
 
+.uncheckedRing {
+  fill: none;
+  stroke-width: 1;
+}
+
+.uncheckedBg {
+  fill: #fff;
+}
+
 .notChecked {
-  stroke: var(--colorGrey300);
-  &:hover {
-    stroke: pink;
-  }
+  stroke: #d5d7da;
 }
 
 .required {
   stroke: var(--colorAttention);
-  &:hover {
-    stroke: pink;
-  }
 }
 
 .text {
-  composes: marketplaceListingAttributeFontStyles from global;
-  color: var(--colorGrey700);
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0%;
+  
+  color:#414651;
   margin-top: -1px;
   margin-bottom: 1px;
   cursor: pointer;

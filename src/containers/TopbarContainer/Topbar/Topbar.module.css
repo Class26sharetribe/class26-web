@@ -162,9 +162,10 @@
   display: none;
   /* fill */
   background-color: var(--colorWhite);
+  border-bottom: 1px solid var(--border-border-primary, #D5D7DA);
 
   /* shadows */
-  box-shadow: var(--boxShadowLight);
+  /* box-shadow: var(--boxShadowLight); */
   @media (--viewportLarge) {
     display: block;
   }
