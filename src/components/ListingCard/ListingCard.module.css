@@ -485,7 +485,7 @@
     order: 0;
     flex: 1 1 48%;
     min-height: 100%;
-    border-radius: 16px 16px;
+    border-radius: 16px 0 0 16px;
   }
 }
 
