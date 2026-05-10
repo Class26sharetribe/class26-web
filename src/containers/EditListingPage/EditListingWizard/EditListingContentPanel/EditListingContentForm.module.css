@@ -14,19 +14,29 @@
 }
 
 .error {
-  margin-top: 48px;
+  /* margin-top: 48px; */
   color: var(--colorFail);
+  padding: 0;
+  margin: 8px 0;
 }
 
 .submitButton {
-  flex-shrink: 0;
   margin-top: auto;
   margin-bottom: 24px;
-
+  flex-shrink: 0;
+  min-height: 44px;
+  font-family: Nohemi;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0px;
+  
   @media (--viewportLarge) {
     display: inline-block;
-    width: 241px;
-    margin-top: 100px;
+    width: 70px;
+    margin-top: 32px;
   }
 }
 
@@ -47,30 +57,42 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: 18px;
-  min-height: 84px;
+  /* gap: 18px; */
+  /* min-height: 84px; */
   padding: 18px;
 
   @media (--viewportMedium) {
     grid-template-columns: minmax(0, 1fr) auto auto;
-    min-height: 96px;
-    padding: 24px;
+    /* min-height: 96px; */
+    padding: 24px 16px 8px;
+  }
+  &:has(.moduleHeaderActions){
+    padding-bottom: 24px;
   }
 }
 
 .moduleTitleButton {
-  composes: h4 from global;
+  font-family: Nohemi;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0px;
+  
   border: 0;
   padding: 0;
   margin: 0;
   background: transparent;
-  color: var(--colorGrey700);
+  color: #101828;
   text-align: left;
   cursor: pointer;
 }
 
 .moduleHeaderActions {
   display: none;
+  margin-right: 16px;
+
 
   @media (--viewportMedium) {
     display: flex;
@@ -80,17 +102,25 @@
 }
 
 .moduleBody {
-  padding: 0 18px 24px;
+  padding: 0 16px 0px;
 
   @media (--viewportMedium) {
-    padding: 0 24px 32px;
+    padding: 0 16px 0px;
   }
 }
 
 .moduleDescription {
-  composes: marketplaceBodyFontStyles from global;
-  color: var(--colorGrey700);
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: spacing/3;
+  letter-spacing: 0%;
+  
+  color: #101828;
   margin: 0 0 30px;
+  padding: 0;
 }
 
 .iconButton,
@@ -98,19 +128,21 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
+  width: 36px;
+  height: 36px;
   border: 1px solid var(--colorGrey100);
   border-radius: 6px;
-  background-color: var(--colorWhite);
-  color: var(--colorGrey700);
+  background-color: #FFFFFF;
+  color: #101828;
   cursor: pointer;
+  padding: 0;
 }
 
 .chevronButton {
-  width: 36px;
-  height: 36px;
+  width: 20px;
+  height: 20px;
   border-color: transparent;
+  padding: 0;
 }
 
 .deleteIcon {
@@ -123,12 +155,20 @@
 }
 
 .editButton {
-  min-height: 48px;
-  padding: 0 24px;
+  min-height: 36px;
+  padding: 0 14px;
   border: 0;
   border-radius: 6px;
   background-color: #d8ffee;
-  color: var(--marketplaceColorDark);
+  font-family: Nohemi;
+font-weight: 500;
+font-style: Medium;
+font-size: 14px;
+leading-trim: NONE;
+line-height: 20px;
+letter-spacing: 0px;
+
+  color:#006647;
   cursor: pointer;
 }
 
@@ -143,51 +183,63 @@
 
 .addModuleButton {
   margin-bottom: 36px;
+  font-family: Nohemi;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 14px;
+  leading-trim: NONE;
+  line-height: 20px;
+  letter-spacing: 0px;
+  color: #006647;
 }
 
 .addLessonButton {
-  margin-bottom: 24px;
+  margin-bottom: 32px;
+  font-family: Nohemi;
+font-weight: 500;
+font-style: Medium;
+font-size: 14px;
+leading-trim: NONE;
+line-height: 20px;
+letter-spacing: 0px;
+color: #006647;
+padding: 0;
 }
 
 .inlineEditor,
 .lessonEditor {
-  padding: 24px 18px;
+  padding: 16px 16px 0;
 
   @media (--viewportMedium) {
-    padding: 32px 24px;
+    padding: 16px 16px 0;
   }
 }
 
 .lessonEditor {
-  margin: 0 -18px -24px;
-  border-top: 1px solid var(--colorGrey100);
+padding: 0;
+margin-top: 0px;
   background-color: var(--colorWhite);
 
   @media (--viewportMedium) {
-    margin: 0 -24px -32px;
+ 
     padding-bottom: 0;
   }
 }
 
 .label {
-  composes: marketplaceBodyFontStyles from global;
-  display: block;
-  margin-bottom: 12px;
-  color: var(--colorGrey700);
-  font-weight: var(--fontWeightSemiBold);
+  font-family: Nohemi;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0px;
+
+  color: #101828;
+
 }
 
-.textInput {
-  composes: marketplaceBodyFontStyles from global;
-  width: 100%;
-  min-height: 48px;
-  border: 1px solid var(--colorGrey100);
-  border-radius: 4px;
-  padding: 8px 18px;
-  color: var(--colorGrey700);
-  background-color: var(--colorWhite);
-  box-shadow: var(--boxShadow);
-}
+.textInput {}
 
 .textarea,
 .lessonTextarea {
@@ -205,6 +257,14 @@
   align-items: center;
   justify-content: flex-end;
   gap: 24px;
+}
+
+.inlineEditorActions {
+  margin-left: -16px;
+  width: calc(100% + 32px);
+  padding: 24px 16px;
+  background: #FAFAFA;
+  border-radius: 0 0 8px 8px;
 }
 
 .lessonEditorActions {
@@ -225,6 +285,19 @@
   padding: 0 24px;
 }
 
+.smallPrimaryButton {
+  min-height: 36px;
+  font-family: Nohemi;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 14px;
+  leading-trim: NONE;
+  line-height: 19px;
+  letter-spacing: 0px;
+  padding: 8px 16px;
+  color: #FFFFFF;
+}
+
 .lessonAssetButtons {
   display: grid;
   grid-template-columns: 1fr;
@@ -235,9 +308,20 @@
   @media (--viewportMedium) {
     grid-template-columns: repeat(3, 1fr);
     gap: 24px;
-    margin-top: 32px;
-    margin-bottom: 32px;
+    margin-top: 16px;
+    margin-bottom: 16px;
   }
+}
+
+.inlineEditorActionsButton {
+  font-family: Nohemi;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 14px;
+  leading-trim: NONE;
+  line-height: 20px;
+  letter-spacing: 0px;
+  color: #101828;
 }
 
 .lessonAssetButton {
@@ -247,13 +331,15 @@
   align-items: center;
   justify-content: center;
   gap: 18px;
-  min-height: 72px;
+
   border: 0;
   border-radius: 8px;
   background-color: #e7fff4;
   color: var(--colorGrey700);
+  padding: 10px 30px;
   font-weight: var(--fontWeightSemiBold);
   cursor: pointer;
+  margin-bottom: 0;
 }
 
 .lessonAssetButton:disabled,
@@ -265,19 +351,21 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  flex: 0 0 36px;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
   border-radius: 50%;
   background-color: #8bf7c4;
-  color: var(--marketplaceColorDark);
+  color: #006647;
   font-size: 16px;
   line-height: 1;
+  padding: 0;
 }
 
 .assetIcon svg {
-  width: 18px;
-  height: 18px;
+  width: 12px;
+  height: 12px;
+  padding: 0;
 }
 
 .assetIcon path {
@@ -351,6 +439,7 @@
   0% {
     background-position: -200px 0;
   }
+
   100% {
     background-position: calc(200px + 100%) 0;
   }
@@ -360,12 +449,10 @@
   height: 100%;
   border-radius: 999px;
   width: 100%;
-  background: linear-gradient(
-    90deg,
-    var(--colorGrey200) 25%,
-    var(--colorGrey100) 50%,
-    var(--colorGrey200) 75%
-  );
+  background: linear-gradient(90deg,
+      var(--colorGrey200) 25%,
+      var(--colorGrey100) 50%,
+      var(--colorGrey200) 75%);
   background-size: 200px 100%;
   animation: progressShimmer 1.4s ease-in-out infinite;
 }
@@ -597,11 +684,11 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 4px;
   width: 100%;
-  min-height: 160px;
-  padding: 32px 24px;
-  border: 1px solid var(--colorGrey100);
+  min-height: 132px;
+  padding: 16px 24px;
+  border: 1px solid var(--border-border-divider, #E9EAEB);
   border-radius: 8px;
   background-color: var(--colorWhite);
   cursor: pointer;
@@ -621,24 +708,44 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background-color: #d8ffee;
   color: var(--marketplaceColorDark);
+  & svg{
+    fill: transparent;
+  }
 }
 
 .uploadZoneLabel {
-  composes: marketplaceBodyFontStyles from global;
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: spacing/3;
+  letter-spacing: 0%;
   text-decoration: underline;
-  color: var(--colorGrey700);
-  font-weight: var(--fontWeightSemiBold);
+  text-decoration-style: solid;
+  text-decoration-offset: 0%;
+  text-decoration-thickness: 0%;
+  
+  color: #414651;
 }
 
 .uploadZoneHint {
-  composes: marketplaceBodyFontStyles from global;
-  color: var(--colorGrey400);
-  font-size: 13px;
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 14px;
+  leading-trim: NONE;
+  line-height: spacing/2,5;
+  letter-spacing: 0%;
+  text-align: center;
+  
+  color: #A4A7AE;
+
 }
 
 .assetList {

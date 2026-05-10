@@ -455,6 +455,7 @@ const EditListingAvailabilityPanel = props => {
       </div>
 
       {listingType === LISTING_TYPE_GROUP_COACHING ? (
+        <>
         <div className={css.sessionScheduler}>
           <h4 className={css.sessionSchedulerTitle}>
             <FormattedMessage id="EditListingAvailabilityPanel.sessionDatesTitle" />
@@ -540,8 +541,9 @@ const EditListingAvailabilityPanel = props => {
 
           {saveSessionsError ? <p className={css.sessionError}>{saveSessionsError}</p> : null}
 
+        </div>
           <Button
-            className={css.saveSessionsButton}
+            className={css.submitButton}
             onClick={handleSaveSessions}
             inProgress={saveSessionsInProgress}
             disabled={saveSessionsInProgress}
@@ -554,7 +556,7 @@ const EditListingAvailabilityPanel = props => {
               <FormattedMessage id="EditListingAvailabilityPanel.sessionDatesSaved" />
             </p>
           ) : null}
-        </div>
+        </>
       ) : (
         <>
           <div className={css.planInfo}>

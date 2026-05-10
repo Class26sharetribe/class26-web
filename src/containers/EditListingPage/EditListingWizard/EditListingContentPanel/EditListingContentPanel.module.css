@@ -22,3 +22,31 @@
     margin-bottom: 32px;
   }
 }
+
+.heading {
+  font-family: Nohemi;
+  font-weight: 600;
+  font-style: Semi Bold;
+  font-size: 24px;
+  leading-trim: NONE;
+  line-height: spacing/4;
+  letter-spacing: 0%;
+  vertical-align: middle;
+  color: #101828;
+  margin: 0 0 32px;
+  padding: 0;
+}
+
+.Subheading {
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: spacing/3;
+  letter-spacing: 0%;
+  
+  color: #101828;
+  margin: 0 0 32px;
+  padding: 0;
+}

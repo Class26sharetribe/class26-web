@@ -72,17 +72,29 @@
 }
 
 .selectedLabel {
-  composes: label from global;
+  font-family: Nohemi;
+font-weight: 500;
+font-style: Medium;
+font-size: 16px;
+leading-trim: NONE;
+line-height: 24px;
+letter-spacing: 0px;
+color: #101828;
+margin: 0;
 }
 
 .selectedValue {
   margin-top: 0;
   margin-bottom: 6px;
+  border: 1px solid var(--border-border-primary, #D5D7DA);
+  border-radius: 4px;
+  padding: 9px 14px 9px 14px;
+  cursor: not-allowed;
 
   @media (--viewportMedium) {
     margin-top: 0;
     margin-bottom: 0;
-    padding: 2px 0 6px 0;
+ 
   }
 }
 

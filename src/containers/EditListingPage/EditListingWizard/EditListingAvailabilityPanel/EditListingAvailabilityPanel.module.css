@@ -221,7 +221,7 @@
   border-radius: 8px;
 
   @media (--viewportMedium) {
-    padding: 24px;
+    padding: 16px;
   }
 }
 
@@ -248,6 +248,11 @@
     align-items: center;
     gap: 12px;
     margin-bottom: 12px;
+
+    & input {
+      padding: 7px 0 7px 30px;
+      background-position: 8px 11px;
+    }
   }
 }
 
@@ -323,6 +328,10 @@
   gap: 12px;
   margin-top: 20px;
   margin-bottom: 16px;
+
+  & label {
+    padding: 0;
+  }
 }
 
 .sessionSeatsLabel {
@@ -387,7 +396,7 @@
   leading-trim: NONE;
   line-height: 24px;
   letter-spacing: 0px;
-  
+
   @media (--viewportLarge) {
     display: inline-block;
     width: 70px;
@@ -414,4 +423,24 @@
 
 .error {
   color: var(--colorFail);
+}
+
+.submitButton {
+  margin-top: auto;
+  margin-bottom: 24px;
+  flex-shrink: 0;
+  min-height: 44px;
+  font-family: Nohemi;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0px;
+
+  @media (--viewportLarge) {
+    display: inline-block;
+    width: 70px;
+    margin-top: 32px;
+  }
 }

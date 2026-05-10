@@ -346,7 +346,7 @@ const ModuleEditor = props => {
         />
       </div>
       <div className={css.inlineEditorActions}>
-        <InlineTextButton type="button" onClick={onCancel}>
+        <InlineTextButton type="button" onClick={onCancel} className={css.inlineEditorActionsButton}>
           <FormattedMessage id="EditListingContentForm.cancel" />
         </InlineTextButton>
         <Button type="button" className={css.smallPrimaryButton} onClick={submit}>
