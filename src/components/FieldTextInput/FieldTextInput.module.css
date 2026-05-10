@@ -2,6 +2,14 @@
 }
 
 .input {
+  font-family: Nunito Sans;
+font-weight: 400;
+font-style: Regular;
+font-size: 16px;
+leading-trim: NONE;
+line-height: 24px;
+letter-spacing: 0%;
+
 }
 .textarea {
 }

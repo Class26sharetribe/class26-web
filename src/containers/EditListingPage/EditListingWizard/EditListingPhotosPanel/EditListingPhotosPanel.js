@@ -150,10 +150,10 @@ const EditListingPhotosPanel = props => {
           { ...panelHeadingProps.messageProps }
         )}
       />
-      <H3 as="h1">
+      <H3 as="h1" className={css.heading}>
         <FormattedMessage id={panelHeadingProps.id} values={{ ...panelHeadingProps.values }} />
       </H3>
-      <p>
+      <p className={css.Subheading}>
         <FormattedMessage
           id={
             mediaMode

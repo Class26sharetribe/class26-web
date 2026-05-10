@@ -86,7 +86,7 @@
   --colorStatusFinalState: var(--colorGrey600);
 
   /* ================ Font ================ */
-  --fontFamily: -apple-system, BlinkMacSystemFont, 'Inter', Helvetica, Arial, sans-serif,
+  --fontFamily: -apple-system, BlinkMacSystemFont, 'Nunito Sans', 'Inter', Helvetica, Arial, sans-serif,
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 
   --fontWeightRegular: 400;
@@ -500,13 +500,13 @@ select {
   leading-trim: NONE;
   line-height: 24px;
   letter-spacing: 0%;
-  
+  color: #101828;
   /* 6 + 24 + 4 + borders are divisible by 6 */
   padding: 6px 12px 4px 12px;
   background-color: #fff;
 
   /* Borders */
-  border-radius: 0px;
+  border-radius: 4px;
   border: 1px solid var(--border-border-primary, #D5D7DA);
   outline: none;
 
@@ -524,7 +524,7 @@ select {
   background-size: 8px 14px;
 
   &::placeholder {
-    color: var(--colorGrey300);
+    color: #101828;
   }
 
   @media (--viewportMedium) {
@@ -564,7 +564,14 @@ textarea {
   display: block;
   width: 100%;
   margin: 0;
-
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0%;
+  
   /* 6 + 24 + 4 + borders are divisible by 6 */
   padding: 6px 12px 4px 12px;
   background-color: #fff;
@@ -585,7 +592,7 @@ textarea {
 
   @media (--viewportMedium) {
     /* 7 + 32 + 7 + borders = 48, which is divisible by 8. */
-    padding: 4px 16px 4px 16px;
+    padding: 6px 16px 6px 16px;
     line-height: 32px;
   }
 }

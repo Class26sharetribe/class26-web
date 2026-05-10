@@ -6,15 +6,10 @@ import { ValidationError, HelpText } from '../../components';
 import css from './FieldMultiSelect.module.css';
 
 const ChevronIcon = () => (
-  <svg width="14" height="8" viewBox="0 0 14 8" fill="none" aria-hidden="true">
-    <path
-      d="M1 1L7 7L13 1"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
+<svg style={{fill:"transparent"}} width="12" height="6" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M1 1L7 7L13 1" stroke="#414651" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
 );
 
 /**

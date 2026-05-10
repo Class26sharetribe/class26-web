@@ -64,10 +64,10 @@ const EditListingFaqPanel = props => {
           { ...panelHeadingProps.messageProps }
         )}
       />
-      <H3 as="h1">
+      <H3 as="h1"className={css.heading}>
         <FormattedMessage id={panelHeadingProps.id} values={{ ...panelHeadingProps.values }} />
       </H3>
-      <p className={css.description}>
+      <p className={css.Subheading}>
         <FormattedMessage id="EditListingFaqPanel.description" />
       </p>
       <EditListingFaqForm

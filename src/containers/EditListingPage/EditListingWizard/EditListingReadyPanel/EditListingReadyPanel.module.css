@@ -12,6 +12,20 @@
   flex-grow: 1;
 }
 
+.heading {
+  font-family: Nohemi;
+  font-weight: 600;
+  font-style: Semi Bold;
+  font-size: 24px;
+  leading-trim: NONE;
+  line-height: spacing/4;
+  letter-spacing: 0%;
+  vertical-align: middle;
+  color: #101828;
+  margin: 0 0 32px;
+  padding: 0;
+}
+
 .description {
   margin-bottom: 32px;
   color: var(--colorGrey700);

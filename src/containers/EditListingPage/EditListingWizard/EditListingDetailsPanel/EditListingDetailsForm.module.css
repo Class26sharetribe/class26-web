@@ -51,9 +51,15 @@
 }
 
 .charCount {
-  font-size: 12px;
-  font-weight: var(--fontWeightRegular);
-  color: var(--colorGrey400);
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0%;
+
+  color: #101828;
   white-space: nowrap;
 }
 
@@ -68,6 +74,7 @@
 .selectedLabel {
   composes: label from global;
 }
+
 .selectedValue {
   margin-top: 0;
   margin-bottom: 6px;
@@ -87,10 +94,18 @@
   margin-top: auto;
   margin-bottom: 24px;
   flex-shrink: 0;
-
+  min-height: 44px;
+  font-family: Nohemi;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0px;
+  
   @media (--viewportLarge) {
     display: inline-block;
-    width: 241px;
-    margin-top: 100px;
+    width: 70px;
+    margin-top: 32px;
   }
 }

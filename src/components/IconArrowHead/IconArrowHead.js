@@ -71,19 +71,10 @@ const IconArrowHead = props => {
     );
   } else if (isDown && isSmall) {
     return (
-      <svg
-        className={classes}
-        width="13"
-        height="9"
-        viewBox="0 0 13 9"
-        xmlns="http://www.w3.org/2000/svg"
-        role="none"
-      >
-        <path
-          d="M6.03 6.805c.26.26.68.26.94 0l5.335-5.333a.668.668 0 0 0-.943-.943L6.5 5.39 1.638.53a.666.666 0 1 0-.943.942L6.03 6.805z"
-          fillRule="evenodd"
-        />
+      <svg className={classes} width="12" height="7" viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M11.4227 0.244078C11.7481 0.569515 11.7481 1.09715 11.4227 1.42259L6.42267 6.42259C6.09723 6.74803 5.5696 6.74803 5.24416 6.42259L0.244159 1.42259C-0.0812787 1.09715 -0.0812787 0.569515 0.244159 0.244078C0.569595 -0.0813592 1.09723 -0.0813592 1.42267 0.244078L5.83341 4.65482L10.2442 0.244078C10.5696 -0.0813592 11.0972 -0.0813592 11.4227 0.244078Z" fill="#101828" />
       </svg>
+
     );
   } else if (isUp && isSmall) {
     return (

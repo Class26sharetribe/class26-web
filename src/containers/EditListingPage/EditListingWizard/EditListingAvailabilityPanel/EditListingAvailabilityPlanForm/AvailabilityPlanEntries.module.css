@@ -160,7 +160,7 @@
 .deleteIcon {
   display: inline-block;
   box-sizing: content-box;
-  stroke: var(--colorGrey300);
+  stroke: #414651;
 
   /* align icon with the select fields */
   padding: 1px 0 4px 0;

@@ -17,7 +17,7 @@
 .checkboxList {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 32px;
   margin-bottom: 32px;
 }
 
@@ -35,7 +35,7 @@
   margin-bottom: 24px;
 
   @media (--viewportLarge) {
-    margin-top: 100px;
+    margin-top: 64px;
   }
 }
 
@@ -43,12 +43,20 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 12px 20px;
-  border: 1px solid var(--colorGrey300);
-  border-radius: var(--borderRadius);
-  font-weight: var(--fontWeightMedium);
-  font-size: 14px;
-  color: var(--colorGrey700);
+  padding: 9px 16px;
+  border: 1px solid var(--border-border-primary, #D5D7DA);
+  box-shadow: 0px 1px 2px 0px #0A0D120D;
+
+  border-radius: 4px;
+  font-family: Nohemi;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0px;
+  
+  color: #101828;
   text-decoration: none;
   white-space: nowrap;
 
@@ -58,10 +66,38 @@
   }
 
   &::before {
-    content: '↗';
+    content: '';
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0.834961 9.16832L9.16829 0.834991M9.16829 0.834991H0.834961M9.16829 0.834991V9.16832' stroke='%23101828' stroke-width='1.67' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+    background-size: 10px 10px;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 10px;
+    height: 10px;
+    margin-right: 6px;
   }
 }
 
 .submitButton {
+  margin-top: auto;
+  margin-bottom: 0px;
   flex-shrink: 0;
+  min-height: 44px;
+  font-family: Nohemi;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0px;
+  
+  
+  @media (--viewportLarge) {
+    display: inline-block;
+    width: 190px;
+    margin-top: 0px;
+  }
+  &:disabled{
+    background: #E9EAEB;
+    color: #fff;
+  }
 }

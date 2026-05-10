@@ -41,13 +41,13 @@
     padding: 72px 0 82px 36px;
     flex-direction: column;
     overflow-x: auto;
-    background-color: var(--colorGrey50);
+    background-color: #EBFEF5;
     box-shadow: none;
     border-top: none;
   }
 
   @media (--viewportLargeWithPaddings) {
-    padding: 72px 0 82px calc((100% - 1056px) / 2);
+    padding: 64px 0 82px calc((100% - 1056px) / 2);
   }
 }
 

@@ -165,14 +165,14 @@
   background-color: var(--colorWhite);
 
   @media (--viewportLarge) {
-    background-color: var(--colorGrey50);
+    background-color:#FAFAFA;
   }
 
   border-style: dashed;
   border-color: var(--colorGrey100);
   border-width: 2px;
   border-radius: 2px;
-
+  border: 1px dashed var(--neutral-gray-200, #CACACE);
   /* Behaviour */
   cursor: pointer;
   transition: var(--transitionStyleButton);
@@ -189,23 +189,32 @@
 }
 
 .chooseImage {
-  composes: h4 from global;
-  color: var(--colorGrey700);
-  font-weight: var(--fontWeightSemiBold);
-
+  font-family: Nohemi;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0px;
+  vertical-align: middle;
+  
+  color: #4A4A4F;
   margin-top: 0;
   margin-bottom: 0;
-
-  @media (--viewportLarge) {
-    font-weight: var(--fontWeightSemiBold);
-    margin-top: 0;
-    margin-bottom: 0;
-  }
+  padding: 0;
 }
 
 .imageTypes {
-  composes: marketplaceTinyFontStyles from global;
-  color: var(--colorGrey600);
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 14px;
+  leading-trim: NONE;
+  line-height: spacing/2,5;
+  letter-spacing: 0%;
+  text-align: center;
+  
+  color: #7C7C83;
 
   margin-top: 0;
   margin-bottom: 0;
@@ -232,16 +241,24 @@
 }
 
 .tip {
-  composes: h5 from global;
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 14px;
+  leading-trim: NONE;
+  line-height: spacing/2,5;
+  letter-spacing: 0%;
+  
 
   flex-shrink: 0;
-  color: var(--colorGrey600);
+  color:#636369;
   margin-top: 24px;
   margin-bottom: 60px;
+  padding: 0;
 
   @media (--viewportLarge) {
-    margin-top: 0;
-    margin-bottom: 0;
+    margin-top: 8px;
+    margin-bottom: 32px;
   }
 }
 
@@ -269,13 +286,21 @@
 }
 
 .submitButton {
-  flex-shrink: 0;
   margin-top: auto;
   margin-bottom: 24px;
-
+  flex-shrink: 0;
+  min-height: 44px;
+  font-family: Nohemi;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0px;
+  
   @media (--viewportLarge) {
     display: inline-block;
-    width: 241px;
-    margin-top: 100px;
+    width: 70px;
+    margin-top: 32px;
   }
 }

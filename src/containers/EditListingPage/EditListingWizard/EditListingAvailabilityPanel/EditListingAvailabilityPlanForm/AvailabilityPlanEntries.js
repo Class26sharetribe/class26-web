@@ -265,6 +265,10 @@ const TimeRangeSelects = props => {
           <div className={classNames(css.plus1Day, { [css.showPlus1Day]: isNextDay })}>
             <FormattedMessage id="EditListingAvailabilityPlanForm.plus1Day" />
           </div>
+          <div className={css.fieldArrayDelete} onClick={onRemove} style={{ cursor: 'pointer' }}>
+        <IconDelete rootClassName={css.deleteIcon} />
+        {/* <FormattedMessage id="EditListingAvailabilityPlanForm.delete" /> */}
+      </div>
         </div>
       </div>
       {useMultipleSeats ? (
@@ -281,10 +285,7 @@ const TimeRangeSelects = props => {
       ) : (
         <FieldHidden name={`${name}.seats`} value={1} />
       )}
-      <div className={css.fieldArrayDelete} onClick={onRemove} style={{ cursor: 'pointer' }}>
-        <IconDelete rootClassName={css.deleteIcon} />
-        <FormattedMessage id="EditListingAvailabilityPlanForm.delete" />
-      </div>
+ 
     </div>
   );
 };

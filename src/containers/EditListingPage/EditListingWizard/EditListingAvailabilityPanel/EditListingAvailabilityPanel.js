@@ -422,7 +422,7 @@ const EditListingAvailabilityPanel = props => {
           { ...panelHeadingProps.messageProps }
         )}
       />
-      <H3 as="h1">
+      <H3 as="h1" className={css.heading}>
         <FormattedMessage id={panelHeadingProps.id} values={{ ...panelHeadingProps.values }} />
       </H3>
 
@@ -558,11 +558,11 @@ const EditListingAvailabilityPanel = props => {
       ) : (
         <>
           <div className={css.planInfo}>
-            <span>
-              <h4>Availability</h4>
-            </span>
+          
+              <h4 className={css.availabilityPlanTitle}>Availability</h4>
+         
             {!hasAvailabilityPlan ? (
-              <p>
+              <p className={css.availabilityPlanInfo}>
                 <FormattedMessage id="EditListingAvailabilityPanel.availabilityPlanInfo" />
               </p>
             ) : null}

@@ -14,6 +14,7 @@
     padding: 5px 0 3px 0;
   }
 }
+
 .weekPicker,
 .sectionTitle {
   composes: marketplaceSearchFilterSublabelFontStyles from global;
@@ -29,17 +30,34 @@
     margin-bottom: 0;
   }
 }
+
 .sectionTitle {
   margin-right: 5px;
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: spacing/3;
+  letter-spacing: 0%;
+  color: #414651;
 }
 
 .weekPickerLabel {
-  composes: marketplaceSearchFilterSublabelFontStyles from global;
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: spacing/3;
+  letter-spacing: 0%;
+  color: #414651;
   display: inline-flex;
   gap: 8px;
   align-items: center;
   text-align: left;
 }
+
 .weekPicker {
   color: var(--colorGrey700);
 }
@@ -68,18 +86,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 6.5px 8.5px;
-  border: solid 1px var(--colorGrey100);
+  padding: 6px;
+  border: solid 0px var(--colorGrey100);
   cursor: pointer;
+  width: 32px;
+  height: 32px;
 
   &:hover {
     background-color: var(--colorGrey50);
   }
 
   @media (--viewportMedium) {
-    padding: 11.5px 13px;
+    padding: 0;
   }
 }
+
 .prev {
   composes: button;
   margin-right: -1px;
@@ -88,6 +109,7 @@
     margin-right: 0;
   }
 }
+
 .next {
   composes: button;
 }
@@ -115,10 +137,18 @@
     border-bottom: solid 1px var(--colorGrey100);
   }
 }
+
 .dateLabel {
   margin: 0;
-  composes: p from global;
-  font-weight: var(--fontWeightBold);
+  font-family: Nohemi;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0px;
+  vertical-align: middle;
+  color: #101828;
 
   &::first-letter {
     text-transform: capitalize;
@@ -128,14 +158,21 @@
     margin: 0;
   }
 }
+
 .dateAndMonth {
-  composes: h5 from global;
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: spacing/3;
+  letter-spacing: 0%;
+  color: #414651;
 }
 
 .blockedDateLabel {
-  background-color: #f3f3f3;
-  background-color: var(--colorGrey50);
-  color: var(--colorGrey600);
+  background-color: #fff;
+  color: #414651;
 }
 
 .info {
@@ -168,10 +205,17 @@
 }
 
 .timeRange {
-  composes: marketplaceTinyFontStyles from global;
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: spacing/3;
+  letter-spacing: 0%;
+  color: #414651;
   display: inline-flex;
   flex-wrap: wrap;
-  color: var(--colorGrey700);
+ 
   transition: color var(--transitionStyleButton);
   margin: 0;
 
@@ -227,9 +271,10 @@
   display: inline-flex;
   align-items: baseline;
 
-  &:hover > .timeRange {
+  &:hover>.timeRange {
     color: var(--colorBlack);
   }
+
   &:hover .deleteIcon {
     stroke: var(--colorFail);
   }
@@ -251,18 +296,19 @@
 }
 
 .blockedDate {
-  background-color: #f3f3f3;
-  background-color: var(--colorGrey50);
+  background-color: #fff;
+
   color: var(--colorGrey600);
 
   & .timeRange {
     color: var(--colorGrey300);
   }
 
-  &:hover .exception > .timeRange {
+  &:hover .exception>.timeRange {
     color: var(--colorGrey700);
   }
-  &:hover .exception:hover > .timeRange {
+
+  &:hover .exception:hover>.timeRange {
     color: var(--colorBlack);
   }
 }
@@ -283,18 +329,43 @@
     'source source';
   */
 }
+
 .entryRange {
   grid-area: timeRange;
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: spacing/3;
+  letter-spacing: 0%;
+  color: #414651;
 }
+
 .seats {
   grid-area: seats;
   text-align: left;
 }
+
 .sourceMaybe {
   grid-area: source;
-  color: var(--colorGrey600);
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: spacing/3;
+  letter-spacing: 0%;
+  color: #414651;
 }
 
 .exceptionMsg {
-  color: var(--colorGrey600);
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: spacing/3;
+  letter-spacing: 0%;
+  color: #414651;
 }
