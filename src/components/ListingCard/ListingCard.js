@@ -1,11 +1,13 @@
 // ⚠️ If you modify the styling of this component and you're using the SectionListings component in your marketplace (featured listings)
 // please reflect those changes in the calculateCarouselHeight function in SectionListings.js to avoid layout issues
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
+import MuxPlayer from '@mux/mux-player-react';
 
 import { useConfiguration } from '../../context/configurationContext';
 
 import { useIntl, FormattedMessage } from '../../util/reactIntl';
+import { getMuxJwtToken } from '../../util/api';
 import { requireListingImage } from '../../util/configHelpers';
 import { lazyLoadWithDimensions } from '../../util/uiHelpers';
 import { createSlug } from '../../util/urlHelpers';
@@ -18,7 +20,6 @@ import {
 } from '../../components';
 
 import Avatar from '../Avatar/Avatar';
-import IconCheckmark from '../IconCheckmark/IconCheckmark';
 
 import { getListingCardTranslations, resolveCourseCardContent } from './ListingCard.helpers';
 
@@ -31,6 +32,25 @@ import {
 } from '../../util/types';
 
 const LazyImage = lazyLoadWithDimensions(ResponsiveImage, { loadAfterInitialRendering: 3000 });
+
+/**
+ * First Mux video item from `publicData.mediaGallery`, if any.
+ *
+ * @param {Array<{ type?: string, playbackId?: string }>} [mediaGallery]
+ * @returns {{ type: string, playbackId: string } | null}
+ */
+const getMuxVideoFromMediaGallery = mediaGallery => {
+  if (!Array.isArray(mediaGallery)) {
+    return null;
+  }
+  const item = mediaGallery.find(
+    entry =>
+      entry?.type === 'video' &&
+      typeof entry?.playbackId === 'string' &&
+      entry.playbackId.length > 0
+  );
+  return item || null;
+};
 
 // Default card: must match `landingPage-css` / design (portrait 3:4, text + pills on image)
 const CARD_ASPECT_WIDTH = 3;
@@ -59,16 +79,12 @@ const BookmarkIcon = () => (
 );
 
 const PlayIcon = () => (
-  <svg
-    width="20"
-    height="20"
-    viewBox="0 0 20 20"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    aria-hidden
-  >
-    <circle cx="10" cy="10" r="9" fill="rgba(255,255,255,0.88)" />
-    <path d="M8 6.5v7l5.5-3.5L8 6.5Z" fill="#1a1a1a" />
+  <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M40 0C62.0914 0 80 17.9086 80 40C80 62.0914 62.0914 80 40 80C17.9086 80 0 62.0914 0 40C0 17.9086 17.9086 0 40 0ZM33.75 25.3281C32.0834 24.3966 30 25.5607 30 27.4238V52.5762C30 54.4393 32.0834 55.6034 33.75 54.6719L56.25 42.0957C57.9165 41.1641 57.9165 38.8359 56.25 37.9043L33.75 25.3281Z"
+      fill="white"
+      fillOpacity="0.3"
+    />
   </svg>
 );
 
@@ -100,6 +116,12 @@ const ListingCardCourse = props => {
     listingTypeLabel,
   } = props;
 
+  const intl = useIntl();
+  const [courseVideoPlaying, setCourseVideoPlaying] = useState(false);
+  const [muxToken, setMuxToken] = useState(null);
+  const [muxTokenLoading, setMuxTokenLoading] = useState(false);
+  const [muxTokenError, setMuxTokenError] = useState(null);
+
   const {
     priceLabel,
     badgePrimary,
@@ -122,6 +144,9 @@ const ListingCardCourse = props => {
     : [];
   const ImageComponent = lazyLoadImage ? LazyImage : ResponsiveImage;
 
+  const courseMuxVideo = getMuxVideoFromMediaGallery(publicData?.mediaGallery);
+
+
   const categories = config.categoryConfiguration?.categories || [];
   const {
     categoryLevel1: categoryLevel1Value,
@@ -134,6 +159,43 @@ const ListingCardCourse = props => {
     : null;
   const authorId = author?.id?.uuid;
   const durationText = !!courseModules ? formatCourseDuration(courseModules) : null;
+
+  const playbackId = courseMuxVideo?.playbackId;
+
+  useEffect(() => {
+    if (!courseVideoPlaying || !playbackId) {
+      setMuxToken(null);
+      setMuxTokenError(null);
+      setMuxTokenLoading(false);
+      return;
+    }
+
+    let cancelled = false;
+    setMuxTokenLoading(true);
+    setMuxToken(null);
+    setMuxTokenError(null);
+
+    getMuxJwtToken({ playbackId })
+      .then(data => {
+        if (!cancelled) {
+          setMuxToken(data.token);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setMuxTokenError(intl.formatMessage({ id: 'MuxPlayerModal.tokenError' }));
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setMuxTokenLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [courseVideoPlaying, playbackId, intl]);
 
   const onSaveClick = e => {
     e.preventDefault();
@@ -249,44 +311,37 @@ const ListingCardCourse = props => {
         </div>
 
         <div className={css.courseMedia}>
-          <NamedLink
-            name="ListingPage"
-            params={{ id, slug }}
-            className={css.courseMediaLinkLayer}
-            aria-label={cardAriaLabel}
-          />
-          {firstImage ? (
-            <ImageComponent
-              rootClassName={css.courseMediaImage}
-              alt={title}
-              image={firstImage}
-              variants={variants}
-              sizes={renderSizes}
-            />
-          ) : (
-            <div className={css.courseMediaFallback} />
-          )}
 
-          <div className={css.courseMediaPresentation}>{mediaLabel}</div>
 
-          <button
-            type="button"
-            className={css.coursePlayButton}
-            onClick={e => {
-              e.preventDefault();
-              e.stopPropagation();
-            }}
-            aria-label={mediaLabel}
-          >
-            <PlayIcon />
-          </button>
-
-          <div className={css.courseVideoBar} aria-hidden>
-            <span className={css.courseVideoBarPlay}>▶</span>
-            <div className={css.courseVideoTrack}>
-              <div className={css.courseVideoProgress} />
-            </div>
-          </div>
+          {playbackId ?
+            <>
+              <MuxPlayer
+                className={css.courseMuxPlayer}
+                playbackId={playbackId}
+                // tokens={{ playback: muxToken }}
+                streamType="on-demand"
+                autoPlay
+                playsInline
+              // skipJwt={true}
+              />
+            </>
+            : <>
+              <NamedLink
+                name="ListingPage"
+                params={{ id, slug }}
+                className={css.courseMediaLinkLayer}
+                aria-label={cardAriaLabel}
+              />
+              {firstImage ? (
+                <ImageComponent
+                  rootClassName={css.courseMediaImage}
+                  alt={title}
+                  image={firstImage}
+                  variants={variants}
+                  sizes={renderSizes}
+                />) : null}
+            </>}
+       
         </div>
       </div>
     </article>
@@ -400,9 +455,9 @@ export const ListingCard = props => {
 
   const setActivePropsMaybe = setActiveListing
     ? {
-        onMouseEnter: () => setActiveListing(listing?.id),
-        onMouseLeave: () => setActiveListing(null),
-      }
+      onMouseEnter: () => setActiveListing(listing?.id),
+      onMouseLeave: () => setActiveListing(null),
+    }
     : null;
 
   const courseContent = resolveCourseCardContent(listing, config, intl, showPrice);

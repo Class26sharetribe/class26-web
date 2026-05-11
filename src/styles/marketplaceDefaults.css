@@ -1193,7 +1193,7 @@ textarea {
   /* button defaults */
   display: block;
   width: 100%;
-  min-height: 56px;
+  min-height: 44px;
   margin: 0;
 
   /* Padding is only for <a> elements where button styles are applied,

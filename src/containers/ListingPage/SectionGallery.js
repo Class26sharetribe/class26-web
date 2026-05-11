@@ -6,6 +6,7 @@ import css from './ListingPage.module.css';
 const SectionGallery = props => {
   const { listing, variantPrefix } = props;
   const images = listing.images;
+  const { title, publicData } = listing?.attributes || {};
   const imageVariants = ['scaled-small', 'scaled-medium', 'scaled-large', 'scaled-xlarge'];
   const thumbnailVariants = [variantPrefix, `${variantPrefix}-2x`, `${variantPrefix}-4x`];
   return (
@@ -14,6 +15,8 @@ const SectionGallery = props => {
         images={images}
         imageVariants={imageVariants}
         thumbnailVariants={thumbnailVariants}
+        mediaGallery={publicData?.mediaGallery}
+        listingTitle={title}
       />
     </section>
   );

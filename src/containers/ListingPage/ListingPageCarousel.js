@@ -164,6 +164,18 @@ export const ListingPageComponent = props => {
   const unitType = publicData.unitType;
   const isNegotiation = processType === 'negotiation';
 
+  // Badge labels (mirrors ListingCard course badges: category + listing type)
+  const categories = config.categoryConfiguration?.categories || [];
+  const categoryLevel1Value = publicData?.categoryLevel1;
+  const categoryLevel1Label = categoryLevel1Value
+    ? categories.find(c => c.id === categoryLevel1Value)?.name || categoryLevel1Value
+    : null;
+  const validListingTypes = config.listing.listingTypes || [];
+  const foundListingTypeConfig = validListingTypes.find(
+    conf => conf.listingType === publicData?.listingType
+  );
+  const listingTypeLabel = foundListingTypeConfig?.label || publicData?.listingType || null;
+
   const commonParams = { params, history, routes: routeConfiguration };
   const onContactUser = handleContactUser({
     ...commonParams,
@@ -212,6 +224,8 @@ export const ListingPageComponent = props => {
     }
   };
 
+  console.log('currentListing', currentListing);
+
   return (
     <Page
       title={schemaTitle}
@@ -252,6 +266,24 @@ export const ListingPageComponent = props => {
                 tab: listingTab,
               }}
             />
+            {(categoryLevel1Label || listingTypeLabel) ? (
+              <div className={css.listingBadgeRow}>
+                {categoryLevel1Label ? (
+                  <span className={classNames(css.listingBadge, css.listingBadgeGreen)}>
+                    {categoryLevel1Label}
+                  </span>
+                ) : null}
+                {listingTypeLabel ? (
+                  <span className={classNames(css.listingBadge, css.listingBadgeNeutral)}>
+                    {listingTypeLabel}
+                  </span>
+                ) : null}
+              </div>
+            ) : null}
+
+            {currentListing.attributes.title ? <>
+           <h1>{currentListing.attributes.title}</h1>
+            </> : null}
             {showListingImage && (
               <SectionGallery
                 listing={currentListing}
