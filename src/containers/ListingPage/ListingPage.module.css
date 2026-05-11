@@ -1104,9 +1104,13 @@ padding: 0;
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
-  background: linear-gradient(145deg, #6b9e3e 0%, #c5d84a 45%, #8fbc55 100%);
+  /* background: linear-gradient(145deg, #6b9e3e 0%, #c5d84a 45%, #8fbc55 100%); */
   overflow: hidden;
   border-radius: 16px;
+  & img{
+    width: 100%;
+    filter: grayscale(1);
+  }
 }
 
 .courseLessonThumb {

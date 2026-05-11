@@ -3,6 +3,7 @@ import classNames from 'classnames';
 
 import css from './ListingPage.module.css';
 import MuxPlayer from '@mux/mux-player-react';
+import videoThumbnail from '../../assets/video-thumbnail.jpg';
 
 const muxPosterUrl = playbackId =>
   `https://image.mux.com/${playbackId}/thumbnail.jpg?width=640&height=360&fit_mode=crop`;
@@ -107,7 +108,7 @@ const ListingPageModulesAndLessons = props => {
                               {lesson?.title || `Lesson ${lessonIndex + 1}`}
                             </div>
                             <div className={css.courseLessonThumbWrap}>
-                              {lessonPlaybackId ?
+                              {/* {lessonPlaybackId ?
                                 <>
                                   <MuxPlayer
                                     className={css.courseMuxPlayer}
@@ -118,7 +119,9 @@ const ListingPageModulesAndLessons = props => {
                                     playsInline
                                   // skipJwt={true}
                                   />
-                                </> : null}
+                                </> : null} */}
+                         
+                              <img src={videoThumbnail} alt={lesson?.title || `Lesson ${lessonIndex + 1}`} className={css.courseLessonThumbnail} />
                             </div>
 
                             <div className={css.courseLessonContent}>

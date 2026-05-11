@@ -58,7 +58,10 @@
       leading-trim: NONE;
       line-height: 80px;
       letter-spacing: 0px;
-
+      @media (max-width:767px) {
+        font-size: 32px;
+        line-height: 40px;
+      }
     }
 
     & p {
@@ -119,6 +122,9 @@
     }
 
     & header {
+      @media (max-width:767px) {
+        padding: 0;
+      }
 
       & [class*='FilterKeyword_customField'] {
         height: auto;
@@ -191,6 +197,10 @@
       max-width: 100%;
       width: 100%;
       text-align: left;
+      @media (max-width:767px) {
+        font-size: 32px;
+        line-height: 40px;
+      }
     }
 
     & p {
@@ -225,7 +235,10 @@
       line-height: 60px;
       letter-spacing: 0px;
       text-align: center;
-
+      @media (max-width:767px) {
+        font-size: 32px;
+        line-height: 40px;
+      }
     }
 
     & a {
@@ -321,6 +334,10 @@
       text-align: left;
       width: 100%;
       max-width: 100%;
+      @media (max-width:767px) {
+        font-size: 32px;
+        line-height: 40px;
+      }
     }
   }
 
@@ -431,6 +448,10 @@
       text-align: left;
       width: 100%;
       max-width: 100%;
+      @media (max-width:767px) {
+        font-size: 32px;
+        line-height: 40px;
+      }
     }
 
     p {
