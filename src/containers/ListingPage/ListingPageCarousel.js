@@ -8,6 +8,13 @@ import { FormattedMessage } from '../../util/reactIntl';
 import { LISTING_STATE_CLOSED, propTypes } from '../../util/types';
 import { OFFER, REQUEST } from '../../transactions/transaction';
 
+// Assets
+import BannerPlaceholderImage from '../../assets/Image.png';
+import bannerGroupCoachingImage from '../../assets/group-coaching.jpg';
+import bannerIndividualCoachingImage from '../../assets/individual-coaching.jpg';
+import bannerVideoCourseImage from '../../assets/video-course.jpg';
+import bannerDigitalDownloadImage from '../../assets/digital-download.jpg';
+
 // Global ducks (for Redux actions and thunks)
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
@@ -179,6 +186,40 @@ export const ListingPageComponent = props => {
   );
   const listingTypeLabel = foundListingTypeConfig?.label || publicData?.listingType || null;
 
+  const normalizedListingTypeLabel = (listingTypeLabel || '').replace(/\s+/g, ' ').trim();
+  const bannerVariant =
+    normalizedListingTypeLabel === 'Group Coaching'
+      ? 'groupCoaching'
+      : normalizedListingTypeLabel === 'Individual Coaching'
+        ? 'individualCoaching'
+        : normalizedListingTypeLabel === 'Video Course'
+          ? 'videoCourse'
+          : normalizedListingTypeLabel === 'Digital Download'
+            ? 'digitalDownload'
+            : null;
+
+  const bannerImageByVariant = {
+    groupCoaching: bannerGroupCoachingImage,
+    individualCoaching: bannerIndividualCoachingImage,
+    videoCourse: bannerVideoCourseImage,
+    digitalDownload: bannerDigitalDownloadImage,
+  };
+  const bannerImageSrc = bannerVariant ? bannerImageByVariant[bannerVariant] : null;
+
+  const scrollToId = id => {
+    const el = typeof document !== 'undefined' ? document.getElementById(id) : null;
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  const bannerActionByVariant = {
+    groupCoaching: () => onContactUser(),
+    individualCoaching: () => onContactUser(),
+    videoCourse: () => scrollToId('listingPageCourseContent'),
+    digitalDownload: () => scrollToId('listingPageOrderPanel'),
+  };
+
   const commonParams = { params, history, routes: routeConfiguration };
   const onContactUser = handleContactUser({
     ...commonParams,
@@ -313,6 +354,7 @@ export const ListingPageComponent = props => {
 
           </div>
           <div className={css.orderColumnForProductLayout}>
+            <div id="listingPageOrderPanel">
             <OrderPanel
               className={classNames(css.productOrderPanel, {
                 [css.imagesEnabled]: showListingImage,
@@ -347,10 +389,11 @@ export const ListingPageComponent = props => {
               marketplaceName={config.marketplaceName}
               showListingImage={showListingImage}
             />
+            </div>
           </div>
         </div>
         <div className={css.listingPageCarouselContent}>
-          <div className={css.courseSections}>
+          <div className={css.courseSections} id="listingPageCourseContent">
             <ListingPageBenefits publicData={publicData} />
             <ListingPageModulesAndLessons publicData={publicData} />
           </div>
@@ -387,6 +430,27 @@ export const ListingPageComponent = props => {
             onManageDisableScrolling={onManageDisableScrolling}
           /> 
         </div>
+        {bannerVariant ? (
+          <div className={classNames(css.banner, css[`banner_${bannerVariant}`])}>
+            <div className={css.bannerInner}>
+              {bannerImageSrc ? (
+                <img
+                  className={css.bannerImage}
+                  src={bannerImageSrc}
+                  alt={intl.formatMessage({ id: `ListingPage.banner.${bannerVariant}.title` })}
+                />
+              ) : null}
+
+              <button
+                className={css.bannerActionButton}
+                type="button"
+                onClick={bannerVariant ? bannerActionByVariant[bannerVariant] : null}
+              >
+                <FormattedMessage id={`ListingPage.banner.${bannerVariant}.action`} />
+              </button>
+            </div>
+          </div>
+        ) : null}
         <ListingPageFaqs publicData={publicData} />
       </LayoutSingleColumn>
     </Page>

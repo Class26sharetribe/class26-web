@@ -1252,3 +1252,112 @@ letter-spacing: 0%;
   word-break: break-word;
   padding: 0;
 }
+
+.banner {
+  margin-top: 48px;
+  border-radius: 0px;
+  padding: 0;
+
+  overflow: hidden;
+}
+
+.bannerInner {
+  position: relative;
+  width: 100%;
+  &:after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 1;
+  }
+}
+
+.bannerImage {
+  width: 100%;
+  max-width: none;
+  height: 220px;
+  display: block;
+  object-fit: cover;
+}
+
+.bannerActionButton {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid #d0d5dd;
+  border-radius: 4px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-family: Nohemi;
+font-weight: 500;
+font-style: Medium;
+font-size: 20px;
+leading-trim: NONE;
+line-height: 28px;
+letter-spacing: 0px;
+
+  color: #101828;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0px 2px 10px rgba(16, 24, 40, 0.12);
+  backdrop-filter: blur(6px);
+  z-index: 2;
+}
+
+.bannerActionButton:hover {
+  background: rgba(255, 255, 255, 1);
+}
+
+.bannerActionButton:focus {
+  outline: 3px solid rgba(77, 155, 255, 0.45);
+  outline-offset: 2px;
+}
+
+.banner_groupCoaching {
+  background: #ffffff;
+}
+
+.banner_individualCoaching {
+  background: #ffffff;
+}
+
+.banner_videoCourse {
+  background: #ffffff;
+}
+
+.banner_digitalDownload {
+  background: #ffffff;
+}
+
+@media (--viewportMedium) {
+  .bannerImage {
+    height: 532px;
+    object-fit: cover;
+    object-position: 0% 27%;
+  }
+
+  .bannerActionButton {
+    font-size: 16px;
+    line-height: 24px;
+    padding: 12px 18px;
+  }
+  .banner_groupCoaching  {
+    & .bannerImage {  
+      object-position: 0% 52%;
+    }
+  }
+  .banner_individualCoaching {
+    & .bannerImage {
+      object-position: 0% 52%;
+    }
+  } 
+    /* object-position: 0% 27%; */
+  
+  .banner_digitalDownload {
+    & .bannerImage {
+      object-position: 0% 52%;
+    }
+    /* object-position: 0% 27%; */
+  }
+}
