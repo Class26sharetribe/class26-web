@@ -297,6 +297,9 @@
 .muxPlayer {
   width: 100%;
   height: 100%;
+    /* Hide 10s skip buttons to match design controls */
+    --seek-backward-button: none;
+    --seek-forward-button: none;
 }
 
 .muxClose {

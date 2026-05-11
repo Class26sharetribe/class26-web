@@ -171,6 +171,9 @@ const GalleryMuxSlide = props => {
           autoPlay
           playsInline
           controls
+          accentColor="#FFFFFF"
+          primaryColor="#ddd"
+          secondaryColor="transparent"
 
         />
 

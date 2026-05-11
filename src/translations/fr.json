@@ -577,6 +577,7 @@
   "ListingImageGallery.previousImage": "Image précédente",
   "ListingImageGallery.nextImage": "Image suivante",
   "ListingPage.aboutProviderTitle": "À propos de l'auteur de l'annonce",
+  "ListingPage.aboutTeacherTitle": "À propos de votre professeur",
   "ListingPage.addPayoutDetails": "Ajouter les détails de paiement",
   "ListingPage.addPayoutDetailsMessage": "Veuillez ajouter vos détails de paiement pour pouvoir recevoir des commandes.",
   "ListingPage.closedListing": "Cette annonce n'est pas disponible pour le moment.",

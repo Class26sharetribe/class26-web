@@ -41,16 +41,18 @@ const SectionAuthorMaybe = props => {
 
   return (
     <section id="author" className={css.sectionAuthor}>
-      <Heading as="h2" rootClassName={css.sectionHeadingWithExtraMargin}>
-        <FormattedMessage id="ListingPage.aboutProviderTitle" />
+      <Heading as="h2" rootClassName={css.sectionAuthorHeading}>
+        <FormattedMessage id="ListingPage.aboutTeacherTitle" />
       </Heading>
-      <UserCard
-        user={listing.author}
-        currentUser={currentUser}
-        onContactUser={onContactUser}
-        showContact={showContact}
-        contactLinkId={CONTACT_USER_LINK}
-      />
+      <div className={css.sectionAuthorCard}>
+        <UserCard
+          user={listing.author}
+          currentUser={currentUser}
+          onContactUser={onContactUser}
+          showContact={showContact}
+          contactLinkId={CONTACT_USER_LINK}
+        />
+      </div>
       <Modal
         id="ListingPage.inquiry"
         contentClassName={css.inquiryModalContent}

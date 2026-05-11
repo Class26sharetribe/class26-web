@@ -372,7 +372,8 @@ export const ListingPageComponent = props => {
             mapsConfig={config.maps}
           />
           <SectionReviews reviews={reviews} fetchReviewsError={fetchReviewsError} />
-          <SectionAuthorMaybe
+     */}
+             <SectionAuthorMaybe
             title={title}
             listing={currentListing}
             authorDisplayName={authorDisplayName}
@@ -384,7 +385,7 @@ export const ListingPageComponent = props => {
             onSubmitInquiry={onSubmitInquiry}
             currentUser={currentUser}
             onManageDisableScrolling={onManageDisableScrolling}
-          /> */}
+          /> 
         </div>
         <ListingPageFaqs publicData={publicData} />
       </LayoutSingleColumn>

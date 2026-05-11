@@ -7,7 +7,13 @@ import { richText } from '../../../util/richText';
 import { ensureUser, ensureCurrentUser } from '../../../util/data';
 import { propTypes } from '../../../util/types';
 
-import { AvatarLarge, NamedLink, InlineTextButton } from '../../../components';
+import {
+  AvatarLarge,
+  ExternalLink,
+  IconSocialMediaInstagram,
+  InlineTextButton,
+  NamedLink,
+} from '../../../components';
 
 import css from './UserCard.module.css';
 
@@ -98,6 +104,7 @@ const UserCard = props => {
   const isCurrentUser =
     ensuredUser.id && ensuredCurrentUser.id && ensuredUser.id.uuid === ensuredCurrentUser.id.uuid;
   const { displayName, bio } = ensuredUser.attributes.profile;
+  const profilePublicData = ensuredUser?.attributes?.profile?.publicData || {};
 
   const handleContactUserClick = () => {
     onContactUser(user);
@@ -141,14 +148,56 @@ const UserCard = props => {
       </NamedLink>
     ) : null;
 
+    console.log('profilePublicData', user);
+
   const links = ensuredUser.id ? (
-    <p className={linkClasses}>
-      <NamedLink className={css.link} name="ProfilePage" params={{ id: ensuredUser.id.uuid }}>
-        <FormattedMessage id="UserCard.viewProfileLink" />
-      </NamedLink>
-      {separator}
-      {mounted && isCurrentUser ? editProfileMobile : contact}
-    </p>
+    <div className={linkClasses}>
+       <ExpandableBio className={css.desktopBio} bio={"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."} />
+      {user?.attributes?.profile?.bio && <ExpandableBio className={css.desktopBio} bio={user.attributes.profile.bio} />}
+    
+      <div className={css.profileLinksRow}>
+        <NamedLink className={css.link} name="ProfilePage" params={{ id: ensuredUser.id.uuid }}>
+          <FormattedMessage id="UserCard.viewProfileLink" />
+        </NamedLink>
+        {mounted && isCurrentUser ? separator : null}
+        {mounted && isCurrentUser ? editProfileMobile : <></>}
+      </div>
+     
+      <div className={css.socialLinksRow}>
+        {profilePublicData?.linkedinUrl || profilePublicData?.linkedin ? (
+          <ExternalLink
+            className={css.socialLink}
+            href={profilePublicData.linkedinUrl || profilePublicData.linkedin}
+          >
+            <span className={css.linkedinMark} aria-hidden="true">
+              in
+            </span>
+            <span className={css.socialSrOnly}>LinkedIn</span>
+          </ExternalLink>
+        ) : (
+          <span className={classNames(css.socialLink, css.socialLinkDisabled)} aria-disabled="true">
+            <span className={css.linkedinMark} aria-hidden="true">
+              in
+            </span>
+            <span className={css.socialSrOnly}>LinkedIn</span>
+          </span>
+        )}
+        {profilePublicData?.instagramUrl || profilePublicData?.instagram ? (
+          <ExternalLink
+            className={css.socialLink}
+            href={profilePublicData.instagramUrl || profilePublicData.instagram}
+          >
+            <IconSocialMediaInstagram className={css.socialIcon} />
+            <span className={css.socialSrOnly}>Instagram</span>
+          </ExternalLink>
+        ) : (
+          <span className={classNames(css.socialLink, css.socialLinkDisabled)} aria-disabled="true">
+            <IconSocialMediaInstagram className={css.socialIcon} />
+            <span className={css.socialSrOnly}>Instagram</span>
+          </span>
+        )}
+      </div>
+    </div>
   ) : null;
 
   return (
@@ -157,7 +206,7 @@ const UserCard = props => {
         <AvatarLarge className={css.avatar} user={user} />
         <div className={css.info}>
           <div className={css.headingRow}>
-            <FormattedMessage id="UserCard.heading" values={{ name: displayName }} />
+            <h3 className={css.name}>{displayName}</h3>
             {editProfileDesktop}
           </div>
           {hasBio ? <ExpandableBio className={css.desktopBio} bio={bio} /> : null}

@@ -320,6 +320,9 @@ const ListingCardCourse = props => {
                 playbackId={playbackId}
                 // tokens={{ playback: muxToken }}
                 streamType="on-demand"
+                accentColor="#FFFFFF"
+                primaryColor="#ddd"
+                secondaryColor="transparent"
                 autoPlay
                 playsInline
               // skipJwt={true}
