@@ -5,7 +5,7 @@
 
 .pageRoot {
   padding-bottom: 90px;
-
+  background: var(--colorWhite);
   @media (--viewportLarge) {
     padding-bottom: 0;
   }
@@ -326,10 +326,10 @@
   @media (--viewportLarge) {
     display: flex;
     flex-direction: row;
-    max-width: unset;
-    width: min(calc(var(--contentMaxWidth) + 72px), 100vw);
-    padding: 64px 36px 0 36px;
-    margin: 0 auto 117px auto;
+    max-width: 1280px;
+    /* width: min(calc(var(--contentMaxWidth) + 72px), 100vw); */
+    padding: 0px 32px 0 32px;
+    margin: 0 auto 96px auto;
   }
 }
 
@@ -752,13 +752,13 @@
 }
 
 .productGallery {
-  margin: 0 0 36px 0;
+  margin: 0 0 0 0;
 
   @media (--viewportMedium) {
-    margin: 24px 0 48px 0;
+    margin: 24px 0 0 0;
   }
   @media (--viewportLarge) {
-    margin: 0 0 40px 0;
+    margin: 0 0 0px 0;
     padding-bottom: 4px;
   }
 }
@@ -871,4 +871,353 @@
 .listingBadgeNeutral {
   background: var(--course-gray-badge-bg);
   color: var(--course-gray-badge-text);
+}
+
+.listingPageCarouselContent{
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+
+.listingPageCarouselHeader{
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 80px 32px 40px;
+}
+
+.courseMuxPlayer {
+  width: 100%;
+  height: 100%;
+}
+
+
+.listingPageCarouselTitle{
+  font-family: Nohemi;
+font-weight: 600;
+font-style: Semi Bold;
+font-size: 64px;
+leading-trim: NONE;
+line-height: 80px;
+letter-spacing: 0px;
+color: #101828;
+margin: 48px 0 0 0;
+padding: 0;
+}
+
+/* --- Video course sections (publicData: benefits, modules, faqs) --- */
+
+.courseSections {
+  display: flex;
+  flex-direction: column;
+
+}
+
+.courseSectionTitle {
+  font-family: Nohemi;
+  font-weight: 600;
+  font-style: Semi Bold;
+  font-size: 48px;
+  leading-trim: NONE;
+  line-height: 60px;
+  letter-spacing: 0px;
+  text-align: center;
+  
+  color: #101828;
+  margin: 0 0 48px 0;
+  padding: 0;
+  text-align: center;
+}
+
+.courseModulesSectionTitle{
+  text-align: left;
+}
+
+.courseSectionBody {
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: spacing/3;
+  letter-spacing: 0%;
+  
+  max-width: 712px;
+  margin: 0 auto;
+  padding: 0;
+  width: 100%;
+  color: #475467;
+  /* white-space: pre-line; */
+  text-align: center;
+  word-break: break-word;
+}
+
+.courseBenefitsSection {
+  padding: 0px 0 96px;
+ 
+}
+
+.courseModulesSection {
+  padding: 0;
+  margin-bottom: 20px;
+}
+
+.courseModuleList {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.courseModuleItem {
+  border-bottom: 1px solid var(--colorGrey100);
+  padding-bottom: 24px;
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.courseModuleHeader {
+  width: 100%;
+  border: none;
+  padding: 0;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.courseModuleHeaderLeft {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+}
+
+.courseModuleIndex {
+  font-family: Nohemi;
+  font-weight: 600;
+  font-style: Semi Bold;
+  font-size: 24px;
+  leading-trim: NONE;
+  line-height: spacing/4;
+  letter-spacing: 0%;
+  
+  color: #101828;
+}
+
+.courseModuleTitle {
+  font-family: Nohemi;
+  font-weight: 600;
+  font-style: Semi Bold;
+  font-size: 24px;
+  leading-trim: NONE;
+  line-height: spacing/4;
+  letter-spacing: 0%;
+  
+  color: #101828;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.courseModuleChevron {
+ 
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #101828;
+  transform: rotate(0deg);
+  transition: transform 160ms ease;
+  flex-shrink: 0;
+  & svg{
+    fill: transparent;
+  }
+}
+
+.courseModuleChevronOpen {
+  transform: rotate(180deg);
+}
+
+.courseModulePanel {
+  padding-top: 16px;
+}
+
+.courseModuleDescription {
+  composes: p from global;
+  margin: 0 0 18px 0;
+  max-width: 920px;
+  color: #475467;
+  white-space: pre-line;
+}
+
+.courseLessonRow {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+
+  @media (--viewportMedium) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+}
+
+.courseLessonCard {
+
+  background: var(--colorWhite);
+}
+
+.courseLessonThumbWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: linear-gradient(145deg, #6b9e3e 0%, #c5d84a 45%, #8fbc55 100%);
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.courseLessonThumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.courseLessonThumbFallback {
+  width: 100%;
+  height: 100%;
+}
+
+.courseLessonThumbOverlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 45%, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.34));
+}
+
+.courseLessonThumbPlay {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.85);
+  color: #101828;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.courseLessonContent {
+  padding: 20px 0 16px 0;
+}
+
+.courseLessonTitle {
+  font-family: Nohemi;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0px;
+  
+  color: #101828;
+  margin: 0 0 20px 0;
+  padding: 0;
+}
+
+.courseLessonDuration {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: Nohemi;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0px;
+  vertical-align: middle;
+  
+  color: #006647;
+  margin: 0 0 20px 0;
+}
+
+.courseLessonDescription {
+  font-family: Nunito Sans;
+font-weight: 400;
+font-style: Regular;
+font-size: 16px;
+leading-trim: NONE;
+line-height: spacing/3;
+letter-spacing: 0%;
+
+  margin: 0;
+  color: #535862;
+  word-break: break-word;
+  padding: 0;
+  /* white-space: pre-line; */
+}
+
+.courseFaqSection {
+  padding: 96px 0 96px 0;
+  background: #FAFAFA;
+
+}
+
+.courseFaqGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 32px;
+
+  @media (--viewportMedium) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 36px;
+  }
+}
+
+.courseFaqSectionTitle{
+  text-align: left;
+  max-width: 1280px;
+  margin: 0 auto 64px;
+  padding: 0 32px;
+}
+
+.courseFaqItem {
+  min-width: 0;
+}
+
+.courseFaqQuestion {
+  font-family: Nohemi;
+  font-weight: 600;
+  font-style: Semi Bold;
+  font-size: 24px;
+  leading-trim: NONE;
+  line-height: spacing/4;
+  letter-spacing: 0%;
+  
+  color: #101828;
+  margin: 0 0 10px 0;
+}
+
+.courseFaqAnswer {
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: spacing/3;
+  letter-spacing: 0%;
+  
+  margin: 0;
+  color: #414651;
+  word-break: break-word;
+  padding: 0;
 }

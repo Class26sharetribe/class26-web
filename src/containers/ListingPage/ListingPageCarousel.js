@@ -55,6 +55,9 @@ import SectionMapMaybe from './SectionMapMaybe';
 import SectionGallery from './SectionGallery';
 import CustomListingFields from './CustomListingFields';
 import ListingPageAccessWrapper from './ListingPageAccessWrapper';
+import ListingPageBenefits from './ListingPageBenefits';
+import ListingPageModulesAndLessons from './ListingPageModulesAndLessons';
+import ListingPageFaqs from './ListingPageFaqs';
 
 import css from './ListingPage.module.css';
 
@@ -250,6 +253,25 @@ export const ListingPageComponent = props => {
       }}
     >
       <LayoutSingleColumn className={css.pageRoot} topbar={topbar} footer={<FooterContainer />}>
+        <div className={css.listingPageCarouselHeader}>
+          {(categoryLevel1Label || listingTypeLabel) ? (
+            <div className={css.listingBadgeRow}>
+              {categoryLevel1Label ? (
+                <span className={classNames(css.listingBadge, css.listingBadgeGreen)}>
+                  {categoryLevel1Label}
+                </span>
+              ) : null}
+              {listingTypeLabel ? (
+                <span className={classNames(css.listingBadge, css.listingBadgeNeutral)}>
+                  {listingTypeLabel}
+                </span>
+              ) : null}
+            </div>
+          ) : null}
+          {currentListing.attributes.title ? <>
+            <h1 className={css.listingPageCarouselTitle}>{currentListing.attributes.title}</h1>
+          </> : null}
+        </div>
         <div className={css.contentWrapperForProductLayout}>
           <div className={css.mainColumnForProductLayout}>
             <Notifications
@@ -266,24 +288,9 @@ export const ListingPageComponent = props => {
                 tab: listingTab,
               }}
             />
-            {(categoryLevel1Label || listingTypeLabel) ? (
-              <div className={css.listingBadgeRow}>
-                {categoryLevel1Label ? (
-                  <span className={classNames(css.listingBadge, css.listingBadgeGreen)}>
-                    {categoryLevel1Label}
-                  </span>
-                ) : null}
-                {listingTypeLabel ? (
-                  <span className={classNames(css.listingBadge, css.listingBadgeNeutral)}>
-                    {listingTypeLabel}
-                  </span>
-                ) : null}
-              </div>
-            ) : null}
 
-            {currentListing.attributes.title ? <>
-           <h1>{currentListing.attributes.title}</h1>
-            </> : null}
+
+
             {showListingImage && (
               <SectionGallery
                 listing={currentListing}
@@ -303,36 +310,7 @@ export const ListingPageComponent = props => {
                 </H3>
               )}
             </div>
-            {showDescription && <SectionText text={description} showAsIngress />}
 
-            <CustomListingFields
-              publicData={publicData}
-              metadata={metadata}
-              listingFieldConfigs={listingConfig.listingFields}
-              categoryConfiguration={config.categoryConfiguration}
-              intl={intl}
-            />
-
-            <SectionMapMaybe
-              geolocation={geolocation}
-              publicData={publicData}
-              listingId={currentListing.id}
-              mapsConfig={config.maps}
-            />
-            <SectionReviews reviews={reviews} fetchReviewsError={fetchReviewsError} />
-            <SectionAuthorMaybe
-              title={title}
-              listing={currentListing}
-              authorDisplayName={authorDisplayName}
-              onContactUser={onContactUser}
-              isInquiryModalOpen={isAuthenticated && inquiryModalOpen}
-              onCloseInquiryModal={() => setInquiryModalOpen(false)}
-              sendInquiryError={sendInquiryError}
-              sendInquiryInProgress={sendInquiryInProgress}
-              onSubmitInquiry={onSubmitInquiry}
-              currentUser={currentUser}
-              onManageDisableScrolling={onManageDisableScrolling}
-            />
           </div>
           <div className={css.orderColumnForProductLayout}>
             <OrderPanel
@@ -371,6 +349,44 @@ export const ListingPageComponent = props => {
             />
           </div>
         </div>
+        <div className={css.listingPageCarouselContent}>
+          <div className={css.courseSections}>
+            <ListingPageBenefits publicData={publicData} />
+            <ListingPageModulesAndLessons publicData={publicData} />
+          </div>
+         
+          {/* {showDescription && <SectionText text={description} showAsIngress />}
+
+          <CustomListingFields
+            publicData={publicData}
+            metadata={metadata}
+            listingFieldConfigs={listingConfig.listingFields}
+            categoryConfiguration={config.categoryConfiguration}
+            intl={intl}
+          />
+
+          <SectionMapMaybe
+            geolocation={geolocation}
+            publicData={publicData}
+            listingId={currentListing.id}
+            mapsConfig={config.maps}
+          />
+          <SectionReviews reviews={reviews} fetchReviewsError={fetchReviewsError} />
+          <SectionAuthorMaybe
+            title={title}
+            listing={currentListing}
+            authorDisplayName={authorDisplayName}
+            onContactUser={onContactUser}
+            isInquiryModalOpen={isAuthenticated && inquiryModalOpen}
+            onCloseInquiryModal={() => setInquiryModalOpen(false)}
+            sendInquiryError={sendInquiryError}
+            sendInquiryInProgress={sendInquiryInProgress}
+            onSubmitInquiry={onSubmitInquiry}
+            currentUser={currentUser}
+            onManageDisableScrolling={onManageDisableScrolling}
+          /> */}
+        </div>
+        <ListingPageFaqs publicData={publicData} />
       </LayoutSingleColumn>
     </Page>
   );

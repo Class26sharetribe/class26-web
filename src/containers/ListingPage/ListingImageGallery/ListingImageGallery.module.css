@@ -51,19 +51,24 @@
 }
 
 :global(.image-gallery-slide-wrapper) {
-  background-color: var(--colorWhite);
-  border-bottom: 1px solid var(--colorGrey100);
+  /* background-color: var(--colorWhite);
+  border-bottom: 1px solid var(--colorGrey100); */
 
   @media (--viewportMedium) {
-    border-radius: 16px;
-    border: 1px solid var(--colorGrey100);
-    overflow: hidden;
+
   }
 }
+:global(.image-gallery-swipe) {
+  border: 1px solid var(--colorGrey100);
+  border-radius: 16px;
+ 
+  overflow: hidden;
+}
+
 
 /* Room for bottom-left prev/next controls above thumbnail strip */
 :global(.image-gallery:not(.fullscreen-modal)) :global(.image-gallery-slide-wrapper) {
-  padding-bottom: 56px;
+  padding-bottom: 70px;
 }
 
 :global(.fullscreen) {

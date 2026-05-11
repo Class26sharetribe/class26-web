@@ -28,6 +28,8 @@ const IMAGE_GALLERY_OPTIONS = {
 };
 const MAX_LANDSCAPE_ASPECT_RATIO = 2; // 2:1
 const MAX_PORTRAIT_ASPECT_RATIO = 4 / 3;
+const FIGMA_GALLERY_WIDTH = 715;
+const FIGMA_GALLERY_HEIGHT = 402;
 
 const getIdString = id => id?.uuid || id;
 
@@ -218,6 +220,10 @@ const ListingImageGallery = props => {
       ? { aspectWidth: 16, aspectHeight: 9 }
       : getFirstImageAspectRatio(firstImageForAspect, imageVariants?.[0]);
 
+  const itemAspect = isFullscreen
+    ? { aspectWidth, aspectHeight }
+    : { aspectWidth: FIGMA_GALLERY_WIDTH, aspectHeight: FIGMA_GALLERY_HEIGHT };
+
   const presentationLabel = intl.formatMessage({ id: 'ListingImageGallery.presentationLabel' });
 
   const items = slides.map((slide, i) => {
@@ -261,7 +267,9 @@ const ListingImageGallery = props => {
 
   const imageSizesMaybe = isFullscreen
     ? {}
-    : { sizes: `(max-width: 1024px) 100vw, (max-width: 1200px) calc(100vw - 192px), 708px` };
+    : {
+      sizes: `(max-width: 1024px) 100vw, (max-width: 1200px) calc(100vw - 192px), ${FIGMA_GALLERY_WIDTH}px`,
+    };
 
   const renderItem = item => {
     const itemWrapperClass = isFullscreen ? css.itemWrapperFullscreen : css.itemWrapper;
@@ -269,8 +277,8 @@ const ListingImageGallery = props => {
       return (
         <GalleryMuxSlide
           playbackId={item.playbackId}
-          aspectWidth={aspectWidth || 1}
-          aspectHeight={aspectHeight || 1}
+          aspectWidth={itemAspect.aspectWidth || 1}
+          aspectHeight={itemAspect.aspectHeight || 1}
           isActiveSlide={currentIndex === item.slideIndex}
           itemWrapperClassName={itemWrapperClass}
           presentationLabel={presentationLabel}
@@ -279,8 +287,8 @@ const ListingImageGallery = props => {
     }
     return (
       <AspectRatioWrapper
-        width={aspectWidth || 1}
-        height={aspectHeight || 1}
+        width={itemAspect.aspectWidth || 1}
+        height={itemAspect.aspectHeight || 1}
         className={itemWrapperClass}
       >
         <div className={css.itemCentering}>
