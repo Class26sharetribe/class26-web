@@ -265,6 +265,14 @@ const ListingImageGallery = props => {
     };
   });
 
+  // Keep state index in bounds if items are loaded/changed dynamically.
+  useEffect(() => {
+    if (items.length === 0) {
+      return;
+    }
+    setCurrentIndex(i => Math.min(i, items.length - 1));
+  }, [items.length]);
+
   const imageSizesMaybe = isFullscreen
     ? {}
     : {
@@ -407,6 +415,7 @@ const ListingImageGallery = props => {
       // renderThumbInner={renderThumbInner}
       onScreenChange={onScreenChange}
       onSlide={onSlide}
+      startIndex={currentIndex}
       renderLeftNav={renderLeftNav}
       renderRightNav={renderRightNav}
       // renderFullscreenButton={renderFullscreenButton}
