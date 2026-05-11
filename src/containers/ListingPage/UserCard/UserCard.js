@@ -152,7 +152,7 @@ const UserCard = props => {
 
   const links = ensuredUser.id ? (
     <div className={linkClasses}>
-       <ExpandableBio className={css.desktopBio} bio={"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."} />
+       
       {user?.attributes?.profile?.bio && <ExpandableBio className={css.desktopBio} bio={user.attributes.profile.bio} />}
     
       <div className={css.profileLinksRow}>
