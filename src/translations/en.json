@@ -1679,5 +1679,13 @@
   "ListingCard.highlightVideoCourse": "{durationText}",
   "ListingCard.highlightDefault": "Lifetime access",
   "EditListingWizard.default-booking.new.saveFaq": "Next",
-  "EditListingWizard.default-booking.new.saveReady": "Submit for Approval"
+  "EditListingWizard.default-booking.new.saveReady": "Submit for Approval",
+  "AuthenticationPage.userAgreementAcceptText": "I accept the {userAgreementLink} and the {communityGuidelinesLink}",
+  "AuthenticationPage.userAgreementAcceptRequired": "You need to accept the User Agreement and Community Guidelines",
+  "AuthenticationPage.userAgreementLinkText": "User Agreement",
+  "AuthenticationPage.communityGuidelinesLinkText": "Community Guidelines",
+  "ExpertSignupPage.expertTermsAcceptText": "I accept the {expertCollaborationAgreementLink}, {expertCommunityGuidelinesLink} and the {expertConductPolicyLink}",
+  "ExpertSignupPage.expertTermsAcceptRequired": "You need to accept the Expert Collaboration Agreement, Community Guidelines and Expert Conduct Policy",
+  "ExpertSignupPage.expertCollaborationAgreementLinkText": "Expert Collaboration Agreement",
+  "ExpertSignupPage.expertConductPolicyLinkText": "Expert Conduct Policy"
 }

@@ -37,6 +37,10 @@ import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 import { TermsOfServiceContent } from '../../containers/TermsOfServicePage/TermsOfServicePage';
 // We need to get PrivacyPolicy asset and get it rendered for the modal on this page.
 import { PrivacyPolicyContent } from '../../containers/PrivacyPolicyPage/PrivacyPolicyPage';
+// We need to get UserAgreement asset and get it rendered for the modal on this page.
+import { UserAgreementContent } from './UserAgreementContent';
+// We need to get CommunityGuidelines asset and get it rendered for the modal on this page.
+import { CommunityGuidelinesContent } from './CommunityGuidelinesContent';
 import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
 
 import {
@@ -55,7 +59,12 @@ import SocialLoginButtons from './SocialLoginButtons/SocialLoginButtons';
 import AuthenticationPageImage from '../../assets/Image.png';
 import loginPageImage from '../../assets/login.png';
 
-import { TOS_ASSET_NAME, PRIVACY_POLICY_ASSET_NAME } from './AuthenticationPage.duck';
+import {
+  TOS_ASSET_NAME,
+  PRIVACY_POLICY_ASSET_NAME,
+  USER_AGREEMENT_ASSET_NAME,
+  COMMUNITY_GUIDELINES_ASSET_NAME,
+} from './AuthenticationPage.duck';
 
 import css from './AuthenticationPage.module.css';
 
@@ -197,6 +206,8 @@ const BlankPage = props => {
 export const AuthenticationPageComponent = props => {
   const [tosModalOpen, setTosModalOpen] = useState(false);
   const [privacyModalOpen, setPrivacyModalOpen] = useState(false);
+  const [userAgreementModalOpen, setUserAgreementModalOpen] = useState(false);
+  const [communityGuidelinesModalOpen, setCommunityGuidelinesModalOpen] = useState(false);
   const [authInfo, setAuthInfo] = useState(getAuthInfoFromCookies());
   const [authError, setAuthError] = useState(getAuthErrorFromCookies());
   const [mounted, setMounted] = useState(false);
@@ -216,7 +227,7 @@ export const AuthenticationPageComponent = props => {
   // On mobile, it's better to scroll to top.
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [tosModalOpen, privacyModalOpen]);
+  }, [tosModalOpen, privacyModalOpen, userAgreementModalOpen, communityGuidelinesModalOpen]);
 
   const {
     authInProgress,
@@ -314,6 +325,8 @@ export const AuthenticationPageComponent = props => {
     <TermsAndConditions
       onOpenTermsOfService={() => setTosModalOpen(true)}
       onOpenPrivacyPolicy={() => setPrivacyModalOpen(true)}
+      onOpenUserAgreement={() => setUserAgreementModalOpen(true)}
+      onOpenCommunityGuidelines={() => setCommunityGuidelinesModalOpen(true)}
       intl={intl}
     />
   );
@@ -505,6 +518,40 @@ export const AuthenticationPageComponent = props => {
             data={pageAssetsData?.[camelize(PRIVACY_POLICY_ASSET_NAME)]?.data}
             featuredListings={getFeaturedListingsProps(camelize(PRIVACY_POLICY_ASSET_NAME), props)}
             isOpen={privacyModalOpen}
+          />
+        </div>
+      </Modal>
+      <Modal
+        id="AuthenticationPage.userAgreement"
+        isOpen={userAgreementModalOpen}
+        onClose={() => setUserAgreementModalOpen(false)}
+        usePortal
+        onManageDisableScrolling={onManageDisableScrolling}
+        focusElementId={'user-agreement-accepted.user-agreement-and-guidelines'}
+      >
+        <div className={css.termsWrapper} role="complementary">
+          <UserAgreementContent
+            inProgress={pageAssetsFetchInProgress}
+            error={pageAssetsFetchError}
+            data={pageAssetsData?.[camelize(USER_AGREEMENT_ASSET_NAME)]?.data}
+            featuredListings={getFeaturedListingsProps(camelize(USER_AGREEMENT_ASSET_NAME), props)}
+          />
+        </div>
+      </Modal>
+      <Modal
+        id="AuthenticationPage.communityGuidelines"
+        isOpen={communityGuidelinesModalOpen}
+        onClose={() => setCommunityGuidelinesModalOpen(false)}
+        usePortal
+        onManageDisableScrolling={onManageDisableScrolling}
+        focusElementId={'user-agreement-accepted.user-agreement-and-guidelines'}
+      >
+        <div className={css.termsWrapper} role="complementary">
+          <CommunityGuidelinesContent
+            inProgress={pageAssetsFetchInProgress}
+            error={pageAssetsFetchError}
+            data={pageAssetsData?.[camelize(COMMUNITY_GUIDELINES_ASSET_NAME)]?.data}
+            featuredListings={getFeaturedListingsProps(camelize(COMMUNITY_GUIDELINES_ASSET_NAME), props)}
           />
         </div>
       </Modal>

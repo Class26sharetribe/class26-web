@@ -185,6 +185,7 @@ const SignupFormComponent = props => (
               </div>
 
               <FieldTextInput
+                className={css.row}
                 type="email"
                 id={formId ? `${formId}.email` : 'email'}
                 name="email"
@@ -260,10 +261,7 @@ const SignupFormComponent = props => (
             <p className={css.expertSectionText}>
               <FormattedMessage id="SignupForm.wishToBecomeTeacher" />
             </p>
-            <NamedLink
-              name="ExpertSignupPage"
-              className={css.applyExpertButton}
-            >
+            <NamedLink name="ExpertSignupPage" className={css.applyExpertButton}>
               <FormattedMessage id="SignupForm.applyForExpertAccount" />
             </NamedLink>
           </div>
