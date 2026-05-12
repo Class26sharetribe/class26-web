@@ -16,7 +16,15 @@ export const apiBaseUrl = marketplaceRootURL => {
   }
 
   // Otherwise, use the given marketplaceRootURL parameter or the same domain and port as the frontend
-  return marketplaceRootURL ? marketplaceRootURL.replace(/\/$/, '') : `${window.location.origin}`;
+  if (marketplaceRootURL) {
+    return marketplaceRootURL.replace(/\/$/, '');
+  }
+
+  if (typeof window !== 'undefined') {
+    return `${window.location.origin}`;
+  }
+
+  throw new Error('apiBaseUrl requires marketplaceRootURL when called server-side.');
 };
 
 // Application type handlers for JS SDK.
@@ -50,8 +58,9 @@ const methods = {
 
 // If server/api returns data from SDK, you should set Content-Type to 'application/transit+json'
 const request = (path, options = {}) => {
-  const url = `${apiBaseUrl()}${path}`;
-  const { credentials, headers, body, ...rest } = options;
+  const { credentials, headers, body, marketplaceRootURL, ...rest } = options;
+  const url = `${apiBaseUrl(marketplaceRootURL)}${path}`;
+  const fetch = typeof window !== 'undefined' ? window.fetch.bind(window) : global.fetch;
 
   // If headers are not set, we assume that the body should be serialized as transit format.
   const shouldSerializeBody =
@@ -67,7 +76,7 @@ const request = (path, options = {}) => {
     ...rest,
   };
 
-  return window.fetch(url, fetchOptions).then(res => {
+  return fetch(url, fetchOptions).then(res => {
     const contentTypeHeader = res.headers.get('Content-Type');
     const contentType = contentTypeHeader ? contentTypeHeader.split(';')[0] : null;
 
@@ -159,6 +168,12 @@ export const createUserWithIdp = body => {
 // the marketplace.
 export const deleteUserAccount = body => {
   return post('/api/delete-account', body);
+};
+
+export const querySellers = (queryParams = {}, marketplaceRootURL) => {
+  return get('/api/query-sellers?' + new URLSearchParams(queryParams).toString(), {
+    marketplaceRootURL,
+  });
 };
 
 export const generatePresignedUrl = body => {
