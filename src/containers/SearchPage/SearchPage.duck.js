@@ -13,6 +13,7 @@ import {
 import { constructQueryParamName, isOriginInUse } from '../../util/search';
 import { hasPermissionToViewData, isUserAuthorized } from '../../util/userHelpers';
 import { parse } from '../../util/urlHelpers';
+import { querySellers } from '../../util/api';
 
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 
@@ -20,6 +21,7 @@ import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 // Current design has max 3 columns 12 is divisible by 2 and 3
 // So, there's enough cards to fill all columns on full pagination pages
 const RESULT_PAGE_SIZE = 24;
+const SELLER_RESULT_PAGE_SIZE = 100;
 
 // ================ Helper Functions ================ //
 
@@ -331,6 +333,42 @@ export const searchListings = createAsyncThunk(
   searchListingsPayloadCreator
 );
 
+////////////////////
+// Search Sellers //
+////////////////////
+const searchSellersPayloadCreator = ({ searchParams, config }, thunkAPI) => {
+  const { dispatch, rejectWithValue } = thunkAPI;
+
+  return querySellers({ perPage: SELLER_RESULT_PAGE_SIZE }, config?.marketplaceRootURL)
+    .then(response => {
+      const userFields = config?.user?.userFields;
+      const sanitizeConfig = { userFields };
+      const sellers = response?.data || [];
+      const fallbackMeta = {
+        page: 1,
+        perPage: SELLER_RESULT_PAGE_SIZE,
+        totalItems: sellers.length,
+        totalPages: 1,
+      };
+
+      dispatch(addMarketplaceEntities({ data: response }, sanitizeConfig));
+
+      return {
+        searchParams,
+        sellerRefs: sellers.map(({ id, type }) => ({ id, type })),
+        pagination: response?.meta || fallbackMeta,
+      };
+    })
+    .catch(e => {
+      return rejectWithValue(storableError(e));
+    });
+};
+
+export const searchSellers = createAsyncThunk(
+  'SearchPage/searchSellers',
+  searchSellersPayloadCreator
+);
+
 // ================ Slice ================ //
 
 const searchPageSlice = createSlice({
@@ -341,6 +379,7 @@ const searchPageSlice = createSlice({
     searchInProgress: false,
     searchListingsError: null,
     currentPageResultIds: [],
+    sellerRefs: [],
     activeListingId: null,
   },
   reducers: {
@@ -365,6 +404,22 @@ const searchPageSlice = createSlice({
         console.error(action.payload);
         state.searchInProgress = false;
         state.searchListingsError = action.payload;
+      })
+      .addCase(searchSellers.pending, (state, action) => {
+        state.searchParams = action.meta.arg.searchParams;
+        state.searchInProgress = true;
+        state.searchListingsError = null;
+      })
+      .addCase(searchSellers.fulfilled, (state, action) => {
+        state.currentPageResultIds = [];
+        state.sellerRefs = action.payload.sellerRefs;
+        state.pagination = action.payload.pagination;
+        state.searchInProgress = false;
+      })
+      .addCase(searchSellers.rejected, (state, action) => {
+        console.error(action.payload);
+        state.searchInProgress = false;
+        state.searchListingsError = action.payload;
       });
   },
 });
@@ -376,7 +431,7 @@ export default searchPageSlice.reducer;
 
 // ================ Load data ================ //
 
-export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
+export const loadData = (params, search, config) => (dispatch, getState) => {
   // In private marketplace mode, this page won't fetch data if the user is unauthorized
   const { listingType: listingTypePathParam } = params || {};
   const state = getState();
@@ -396,61 +451,75 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
   });
 
   const { page = 1, address, origin, ...rest } = queryParams;
-  const originMaybe = isOriginInUse(config) && origin ? { origin } : {};
 
-  const listingTypeVariantMaybe = listingTypePathParam
-    ? { listingTypePathParam, isListingTypeVariant: true }
-    : {};
+  if (config.layout.searchPage?.variantType === 'map') {
+    const originMaybe = isOriginInUse(config) && origin ? { origin } : {};
 
-  const {
-    aspectWidth = 1,
-    aspectHeight = 1,
-    variantPrefix = 'listing-card',
-  } = config.layout.listingImage;
-  const aspectRatio = aspectHeight / aspectWidth;
+    const listingTypeVariantMaybe = listingTypePathParam
+      ? { listingTypePathParam, isListingTypeVariant: true }
+      : {};
 
-  const searchListingsCall = searchListings({
+    const {
+      aspectWidth = 1,
+      aspectHeight = 1,
+      variantPrefix = 'listing-card',
+    } = config.layout.listingImage;
+    const aspectRatio = aspectHeight / aspectWidth;
+
+    const searchListingsCall = searchListings({
+      searchParams: {
+        ...rest,
+        ...originMaybe,
+        ...listingTypeVariantMaybe,
+        page,
+        perPage: RESULT_PAGE_SIZE,
+        include: ['author', 'images'],
+        'fields.listing': [
+          'title',
+          'description',
+          'geolocation',
+          'price',
+          'deleted',
+          'state',
+          'publicData.listingType',
+          'publicData.transactionProcessAlias',
+          'publicData.unitType',
+          'publicData.categoryLevel1',
+          'publicData.totalSessions',
+          'publicData.courseModules',
+          // These help rendering of 'purchase' listings,
+          // when transitioning from search page to listing page
+          'publicData.pickupEnabled',
+          'publicData.shippingEnabled',
+          'publicData.priceVariationsEnabled',
+          'publicData.priceVariants',
+          'publicData.mediaGallery',
+        ],
+        'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
+        'fields.image': [
+          'variants.scaled-small',
+          'variants.scaled-medium',
+          `variants.${variantPrefix}`,
+          `variants.${variantPrefix}-2x`,
+        ],
+        ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
+        ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
+        'limit.images': 1,
+      },
+      config,
+    });
+
+    return dispatch(searchListingsCall);
+  }
+
+  const searchSellersCall = searchSellers({
     searchParams: {
       ...rest,
-      ...originMaybe,
-      ...listingTypeVariantMaybe,
       page,
-      perPage: RESULT_PAGE_SIZE,
-      include: ['author', 'images'],
-      'fields.listing': [
-        'title',
-        'description',
-        'geolocation',
-        'price',
-        'deleted',
-        'state',
-        'publicData.listingType',
-        'publicData.transactionProcessAlias',
-        'publicData.unitType',
-        'publicData.categoryLevel1',
-        'publicData.totalSessions',
-        'publicData.courseModules',
-        // These help rendering of 'purchase' listings,
-        // when transitioning from search page to listing page
-        'publicData.pickupEnabled',
-        'publicData.shippingEnabled',
-        'publicData.priceVariationsEnabled',
-        'publicData.priceVariants',
-        'publicData.mediaGallery',
-      ],
-      'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
-      'fields.image': [
-        'variants.scaled-small',
-        'variants.scaled-medium',
-        `variants.${variantPrefix}`,
-        `variants.${variantPrefix}-2x`,
-      ],
-      ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
-      ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
-      'limit.images': 1,
+      perPage: SELLER_RESULT_PAGE_SIZE,
     },
     config,
   });
 
-  return dispatch(searchListingsCall);
+  return dispatch(searchSellersCall);
 };

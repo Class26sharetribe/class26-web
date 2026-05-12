@@ -7,6 +7,10 @@ const MOCK_PROFILE_IMAGE_VARIANTS = [
   { name: 'square-xsmall2x', width: 80, height: 80 },
   { name: 'square-small', width: 240, height: 240 },
   { name: 'square-small2x', width: 480, height: 480 },
+  { name: 'seller-search-card', width: 640, height: 400 },
+  { name: 'seller-search-card-2x', width: 1280, height: 800 },
+  { name: 'seller-landing-card', width: 480, height: 600 },
+  { name: 'seller-landing-card-2x', width: 960, height: 1200 },
 ];
 
 export const createMockProfileImage = (sellerId, avatarUrl) => {

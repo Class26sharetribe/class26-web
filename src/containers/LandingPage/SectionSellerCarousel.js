@@ -8,6 +8,8 @@ import { ErrorMessage, IconSpinner, NamedLink, ResponsiveImage } from '../../com
 import css from './SectionSellerCarousel.module.css';
 
 const PROFILE_IMAGE_VARIANTS = [
+  'seller-landing-card',
+  'seller-landing-card-2x',
   'square-xsmall',
   'square-xsmall2x',
   'square-small',

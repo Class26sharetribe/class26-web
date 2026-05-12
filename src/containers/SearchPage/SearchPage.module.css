@@ -223,13 +223,19 @@
   font-family: Nohemi;
   font-weight: 600;
   font-style: Semi Bold;
-  font-size: 64px;
+  font-size: 44px;
   leading-trim: NONE;
-  line-height: 80px;
+  line-height: 52px;
   letter-spacing: 0px;
   color: #101828;
-  margin: 0 0 48px;
+  margin: 0 0 32px;
   padding: 0;
+
+  @media (--viewportMedium) {
+    font-size: 64px;
+    line-height: 80px;
+    margin: 0 0 48px;
+  }
 }
 
 .pageSubTitle {
@@ -238,7 +244,7 @@
   font-style: Regular;
   font-size: 16px;
   leading-trim: NONE;
-  line-height: spacing/3;
+  line-height: 24px;
   letter-spacing: 0%;
   color: #414651;
   margin: 0 0 48px;
