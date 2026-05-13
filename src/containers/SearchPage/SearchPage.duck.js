@@ -3,6 +3,11 @@ import { createImageVariantConfig } from '../../util/sdkLoader';
 import { isErrorUserPendingApproval, isForbiddenError, storableError } from '../../util/errors';
 import { convertUnitToSubUnit, unitDivisor } from '../../util/currency';
 import {
+  LISTING_TYPE_GROUP_COACHING,
+  LISTING_TYPE_INDIVIDUAL_COACHING,
+  LISTING_TYPE_VIDEO_COURSE,
+} from '../../util/types';
+import {
   parseDateFromISO8601,
   getExclusiveEndDate,
   addTime,
@@ -10,7 +15,7 @@ import {
   daysBetween,
   getStartOf,
 } from '../../util/dates';
-import { constructQueryParamName, isOriginInUse } from '../../util/search';
+import { constructQueryParamName } from '../../util/search';
 import { hasPermissionToViewData, isUserAuthorized } from '../../util/userHelpers';
 import { parse } from '../../util/urlHelpers';
 import { querySellers } from '../../util/api';
@@ -22,6 +27,22 @@ import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 // So, there's enough cards to fill all columns on full pagination pages
 const RESULT_PAGE_SIZE = 24;
 const SELLER_RESULT_PAGE_SIZE = 100;
+
+export const SEARCH_PAGE_TYPE_COURSES = 'courses';
+export const SEARCH_PAGE_TYPE_LISTING_TYPE = 'listingType';
+export const SEARCH_PAGE_TYPE_SELLERS = 'sellers';
+
+export const SEARCH_PAGE_TYPES = [
+  SEARCH_PAGE_TYPE_COURSES,
+  SEARCH_PAGE_TYPE_LISTING_TYPE,
+  SEARCH_PAGE_TYPE_SELLERS,
+];
+
+const COURSE_LISTING_TYPES = [
+  LISTING_TYPE_INDIVIDUAL_COACHING,
+  LISTING_TYPE_GROUP_COACHING,
+  LISTING_TYPE_VIDEO_COURSE,
+];
 
 // ================ Helper Functions ================ //
 
@@ -39,28 +60,6 @@ const resultIds = data => {
 /////////////////////
 const searchListingsPayloadCreator = ({ searchParams, config }, thunkAPI) => {
   const { dispatch, rejectWithValue, extra: sdk } = thunkAPI;
-  // SearchPage can enforce listing query to only those listings with valid listingType
-  // NOTE: this only works if you have set 'enum' type search schema to listing's public data fields
-  //       - listingType
-  //       Same setup could be expanded to 2 other extended data fields:
-  //       - transactionProcessAlias
-  //       - unitType
-  //       ...and then turned enforceValidListingType config to true in configListing.js
-  // Read More:
-  // https://www.sharetribe.com/docs/how-to/manage-search-schemas-with-flex-cli/#adding-listing-search-schemas
-  const searchValidListingTypes = (listingTypes, listingTypePathParam, isListingTypeVariant) => {
-    return isListingTypeVariant
-      ? {
-          pub_listingType: listingTypePathParam,
-        }
-      : config.listing.enforceValidListingType
-      ? {
-          pub_listingType: listingTypes.map(l => l.listingType),
-          // pub_transactionProcessAlias: listingTypes.map(l => l.transactionType.alias),
-          // pub_unitType: listingTypes.map(l => l.transactionType.unitType),
-        }
-      : {};
-  };
 
   const constructCategoryPropertiesForAPI = (queryParamPrefix, categories, level, params) => {
     const levelKey = `${queryParamPrefix}${level}`;
@@ -268,8 +267,6 @@ const searchListingsPayloadCreator = ({ searchParams, config }, thunkAPI) => {
     seats,
     sort,
     mapSearch,
-    listingTypePathParam,
-    isListingTypeVariant,
     ...restOfParams
   } = searchParams;
   // The params related to default filters are prepared one-by-one
@@ -289,19 +286,6 @@ const searchListingsPayloadCreator = ({ searchParams, config }, thunkAPI) => {
     //   I.e. the range end must be exclusive. E.g. 1000,2000 -> 1000,2001
     // Note: invalid independent search params are still passed through
     ...prepareAPIParams(restOfParams, [prepareCategoryParams, prepareIntegerRangeParam]),
-    // If the search page variant is of type /s/:listingType, this sets the pub_listingType
-    // query parameter to the value of the listing type path parameter. The ordering matters here,
-    // since this value overrides any possible pub_listingType value coming from query parameters
-    // i.e. the previous row.
-    //
-    // Only one value is currently supported in pub_listingType – if you want to support e.g.
-    // /s/:listingType?pub_listingType=[otherListingType] => pub_listingType=listingType,otherListingType,
-    // you'll need to customize a logic that merges the query param and path param values.
-    ...searchValidListingTypes(
-      config.listing.listingTypes,
-      listingTypePathParam,
-      isListingTypeVariant
-    ),
     ...priceMaybe,
     ...datesMaybe,
     ...stockMaybe,
@@ -394,6 +378,7 @@ const searchPageSlice = createSlice({
         state.searchParams = action.meta.arg.searchParams;
         state.searchInProgress = true;
         state.searchListingsError = null;
+        state.sellerRefs = [];
       })
       .addCase(searchListings.fulfilled, (state, action) => {
         state.currentPageResultIds = resultIds(action.payload.data);
@@ -409,6 +394,7 @@ const searchPageSlice = createSlice({
         state.searchParams = action.meta.arg.searchParams;
         state.searchInProgress = true;
         state.searchListingsError = null;
+        state.currentPageResultIds = [];
       })
       .addCase(searchSellers.fulfilled, (state, action) => {
         state.currentPageResultIds = [];
@@ -433,7 +419,8 @@ export default searchPageSlice.reducer;
 
 export const loadData = (params, search, config) => (dispatch, getState) => {
   // In private marketplace mode, this page won't fetch data if the user is unauthorized
-  const { listingType: listingTypePathParam } = params || {};
+  const { listingType: listingTypePathParam, searchPageType = SEARCH_PAGE_TYPE_COURSES } =
+    params || {};
   const state = getState();
   const currentUser = state.user?.currentUser;
   const isAuthorized = currentUser && isUserAuthorized(currentUser);
@@ -450,76 +437,72 @@ export const loadData = (params, search, config) => (dispatch, getState) => {
     latlngBounds: ['bounds'],
   });
 
-  const { page = 1, address, origin, ...rest } = queryParams;
+  const { page = 1, ...rest } = queryParams;
+  delete rest.address;
+  delete rest.origin;
 
-  if (config.layout.searchPage?.variantType === 'map') {
-    const originMaybe = isOriginInUse(config) && origin ? { origin } : {};
-
-    const listingTypeVariantMaybe = listingTypePathParam
-      ? { listingTypePathParam, isListingTypeVariant: true }
-      : {};
-
-    const {
-      aspectWidth = 1,
-      aspectHeight = 1,
-      variantPrefix = 'listing-card',
-    } = config.layout.listingImage;
-    const aspectRatio = aspectHeight / aspectWidth;
-
-    const searchListingsCall = searchListings({
+  if (searchPageType === SEARCH_PAGE_TYPE_SELLERS) {
+    const searchSellersCall = searchSellers({
       searchParams: {
         ...rest,
-        ...originMaybe,
-        ...listingTypeVariantMaybe,
         page,
-        perPage: RESULT_PAGE_SIZE,
-        include: ['author', 'images'],
-        'fields.listing': [
-          'title',
-          'description',
-          'geolocation',
-          'price',
-          'deleted',
-          'state',
-          'publicData.listingType',
-          'publicData.transactionProcessAlias',
-          'publicData.unitType',
-          'publicData.categoryLevel1',
-          'publicData.totalSessions',
-          'publicData.courseModules',
-          // These help rendering of 'purchase' listings,
-          // when transitioning from search page to listing page
-          'publicData.pickupEnabled',
-          'publicData.shippingEnabled',
-          'publicData.priceVariationsEnabled',
-          'publicData.priceVariants',
-          'publicData.mediaGallery',
-        ],
-        'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
-        'fields.image': [
-          'variants.scaled-small',
-          'variants.scaled-medium',
-          `variants.${variantPrefix}`,
-          `variants.${variantPrefix}-2x`,
-        ],
-        ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
-        ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
-        'limit.images': 1,
+        perPage: SELLER_RESULT_PAGE_SIZE,
       },
       config,
     });
 
-    return dispatch(searchListingsCall);
+    return dispatch(searchSellersCall);
   }
 
-  const searchSellersCall = searchSellers({
+  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } =
+    config.layout.listingImage;
+  const aspectRatio = aspectHeight / aspectWidth;
+  const listingTypes =
+    searchPageType === SEARCH_PAGE_TYPE_LISTING_TYPE && listingTypePathParam
+      ? listingTypePathParam
+      : COURSE_LISTING_TYPES;
+
+  const searchListingsCall = searchListings({
     searchParams: {
       ...rest,
+      pub_listingType: listingTypes,
       page,
-      perPage: SELLER_RESULT_PAGE_SIZE,
+      perPage: RESULT_PAGE_SIZE,
+      include: ['author', 'images'],
+      'fields.listing': [
+        'title',
+        'description',
+        'geolocation',
+        'price',
+        'deleted',
+        'state',
+        'publicData.listingType',
+        'publicData.transactionProcessAlias',
+        'publicData.unitType',
+        'publicData.categoryLevel1',
+        'publicData.totalSessions',
+        'publicData.courseModules',
+        // These help rendering of 'purchase' listings,
+        // when transitioning from search page to listing page
+        'publicData.pickupEnabled',
+        'publicData.shippingEnabled',
+        'publicData.priceVariationsEnabled',
+        'publicData.priceVariants',
+        'publicData.mediaGallery',
+      ],
+      'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
+      'fields.image': [
+        'variants.scaled-small',
+        'variants.scaled-medium',
+        `variants.${variantPrefix}`,
+        `variants.${variantPrefix}-2x`,
+      ],
+      ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
+      ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
+      'limit.images': 1,
     },
     config,
   });
 
-  return dispatch(searchSellersCall);
+  return dispatch(searchListingsCall);
 };

@@ -226,10 +226,10 @@ const TopbarDesktop = props => {
           [css.takeAvailableSpace]: giveSpaceForSearch,
         })}
       >
-        <NamedLink name="SearchPage" className={css.topbarLink}>
+        <NamedLink name="SearchPageForCourses" className={css.topbarLink}>
           <span className={css.topbarLinkLabel}>Courses</span>
         </NamedLink>
-        <NamedLink name="SearchPage" className={css.topbarLink}>
+        <NamedLink name="SearchPageForSellers" className={css.topbarLink}>
           <span className={css.topbarLinkLabel}>Experts</span>
         </NamedLink>
 
