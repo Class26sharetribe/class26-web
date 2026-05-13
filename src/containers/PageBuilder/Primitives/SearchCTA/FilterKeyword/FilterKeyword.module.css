@@ -29,6 +29,14 @@
   cursor: pointer;
   text-overflow: ellipsis;
   height: 40px;
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0%;
+
   &:hover,
   &:focus {
     border: none;
@@ -38,11 +46,22 @@
 
   &::placeholder {
     color: var(--colorGrey600);
+    font-family: Nunito Sans;
+    font-weight: 400;
+    font-style: Regular;
+    font-size: 16px;
+    leading-trim: NONE;
+    line-height: 24px;
+    letter-spacing: 0%;
+    color: #A4A7AE;
   }
+
   &:hover::placeholder,
   &:focus::placeholder {
     transition: 0.1s all;
     color: var(--colorBlack);
+
+
   }
 
   @media (--viewportMedium) {

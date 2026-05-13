@@ -17,6 +17,7 @@ import {
   LinkedLogo,
   Modal,
   ModalMissingInformation,
+  NamedLink,
 } from '../../../components';
 import { getSearchPageResourceLocatorStringParams } from '../../SearchPage/SearchPage.shared';
 
@@ -366,6 +367,14 @@ const TopbarComponent = props => {
         />
         {mobileSearchButtonMaybe}
       </nav>
+      <div className={css.topbarContent}> 
+        <NamedLink name="SearchPage" className={css.topbarLink}>
+          <span className={css.topbarLinkLabel}>Courses</span>
+        </NamedLink>
+        <NamedLink name="SearchPage" className={css.topbarLink}>
+          <span className={css.topbarLinkLabel}>Experts</span>
+        </NamedLink>
+      </div>
       <div className={css.desktop}>
         <TopbarDesktop
           className={desktopClassName}

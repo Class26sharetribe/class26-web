@@ -83,6 +83,9 @@
   background-color: var(--colorGrey100);
   text-decoration: none;
   transform: translateZ(0);
+  @media (min-width:768px) {
+    min-height: 624px;
+  }
 }
 
 .card:hover {
@@ -131,27 +134,40 @@
 
 .cardTitle {
   margin: 0;
-  font-family: Nohemi, var(--fontFamily);
+  font-family: Nohemi;
+  font-weight: 500;
+  font-style: Medium;
   font-size: 24px;
-  font-weight: 600;
-  line-height: 30px;
+  line-height: 32px;
+  letter-spacing: 0%;
+  vertical-align: middle;
+  
   color: var(--colorWhite);
+  padding: 0;
+  margin: 0 0 14px;
 }
 
 .cardSubtitle {
   margin: 12px 0 0;
-  font-family: 'Nunito Sans', var(--fontFamily);
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 21px;
+  font-family: Nohemi;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0%;
+  vertical-align: middle;
+  
   color: var(--colorWhite);
+  padding: 0;
+  margin: 0;
 }
 
 .pills {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin: 18px 0 0;
+  gap:11px;
+  margin: 14px 0 0;
   padding: 0;
 }
 
@@ -162,10 +178,14 @@
   border-radius: 999px;
   background-color: rgb(255 255 255 / 78%);
   color: #374151;
-  font-family: 'Nunito Sans', var(--fontFamily);
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 18px;
+  font-family: Nohemi;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0%;
+  text-align: center;
+  
   list-style: none;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -287,23 +307,10 @@
   }
 
   .cardContent {
-    right: 32px;
-    bottom: 32px;
-    left: 32px;
+    right: 30px;
+    bottom: 30px;
+    left: 30px;
   }
 
-  .cardTitle {
-    font-size: 28px;
-    line-height: 36px;
-  }
 
-  .cardSubtitle {
-    font-size: 18px;
-    line-height: 26px;
-  }
-
-  .pill {
-    font-size: 15px;
-    line-height: 20px;
-  }
 }
