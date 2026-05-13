@@ -9,7 +9,9 @@
 
   /* Override global content width cap for this section (Figma: 1530px). */
   --contentMaxWidthPages: 1530px;
-
+  @media (max-width:767px) {
+    padding: 17px 0 0 0;
+  }
   &:hover .carouselArrows {
     opacity: 1;
   }
@@ -125,12 +127,20 @@
 
   margin-right: 16px;
   scroll-snap-align: center;
-
+  border-radius: 8px;
+  overflow: hidden;
   transform: translateX(32px);
+  @media (max-width:767px) {
+    transform: translateX(16px);
+    min-height: 464px;
+    & > div{
+      height: 100%;
+    }
+  }
 
   @media (--viewportMedium) {
     margin-right: 32px;
-    border-radius: 8px;
+  
     overflow: hidden;
   }
 
@@ -226,4 +236,31 @@
     background-color: var(--marketplaceColorDark);
     text-decoration: none;
   }
+}
+
+/* Mobile-only carousel scroll-progress indicator.
+   Visualizes the currently visible portion of the horizontally scrollable list. */
+.scrollProgressTrack {
+  display: none;
+
+  @media (max-width: 767px) {
+    display: block;
+    position: relative;
+    width: 150px;
+    height: 2px;
+    margin: 4px auto 16px;
+    background-color: #D5D7DA;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: -60px;
+  }
+}
+
+.scrollProgressActive {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background-color: #0a1b3a;
+  border-radius: 2px;
+  transition: left 120ms ease-out, width 120ms ease-out;
 }

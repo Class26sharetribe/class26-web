@@ -133,40 +133,50 @@
             text-decoration: none;
           }
         }
-        &:last-child{
+
+        &:last-child {
           display: none;
+
           @media (max-width:767px) {
             display: block;
-           & a{
-            background: #F5F5F5 !important;
-            color: #414651 !important;
-            pointer-events: initial;
-           }
+
+            & a {
+              background: #F5F5F5 !important;
+              color: #414651 !important;
+              pointer-events: initial;
+            }
           }
 
         }
+
         @media (max-width:767px) {
-        &:first-child{
-          display: none;
-        }
-        &:nth-child(4){
-          display: none;
-        }
-        &:nth-child(5){
-          display: none;
-        }
-        &:nth-child(6){
-          display: none;
-        }
-        &:nth-child(7){
-          display: none;
-        }
-        &:nth-child(8){
-          display: none;
-        }
-        &:nth-child(9){
-          display: none;
-        }
+          &:first-child {
+            display: none;
+          }
+
+          &:nth-child(4) {
+            display: none;
+          }
+
+          &:nth-child(5) {
+            display: none;
+          }
+
+          &:nth-child(6) {
+            display: none;
+          }
+
+          &:nth-child(7) {
+            display: none;
+          }
+
+          &:nth-child(8) {
+            display: none;
+          }
+
+          &:nth-child(9) {
+            display: none;
+          }
         }
       }
 
@@ -174,6 +184,7 @@
       & li:nth-child(4n + 1) a {
         background: #FBF4FF;
         color: #711D8B;
+
         @media (max-width:767px) {
           color: #006647;
           background: #CEFDE4;
@@ -273,16 +284,19 @@
 
 :global(#listing-section) {
   @media (max-width:767px) {
-    & > div:nth-child(2){
+    &>div:nth-child(2) {
       padding: 20px 0;
     }
   }
+
   & header {
     text-align: left;
     display: block;
+
     @media (max-width:767px) {
       padding: 0 16px;
     }
+
     & h1 {
       max-width: 100%;
       width: 100%;
@@ -294,6 +308,7 @@
         padding: 0;
         max-width: 358px;
         letter-spacing: 0%;
+        text-wrap: auto;
       }
     }
 
@@ -304,6 +319,14 @@
       margin-top: 48px;
       padding: 0;
       text-wrap: auto;
+      font-family: Nunito Sans;
+      font-weight: 400;
+      font-style: Regular;
+      font-size: 16px;
+      line-height: 24px;
+      letter-spacing: 0%;
+      color: #414651;
+
       @media (max-width:767px) {
         margin-top: 20px;
       }

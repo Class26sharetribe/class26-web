@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import classNames from 'classnames';
 
 // Import configs and components
@@ -179,6 +179,7 @@ const ListingCarouselComponent = props => {
     error,
     allSections,
     isInsideContainer,
+    onScroll,
   } = props;
 
   const listingImageConfig = config.layout.listingImage;
@@ -218,7 +219,12 @@ const ListingCarouselComponent = props => {
   }
 
   return (
-    <ul className={getColumnCSS(numColumns, false)} ref={sliderRef} role="list">
+    <ul
+      className={getColumnCSS(numColumns, false)}
+      ref={sliderRef}
+      role="list"
+      onScroll={onScroll}
+    >
       {listings.map(listing => (
         <li key={listing.id.uuid} className={css.listItem}>
           <ListingCard
@@ -293,6 +299,8 @@ const SectionListings = props => {
 
   const [carouselWidthConstant, setCarouselWidthConstant] = useState(null);
   const [mounted, setMounted] = useState(false);
+  // Tracks the position of the mobile carousel scroll-progress indicator (in percent of the track)
+  const [scrollProgress, setScrollProgress] = useState({ left: 0, width: 0 });
 
   const containerRef = React.useRef(null);
   const sliderRef = React.useRef(null);
@@ -320,6 +328,40 @@ const SectionListings = props => {
       };
     }
   }, []);
+
+  // Recalculate the scroll-progress indicator from the slider's current scroll position.
+  // Width represents the visible portion of the track; left represents how far we've scrolled.
+  const updateScrollProgress = slider => {
+    if (!slider) return;
+    const { scrollLeft, scrollWidth, clientWidth } = slider;
+    if (scrollWidth <= clientWidth) {
+      setScrollProgress({ left: 0, width: 100 });
+      return;
+    }
+    const widthPercent = (clientWidth / scrollWidth) * 100;
+    const leftPercent = (scrollLeft / scrollWidth) * 100;
+    setScrollProgress({ left: leftPercent, width: widthPercent });
+  };
+
+  const onCarouselScroll = e => {
+    updateScrollProgress(e.currentTarget);
+  };
+
+  // Callback ref – fires when the underlying <ul> mounts (which may be deferred by
+  // lazyLoadWithDimensions). We both store the node in sliderRef.current (so the
+  // existing arrow-button logic keeps working) and seed the progress indicator
+  // immediately, so the bar is visible right after the slider appears.
+  const setSliderNode = useCallback(node => {
+    sliderRef.current = node;
+    if (node) {
+      updateScrollProgress(node);
+    }
+  }, []);
+
+  // Refresh the progress indicator when the carousel width or listing count changes.
+  useEffect(() => {
+    updateScrollProgress(sliderRef.current);
+  }, [carouselWidthConstant, listingEntities.length, isMobileBreakpoint]);
 
   const onSlideLeft = e => {
     const slider = sliderRef.current;
@@ -402,7 +444,7 @@ const SectionListings = props => {
             <ListingCarouselComponent
               numColumns={numColumns}
               listings={listingEntities}
-              sliderRef={sliderRef}
+              sliderRef={setSliderNode}
               darkMode={darkMode}
               onFetchFeaturedListings={onFetchFeaturedListings}
               fetched={fetched}
@@ -413,12 +455,13 @@ const SectionListings = props => {
               config={config}
               allSections={allSections}
               isInsideContainer={isInsideContainer}
+              onScroll={onCarouselScroll}
             />
           ) : (
             <LazyListingCarouselComponent
               numColumns={numColumns}
               listings={listingEntities}
-              sliderRef={sliderRef}
+              sliderRef={setSliderNode}
               darkMode={darkMode}
               onFetchFeaturedListings={onFetchFeaturedListings}
               fetched={fetched}
@@ -429,10 +472,22 @@ const SectionListings = props => {
               config={config}
               allSections={allSections}
               isInsideContainer={isInsideContainer}
+              onScroll={onCarouselScroll}
             />
           )}
         </div>
       </div>
+      {listingEntities.length > 1 && scrollProgress.width > 0 && scrollProgress.width < 100 ? (
+        <div className={css.scrollProgressTrack} aria-hidden="true">
+          <div
+            className={css.scrollProgressActive}
+            style={{
+              left: `${scrollProgress.left}%`,
+              width: `${scrollProgress.width}%`,
+            }}
+          />
+        </div>
+      ) : null}
     </SectionContainer>
   );
 };

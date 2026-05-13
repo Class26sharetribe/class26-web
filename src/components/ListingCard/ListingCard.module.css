@@ -118,6 +118,9 @@
   color: var(--colorWhite);
   margin: 0;
   margin-bottom: 11px;
+  @media (max-width:767px) {
+    margin-bottom: 8px;
+  }
 }
 
 .authorInfo {
