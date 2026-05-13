@@ -17,6 +17,7 @@ const initiatePrivileged = require('./api/initiate-privileged');
 const transitionPrivileged = require('./api/transition-privileged');
 const deleteAccount = require('./api/delete-account');
 const querySellers = require('./api/query-sellers');
+const checkUsername = require('./api/check-username');
 
 const createUserWithIdp = require('./api/auth/createUserWithIdp');
 
@@ -63,6 +64,7 @@ router.post('/initiate-privileged', initiatePrivileged);
 router.post('/transition-privileged', transitionPrivileged);
 router.post('/delete-account', deleteAccount);
 router.get('/query-sellers', querySellers);
+router.get('/check-username', checkUsername);
 
 // Create user with identity provider (e.g. Facebook or Google)
 // This endpoint is called to create a new user after user has confirmed

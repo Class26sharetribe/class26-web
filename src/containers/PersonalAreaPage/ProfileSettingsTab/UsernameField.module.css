@@ -1,0 +1,94 @@
+@import '../../../styles/customMediaQueries.css';
+
+.root {
+  margin-top: 0;
+}
+
+.inputRow {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--colorGrey300);
+  border-radius: var(--borderRadiusMedium);
+  overflow: hidden;
+  background: var(--colorWhite);
+
+  &:focus-within {
+    border-color: var(--colorBlack);
+    outline: 2px solid transparent;
+  }
+}
+
+.urlPrefix {
+  composes: textSmall from global;
+  flex-shrink: 0;
+  padding: 10px 0 10px 12px;
+  color: var(--colorGrey600);
+  white-space: nowrap;
+  background: var(--colorGrey50, #f9f9f9);
+  border-right: 1px solid var(--colorGrey300);
+
+  @media (--viewportMedium) {
+    padding: 11px 0 11px 14px;
+  }
+}
+
+.input {
+  composes: textSmall from global;
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 10px 8px;
+  background: transparent;
+  min-width: 0;
+
+  @media (--viewportMedium) {
+    padding: 11px 10px;
+  }
+}
+
+.copyButton {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-left: 1px solid var(--colorGrey300);
+  background: var(--colorWhite);
+  color: var(--colorGrey600);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+
+  &:hover:not(:disabled) {
+    background: var(--colorGrey50, #f9f9f9);
+    color: var(--colorBlack);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
+
+  @media (--viewportMedium) {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+.statusMessage {
+  composes: textSmall from global;
+  margin: 4px 0 0 0;
+}
+
+.statusChecking {
+  color: var(--colorGrey600);
+}
+
+.statusAvailable {
+  color: var(--colorSuccess, #2e7d32);
+}
+
+.statusTaken {
+  color: var(--colorFail);
+}

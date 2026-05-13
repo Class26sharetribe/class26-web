@@ -281,3 +281,205 @@
   margin-top: 24px;
   margin-bottom: 56px;
 }
+
+.bioCharCount {
+  composes: textSmall from global;
+  color: var(--colorGrey600);
+  margin: 6px 0 0 0;
+}
+
+/* ===== Profile picture row ===== */
+
+.profilePictureRow {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+
+  @media (--viewportMedium) {
+    gap: 24px;
+  }
+}
+
+.profilePictureInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.profilePictureSubtitle {
+  composes: textSmall from global;
+  color: var(--colorGrey600);
+  margin: 4px 0 0 0;
+}
+
+.profilePictureCurrentAvatar {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--colorGrey100);
+  position: relative;
+
+  @media (--viewportMedium) {
+    width: 64px;
+    height: 64px;
+  }
+}
+
+.avatarUploadSpinner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--colorGrey100);
+}
+
+.uploadZoneOuter {
+  flex: 1;
+  min-width: 0;
+}
+
+.uploadZone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 18px 12px;
+  border: 1.5px dashed var(--colorGrey300);
+  border-radius: var(--borderRadiusMedium);
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+
+  &:hover {
+    border-color: var(--colorGrey500);
+    background-color: var(--colorGrey50, #fafafa);
+  }
+
+  @media (--viewportMedium) {
+    padding: 24px 16px;
+  }
+}
+
+.uploadIconCircle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #e8f5ea;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2e7d32;
+  margin-bottom: 2px;
+
+  @media (--viewportMedium) {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+.uploadZoneClickText {
+  composes: textSmall from global;
+  font-weight: var(--fontWeightMedium);
+  text-decoration: underline;
+  color: var(--colorBlack);
+  margin: 0;
+}
+
+.uploadZoneFormats {
+  composes: textSmall from global;
+  color: var(--colorGrey600);
+  margin: 0;
+}
+
+/* ===== Username field ===== */
+
+.usernameInputRow {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--colorGrey300);
+  border-radius: var(--borderRadiusMedium);
+  overflow: hidden;
+  background: var(--colorWhite);
+
+  &:focus-within {
+    border-color: var(--colorBlack);
+  }
+}
+
+.usernamePrefix {
+  composes: textSmall from global;
+  flex-shrink: 0;
+  padding: 10px 0 10px 12px;
+  color: var(--colorGrey600);
+  white-space: nowrap;
+  background: var(--colorGrey50, #f9f9f9);
+  border-right: 1px solid var(--colorGrey300);
+
+  @media (--viewportMedium) {
+    padding: 11px 0 11px 14px;
+  }
+}
+
+.usernameInput {
+  composes: textSmall from global;
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 10px 8px;
+  background: transparent;
+  min-width: 0;
+
+  @media (--viewportMedium) {
+    padding: 11px 10px;
+  }
+}
+
+.usernameCopyButton {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-left: 1px solid var(--colorGrey300);
+  background: var(--colorWhite);
+  color: var(--colorGrey600);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+
+  &:hover:not(:disabled) {
+    background: var(--colorGrey50, #f9f9f9);
+    color: var(--colorBlack);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
+
+  @media (--viewportMedium) {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+.usernameStatus {
+  composes: textSmall from global;
+  margin: 4px 0 0 0;
+}
+
+.usernameStatusChecking {
+  color: var(--colorGrey600);
+}
+
+.usernameStatusAvailable {
+  color: var(--colorSuccess, #2e7d32);
+}
+
+.usernameStatusTaken {
+  color: var(--colorFail);
+}

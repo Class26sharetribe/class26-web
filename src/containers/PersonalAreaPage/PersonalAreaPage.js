@@ -11,6 +11,7 @@ import { H1, Page, TabNav } from '../../components';
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
 import FooterContainer from '../FooterContainer/FooterContainer';
 import SavedCoursesPage from '../SavedCoursesPage/SavedCoursesPage';
+import ProfileSettingsTab from './ProfileSettingsTab/ProfileSettingsTab';
 
 import css from './PersonalAreaPage.module.css';
 
@@ -88,7 +89,13 @@ export const PersonalAreaPageComponent = props => {
           />
         </div>
         <main id="main-content" className={css.content}>
-          {currentTab === SAVED_FOR_LATER_TAB ? <SavedCoursesPage /> : TAB_CONTENT[currentTab]}
+          {currentTab === SAVED_FOR_LATER_TAB ? (
+            <SavedCoursesPage />
+          ) : currentTab === PERSONAL_PROFILE_TAB ? (
+            <ProfileSettingsTab />
+          ) : (
+            TAB_CONTENT[currentTab]
+          )}
         </main>
       </div>
       <FooterContainer />
