@@ -146,7 +146,6 @@ const ListingCardCourse = props => {
 
   const courseMuxVideo = getMuxVideoFromMediaGallery(publicData?.mediaGallery);
 
-
   const categories = config.categoryConfiguration?.categories || [];
   const {
     categoryLevel1: categoryLevel1Value,
@@ -311,9 +310,7 @@ const ListingCardCourse = props => {
         </div>
 
         <div className={css.courseMedia}>
-
-
-          {playbackId ?
+          {playbackId ? (
             <>
               <MuxPlayer
                 className={css.courseMuxPlayer}
@@ -325,10 +322,11 @@ const ListingCardCourse = props => {
                 secondaryColor="transparent"
                 autoPlay
                 playsInline
-              // skipJwt={true}
+                // skipJwt={true}
               />
             </>
-            : <>
+          ) : (
+            <>
               <NamedLink
                 name="ListingPage"
                 params={{ id, slug }}
@@ -342,9 +340,10 @@ const ListingCardCourse = props => {
                   image={firstImage}
                   variants={variants}
                   sizes={renderSizes}
-                />) : null}
-            </>}
-       
+                />
+              ) : null}
+            </>
+          )}
         </div>
       </div>
     </article>
@@ -369,7 +368,7 @@ const ListingCardImage = props => {
     children,
   } = props;
 
-  const firstImage = listing?.images?.[0] || null;
+  const firstImage = listing?.images?.[0] || listing.author.profileImage || null;
   const variants = firstImage
     ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
     : [];
@@ -418,6 +417,7 @@ export const ListingCard = props => {
     showAuthorInfo = true,
     lazyLoadImage = true,
     cardVariant = LISTING_CARD_VARIANT_DEFAULT,
+    useAuthorImage,
   } = props;
 
   const translations = getListingCardTranslations(listing, config, intl);
@@ -458,9 +458,9 @@ export const ListingCard = props => {
 
   const setActivePropsMaybe = setActiveListing
     ? {
-      onMouseEnter: () => setActiveListing(listing?.id),
-      onMouseLeave: () => setActiveListing(null),
-    }
+        onMouseEnter: () => setActiveListing(listing?.id),
+        onMouseLeave: () => setActiveListing(null),
+      }
     : null;
 
   const courseContent = resolveCourseCardContent(listing, config, intl, showPrice);
@@ -484,12 +484,7 @@ export const ListingCard = props => {
   }
 
   return (
-    <NamedLink
-      className={classes}
-      name="ListingPage"
-      params={{ id, slug }}
-      ariaLabel={cardAriaLabel}
-    >
+    <NamedLink className={classes} name="ProfilePage" params={{ id }} ariaLabel={cardAriaLabel}>
       {showListingImage ? (
         <ListingCardImage
           renderSizes={renderSizes}
@@ -498,7 +493,7 @@ export const ListingCard = props => {
           setActivePropsMaybe={setActivePropsMaybe}
           aspectWidth={cardAspectWidth}
           aspectHeight={cardAspectHeight}
-          variantPrefix={variantPrefix}
+          variantPrefix={useAuthorImage ? 'seller-landing' : variantPrefix}
           aspectRatioClassName={aspectRatioClassName}
           lazyLoadImage={lazyLoadImage}
         >

@@ -111,6 +111,50 @@ const calculateCarouselHeight = (
 };
 
 /**
+ * Convert a single seller (user entity) into a shape that matches a listing entity,
+ * so it can be rendered by the same listing-card components.
+ *
+ * @param {Object} seller - A user entity from realSellersData
+ * @returns {Object} Object shaped like a listing entity
+ */
+const convertSellerToListingEntity = seller => {
+  const profileImageMaybe = seller.profileImage
+    ? [
+        {
+          id: seller.profileImage.id,
+          type: seller.profileImage.type,
+          attributes: {
+            variants: seller.profileImage.attributes?.variants || {},
+          },
+        },
+      ]
+    : [];
+
+  return {
+    id: seller.id,
+    type: 'listing',
+    attributes: {
+      title: seller.attributes.profile.displayName,
+      publicData: seller.attributes.profile.publicData || {},
+      deleted: seller.attributes.deleted,
+      state: seller.attributes.state || 'active',
+      geolocation: null,
+      price: null,
+    },
+    author: seller,
+  };
+};
+
+/**
+ * Convert an array of seller (user) entities into listing-entity shaped objects.
+ *
+ * @param {Array} sellers - Array of user entities from realSellersData
+ * @returns {Array} Array of objects shaped like listing entities
+ */
+const convertSellersToListingEntities = sellers =>
+  (sellers || []).map(convertSellerToListingEntity);
+
+/**
  * Component that renders the listing cards in a carousel layout
  * Used with lazy loading wrapper for performance optimization
  * @param {Object} props - Component properties
@@ -184,6 +228,7 @@ const ListingCarouselComponent = props => {
             darkMode={darkMode}
             renderSizes={getResponsiveImageSizes(numColumns)}
             lazyLoadImage={!isInsideContainer}
+            useAuthorImage={true}
           />
         </li>
       ))}
@@ -222,7 +267,8 @@ const SectionListings = props => {
     isInsideContainer,
   } = props;
 
-  const { featuredListings } = options;
+  const { featuredListings, realSellersData } = options;
+  const sellerListingEntities = convertSellersToListingEntities(realSellersData?.sellers);
   const {
     onFetchFeaturedListings,
     getListingEntitiesById,
@@ -231,7 +277,12 @@ const SectionListings = props => {
   } = featuredListings;
 
   const listingIds = featuredListingData?.[sectionId]?.listingIds;
-  const listingEntities = listingIds ? getListingEntitiesById(listingIds) : [];
+  const listingEntities =
+    sectionId === 'listing-section'
+      ? sellerListingEntities
+      : listingIds
+      ? getListingEntitiesById(listingIds)
+      : [];
 
   const fetched = featuredListingData?.[sectionId]?.fetched || false;
   const inProgress = featuredListingData?.[sectionId]?.inProgress;

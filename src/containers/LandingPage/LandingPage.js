@@ -39,6 +39,11 @@ export const LandingPageComponent = props => {
       error={error}
       fallbackPage={<FallbackPage error={error} />}
       featuredListings={getFeaturedListingsProps(camelize(ASSET_NAME), props)}
+      realSellersData={{
+        sellers: experts,
+        inProgress: sellerFetchInProgress,
+        error: sellerFetchError,
+      }}
       sectionContentAfter={{
         'landing-hero': (
           <SectionSellerCarousel
@@ -74,6 +79,7 @@ const mapStateToProps = state => {
     pageAssetsData,
     featuredListingData,
     getListingEntitiesById,
+
     experts: realSellers,
     sellerFetchInProgress,
     sellerFetchError,

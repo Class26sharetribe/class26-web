@@ -109,6 +109,7 @@ const PageBuilder = props => {
     options,
     currentPage,
     featuredListings,
+    realSellersData,
     sectionContentAfter,
     ...pageProps
   } = props;
@@ -144,7 +145,7 @@ const PageBuilder = props => {
                 ) : (
                   <SectionBuilder
                     sections={sections}
-                    options={{ ...options, featuredListings, sectionContentAfter }}
+                    options={{ ...options, featuredListings, realSellersData, sectionContentAfter }}
                   />
                 )}
               </Main>

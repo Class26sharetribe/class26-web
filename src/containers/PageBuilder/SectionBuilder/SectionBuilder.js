@@ -147,7 +147,7 @@ const SectionBuilder = props => {
                 sectionId={sectionId}
                 allSections={sectionsWithResolvedIds}
               />
-              {sectionContentAfter[sectionId] || null}
+              {/* {sectionContentAfter[sectionId] || null} */}
             </React.Fragment>
           );
         } else {
