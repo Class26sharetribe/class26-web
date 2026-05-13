@@ -16,10 +16,21 @@ import FooterContainer from '../FooterContainer/FooterContainer';
 import { TermsOfServiceContent } from '../TermsOfServicePage/TermsOfServicePage';
 // We need to get PrivacyPolicy asset and get it rendered for the modal on this page.
 import { PrivacyPolicyContent } from '../PrivacyPolicyPage/PrivacyPolicyPage';
+// We need to get CommunityGuidelines asset and get it rendered for the modal on this page.
+import { CommunityGuidelinesContent } from '../AuthenticationPage/CommunityGuidelinesContent';
+// Expert-specific content components live in the same folder.
+import { ExpertCollaborationAgreementContent } from './ExpertCollaborationAgreementContent';
+import { ExpertConductPolicyContent } from './ExpertConductPolicyContent';
 import TermsAndConditions from '../AuthenticationPage/TermsAndConditions/TermsAndConditions';
 
 import ExpertSignupForm from './ExpertSignupForm/ExpertSignupForm';
-import { TOS_ASSET_NAME, PRIVACY_POLICY_ASSET_NAME } from './ExpertSignupPage.duck';
+import {
+  TOS_ASSET_NAME,
+  PRIVACY_POLICY_ASSET_NAME,
+  EXPERT_COLLABORATION_AGREEMENT_ASSET_NAME,
+  COMMUNITY_GUIDELINES_ASSET_NAME,
+  EXPERT_CONDUCT_POLICY_ASSET_NAME,
+} from './ExpertSignupPage.duck';
 
 import css from './ExpertSignupPage.module.css';
 
@@ -47,6 +58,9 @@ const getExpertSignupParams = values => {
     password,
     firstName: fname.trim(),
     lastName: lname.trim(),
+    publicData: {
+      userType: 'provider',
+    },
     protectedData: { terms },
     publicData: {
       userType: SELLER_USER_TYPE,
@@ -69,6 +83,9 @@ const ExpertSignupPage = () => {
 
   const [tosModalOpen, setTosModalOpen] = useState(false);
   const [privacyModalOpen, setPrivacyModalOpen] = useState(false);
+  const [expertCollaborationAgreementModalOpen, setExpertCollaborationAgreementModalOpen] = useState(false);
+  const [expertCommunityGuidelinesModalOpen, setExpertCommunityGuidelinesModalOpen] = useState(false);
+  const [expertConductPolicyModalOpen, setExpertConductPolicyModalOpen] = useState(false);
 
   // Redux state
   const authInProgress = useSelector(state => authenticationInProgress(state));
@@ -107,6 +124,10 @@ const ExpertSignupPage = () => {
     <TermsAndConditions
       onOpenTermsOfService={() => setTosModalOpen(true)}
       onOpenPrivacyPolicy={() => setPrivacyModalOpen(true)}
+      onOpenExpertCollaborationAgreement={() => setExpertCollaborationAgreementModalOpen(true)}
+      onOpenCommunityGuidelines={() => setExpertCommunityGuidelinesModalOpen(true)}
+      onOpenExpertConductPolicy={() => setExpertConductPolicyModalOpen(true)}
+      showExpertTerms
       intl={intl}
     />
   );
@@ -165,6 +186,51 @@ const ExpertSignupPage = () => {
             error={pageAssetsFetchError}
             data={pageAssetsData?.[camelize(PRIVACY_POLICY_ASSET_NAME)]?.data}
             isOpen={privacyModalOpen}
+          />
+        </div>
+      </Modal>
+      <Modal
+        id="ExpertSignupPage.expertCollaborationAgreement"
+        isOpen={expertCollaborationAgreementModalOpen}
+        onClose={() => setExpertCollaborationAgreementModalOpen(false)}
+        usePortal
+        onManageDisableScrolling={onManageDisableScrolling}
+      >
+        <div className={css.termsWrapper} role="complementary">
+          <ExpertCollaborationAgreementContent
+            inProgress={pageAssetsFetchInProgress}
+            error={pageAssetsFetchError}
+            data={pageAssetsData?.[camelize(EXPERT_COLLABORATION_AGREEMENT_ASSET_NAME)]?.data}
+          />
+        </div>
+      </Modal>
+      <Modal
+        id="ExpertSignupPage.communityGuidelines"
+        isOpen={expertCommunityGuidelinesModalOpen}
+        onClose={() => setExpertCommunityGuidelinesModalOpen(false)}
+        usePortal
+        onManageDisableScrolling={onManageDisableScrolling}
+      >
+        <div className={css.termsWrapper} role="complementary">
+          <CommunityGuidelinesContent
+            inProgress={pageAssetsFetchInProgress}
+            error={pageAssetsFetchError}
+            data={pageAssetsData?.[camelize(COMMUNITY_GUIDELINES_ASSET_NAME)]?.data}
+          />
+        </div>
+      </Modal>
+      <Modal
+        id="ExpertSignupPage.expertConductPolicy"
+        isOpen={expertConductPolicyModalOpen}
+        onClose={() => setExpertConductPolicyModalOpen(false)}
+        usePortal
+        onManageDisableScrolling={onManageDisableScrolling}
+      >
+        <div className={css.termsWrapper} role="complementary">
+          <ExpertConductPolicyContent
+            inProgress={pageAssetsFetchInProgress}
+            error={pageAssetsFetchError}
+            data={pageAssetsData?.[camelize(EXPERT_CONDUCT_POLICY_ASSET_NAME)]?.data}
           />
         </div>
       </Modal>
