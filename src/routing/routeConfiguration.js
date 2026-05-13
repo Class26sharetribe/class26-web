@@ -47,6 +47,7 @@ const NoAccessPage = loadable(() => import(/* webpackChunkName: "NoAccessPage" *
 const VideoMeetingPage = loadable(() => import(/* webpackChunkName: "VideoMeetingPage" */ '../containers/VideoMeetingPage/VideoMeetingPage'));
 const ExpertSignupPage = loadable(() => import(/* webpackChunkName: "ExpertSignupPage" */ '../containers/ExpertSignupPage/ExpertSignupPage'));
 const ExpertSignupThankYouPage = loadable(() => import(/* webpackChunkName: "ExpertSignupThankYouPage" */ '../containers/ExpertSignupThankYouPage/ExpertSignupThankYouPage'));
+const PersonalAreaPage = loadable(() => import(/* webpackChunkName: "PersonalAreaPage" */ '../containers/PersonalAreaPage/PersonalAreaPage'));
 
 // Styleguide helps you to review current components and develop new ones
 const StyleguidePage = loadable(() => import(/* webpackChunkName: "StyleguidePage" */ '../containers/StyleguidePage/StyleguidePage'));
@@ -361,6 +362,21 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       authPage: 'LoginPage',
       component: ManageListingsPage,
       loadData: pageDataLoadingAPI.ManageListingsPage.loadData,
+    },
+    {
+      path: '/personal',
+      name: 'PersonalAreaBasePage',
+      auth: true,
+      authPage: 'LoginPage',
+      component: () => <NamedRedirect name="PersonalAreaPage" params={{ tab: 'my-classes' }} />,
+    },
+    {
+      path: '/personal/:tab',
+      name: 'PersonalAreaPage',
+      auth: true,
+      authPage: 'LoginPage',
+      component: PersonalAreaPage,
+      loadData: pageDataLoadingAPI.PersonalAreaPage.loadData,
     },
     {
       path: '/account',

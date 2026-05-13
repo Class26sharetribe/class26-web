@@ -1,0 +1,43 @@
+@import '../../styles/customMediaQueries.css';
+
+.root {
+  width: 100%;
+}
+
+.spinner {
+  display: block;
+  margin: 48px auto;
+}
+
+.error {
+  color: var(--colorFail);
+  margin: 0;
+}
+
+.noResults {
+  color: var(--colorGrey500);
+  margin: 0;
+}
+
+.listingCards {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 32px;
+  width: 100%;
+  padding: 0 0 72px 0;
+  margin: 0;
+
+  @media (--viewportMedium) {
+    padding: 0 0 96px 0;
+  }
+}
+
+.listingCard {
+  width: 100%;
+}
+
+.resultItem {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
