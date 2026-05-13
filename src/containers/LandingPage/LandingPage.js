@@ -1,25 +1,36 @@
 import React from 'react';
 import loadable from '@loadable/component';
 
-import { bool, object } from 'prop-types';
+import { array, bool, object } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
+import { mockSellerUsers } from '../../config/configMockSellers';
 import { camelize } from '../../util/string';
+import { getFeaturedListingsProps } from '../../util/data';
 import { propTypes } from '../../util/types';
+
+import { fetchFeaturedListings } from '../../ducks/featuredListings.duck';
+import { getListingsById, getUsersById } from '../../ducks/marketplaceData.duck';
 
 import FallbackPage from './FallbackPage';
 import { ASSET_NAME } from './LandingPage.duck';
-import { fetchFeaturedListings } from '../../ducks/featuredListings.duck';
-import { getListingsById } from '../../ducks/marketplaceData.duck';
-import { getFeaturedListingsProps } from '../../util/data';
+import SectionSellerCarousel from './SectionSellerCarousel';
 
 const PageBuilder = loadable(() =>
   import(/* webpackChunkName: "PageBuilder" */ '../PageBuilder/PageBuilder')
 );
 
 export const LandingPageComponent = props => {
-  const { pageAssetsData, inProgress, error } = props;
+  const {
+    pageAssetsData,
+    inProgress,
+    error,
+    realSellers = [],
+    sellerFetchInProgress,
+    sellerFetchError,
+  } = props;
+  const sellers = [...mockSellerUsers, ...realSellers];
 
   return (
     <PageBuilder
@@ -28,6 +39,15 @@ export const LandingPageComponent = props => {
       error={error}
       fallbackPage={<FallbackPage error={error} />}
       featuredListings={getFeaturedListingsProps(camelize(ASSET_NAME), props)}
+      sectionContentAfter={{
+        'landing-hero': (
+          <SectionSellerCarousel
+            sellers={sellers}
+            inProgress={sellerFetchInProgress}
+            error={sellerFetchError}
+          />
+        ),
+      }}
     />
   );
 };
@@ -36,15 +56,30 @@ LandingPageComponent.propTypes = {
   pageAssetsData: object,
   inProgress: bool,
   error: propTypes.error,
+  realSellers: array,
 };
 
 const mapStateToProps = state => {
   const { pageAssetsData, inProgress, error } = state.hostedAssets || {};
   const featuredListingData = state.featuredListings || {};
+  const { sellerRefs = [], sellerFetchInProgress, sellerFetchError } = state.LandingPage || {};
 
   const getListingEntitiesById = listingIds => getListingsById(state, listingIds);
+  const realSellers = getUsersById(
+    state,
+    sellerRefs.filter(ref => ref.type === 'user').map(ref => ref.id)
+  );
 
-  return { pageAssetsData, featuredListingData, getListingEntitiesById, inProgress, error };
+  return {
+    pageAssetsData,
+    featuredListingData,
+    getListingEntitiesById,
+    realSellers,
+    sellerFetchInProgress,
+    sellerFetchError,
+    inProgress,
+    error,
+  };
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -58,11 +93,6 @@ const mapDispatchToProps = dispatch => ({
 // lifecycle hook.
 //
 // See: https://github.com/ReactTraining/react-router/issues/4671
-const LandingPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(LandingPageComponent);
+const LandingPage = compose(connect(mapStateToProps, mapDispatchToProps))(LandingPageComponent);
 
 export default LandingPage;

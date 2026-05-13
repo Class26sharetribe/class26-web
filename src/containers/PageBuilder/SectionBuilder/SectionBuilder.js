@@ -85,7 +85,8 @@ const defaultSectionComponents = {
  */
 const SectionBuilder = props => {
   const { sections = [], options } = props;
-  const { sectionComponents = {}, isInsideContainer, ...otherOption } = options || {};
+  const { sectionComponents = {}, isInsideContainer, sectionContentAfter = {}, ...otherOption } =
+    options || {};
 
   // If there's no sections, we can't render the correct section component
   if (!sections || sections.length === 0) {
@@ -136,16 +137,18 @@ const SectionBuilder = props => {
 
         if (Section) {
           return (
-            <Section
-              key={`${sectionId}_i${index}`}
-              className={classes}
-              defaultClasses={DEFAULT_CLASSES}
-              isInsideContainer={isInsideContainer}
-              options={{ ...otherOption, defaultClasses: DEFAULT_CLASSES }}
-              {...section}
-              sectionId={sectionId}
-              allSections={sectionsWithResolvedIds}
-            />
+            <React.Fragment key={`${sectionId}_i${index}`}>
+              <Section
+                className={classes}
+                defaultClasses={DEFAULT_CLASSES}
+                isInsideContainer={isInsideContainer}
+                options={{ ...otherOption, defaultClasses: DEFAULT_CLASSES }}
+                {...section}
+                sectionId={sectionId}
+                allSections={sectionsWithResolvedIds}
+              />
+              {sectionContentAfter[sectionId] || null}
+            </React.Fragment>
           );
         } else {
           // If the section type is unknown, the app can't know what to render

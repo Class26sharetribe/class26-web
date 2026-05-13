@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { camelize } from '../../util/string';
 import { useIntl } from '../../util/reactIntl';
 import { ensureCurrentUser } from '../../util/data';
+import { SELLER_USER_TYPE } from '../../util/types';
 import { signup, authenticationInProgress } from '../../ducks/auth.duck';
 import { manageDisableScrolling } from '../../ducks/ui.duck';
 
@@ -61,6 +62,9 @@ const getExpertSignupParams = values => {
       userType: 'provider',
     },
     protectedData: { terms },
+    publicData: {
+      userType: SELLER_USER_TYPE,
+    },
     privateData: {
       applicationData: privateData,
     },

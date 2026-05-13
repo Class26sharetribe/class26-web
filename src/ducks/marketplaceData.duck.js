@@ -42,6 +42,22 @@ export const getListingsById = (state, listingIds) => {
 };
 
 /**
+ * Get the denormalised user entities with the given IDs
+ *
+ * @param {Object} state the full Redux store
+ * @param {Array<UUID>} userIds user IDs to select from the store
+ */
+export const getUsersById = (state, userIds) => {
+  const { entities } = state.marketplaceData;
+  const resources = userIds.map(id => ({
+    id,
+    type: 'user',
+  }));
+  const throwIfNotFound = false;
+  return denormalisedEntities(entities, resources, throwIfNotFound);
+};
+
+/**
  * Create a memoized selector that returns denormalized listings for `listingIds`.
  *
  * Use this with `useMemo(makeGetListingsByIdSelector, [])` inside components

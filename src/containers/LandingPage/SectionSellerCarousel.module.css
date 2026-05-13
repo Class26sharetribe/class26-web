@@ -1,0 +1,309 @@
+@import '../../styles/customMediaQueries.css';
+
+.root {
+  padding: 64px 0 48px;
+  overflow: hidden;
+  background-color: var(--colorWhite);
+}
+
+.header {
+  max-width: var(--contentMaxWidthPages);
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+.title {
+  margin: 0;
+  font-family: Nohemi, var(--fontFamily);
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 48px;
+  color: #111827;
+}
+
+.description {
+  max-width: 980px;
+  margin: 36px 0 0;
+  font-family: 'Nunito Sans', var(--fontFamily);
+  font-size: 16px;
+  line-height: 24px;
+  color: #4b5563;
+}
+
+.carouselOuter {
+  position: relative;
+  min-height: 420px;
+  margin-top: 48px;
+
+  &:hover .carouselArrows {
+    opacity: 1;
+  }
+
+  @media (any-hover: none) and (pointer: coarse) {
+    &:hover .carouselArrows {
+      opacity: 0;
+    }
+  }
+}
+
+.carousel {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 24px;
+  width: 100%;
+  margin: 0;
+  padding: 0 32px 24px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-padding-left: 32px;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.listItem {
+  flex: 0 0 min(82vw, 360px);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  scroll-snap-align: center;
+}
+
+.card {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: 8px;
+  color: var(--colorWhite);
+  background-color: var(--colorGrey100);
+  text-decoration: none;
+  transform: translateZ(0);
+}
+
+.card:hover {
+  color: var(--colorWhite);
+  text-decoration: none;
+}
+
+.card:not(.mockCard):hover .cardImage {
+  transform: scale(1.025);
+}
+
+.cardImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transitionStyleButton);
+}
+
+.imageFallback {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  background-color: #e6f6ee;
+  color: #006647;
+  font-family: Nohemi, var(--fontFamily);
+  font-size: 48px;
+  font-weight: 600;
+}
+
+.cardShade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgb(0 0 0 / 0%) 42%, rgb(0 0 0 / 70%) 100%);
+}
+
+.cardContent {
+  position: absolute;
+  right: 20px;
+  bottom: 22px;
+  left: 20px;
+  z-index: 1;
+}
+
+.cardTitle {
+  margin: 0;
+  font-family: Nohemi, var(--fontFamily);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 30px;
+  color: var(--colorWhite);
+}
+
+.cardSubtitle {
+  margin: 12px 0 0;
+  font-family: 'Nunito Sans', var(--fontFamily);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 21px;
+  color: var(--colorWhite);
+}
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 18px 0 0;
+  padding: 0;
+}
+
+.pill {
+  max-width: 100%;
+  overflow: hidden;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background-color: rgb(255 255 255 / 78%);
+  color: #374151;
+  font-family: 'Nunito Sans', var(--fontFamily);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 18px;
+  list-style: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.carouselArrows {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transitionStyleButton);
+}
+
+.notEnoughSellers {
+  display: none;
+}
+
+.carouselArrow {
+  position: absolute;
+  top: 50%;
+  display: flex;
+  width: 56px;
+  height: 56px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0 5px;
+  border: 0;
+  border-radius: 50%;
+  background-color: rgb(255 255 255 / 82%);
+  color: #6b7280;
+  cursor: pointer;
+  font-size: 44px;
+  line-height: 1;
+  pointer-events: auto;
+  transform: translateY(-50%);
+  transition: background-color var(--transitionStyleButton), color var(--transitionStyleButton);
+}
+
+.carouselArrow:hover {
+  background-color: var(--colorWhite);
+  color: #111827;
+}
+
+.carouselArrowPrev {
+  left: 32px;
+}
+
+.carouselArrowNext {
+  right: 32px;
+}
+
+.centeredStatus {
+  display: flex;
+  min-height: 320px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 32px;
+  text-align: center;
+}
+
+.errorTitle,
+.emptyMessage {
+  margin: 0;
+  color: var(--colorGrey700);
+}
+
+.loadingText {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (--viewportMedium) {
+  .root {
+    padding: 88px 0 64px;
+  }
+
+  .title {
+    font-size: 56px;
+    line-height: 64px;
+  }
+
+  .carouselOuter {
+    min-height: 560px;
+  }
+
+  .carousel {
+    gap: 32px;
+    padding-right: 32px;
+    padding-left: max(32px, calc((100vw - var(--contentMaxWidthPages)) / 2 + 32px));
+    scroll-padding-left: max(32px, calc((100vw - var(--contentMaxWidthPages)) / 2 + 32px));
+  }
+
+  .listItem {
+    flex-basis: min(30vw, 460px);
+  }
+}
+
+@media (--viewportLarge) {
+  .title {
+    font-size: 64px;
+    line-height: 80px;
+  }
+
+  .description {
+    margin-top: 48px;
+  }
+
+  .carouselOuter {
+    min-height: 620px;
+  }
+
+  .listItem {
+    flex-basis: min(30vw, 564px);
+  }
+
+  .cardContent {
+    right: 32px;
+    bottom: 32px;
+    left: 32px;
+  }
+
+  .cardTitle {
+    font-size: 28px;
+    line-height: 36px;
+  }
+
+  .cardSubtitle {
+    font-size: 18px;
+    line-height: 26px;
+  }
+
+  .pill {
+    font-size: 15px;
+    line-height: 20px;
+  }
+}

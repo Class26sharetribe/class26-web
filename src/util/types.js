@@ -527,6 +527,8 @@ propTypes.defaultFiltersConfig = arrayOf(
 );
 
 // Extended data config
+export const SELLER_USER_TYPE = 'seller';
+
 propTypes.userType = shape({
   userType: string.isRequired,
   label: string.isRequired,

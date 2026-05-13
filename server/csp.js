@@ -146,10 +146,14 @@ exports.csp = (reportUri, reportOnly) => {
   // Example: extend default img directive with custom domain
   // const { imgSrc = [self] } = defaultDirectives;
   // const exampleImgSrc = imgSrc.concat('my-custom-domain.example.com');
+  const { imgSrc = [self] } = defaultDirectives;
+  // Temporary mock seller profile images. Remove these Imgur URLs when mock seller data is removed.
+  const imgSrcWithMockSellerImages = imgSrc.concat('i.imgur.com');
 
   const customDirectives = {
     // Example: Add custom directive override
     // imgSrc: exampleImgSrc,
+    imgSrc: imgSrcWithMockSellerImages,
   };
 
   // ================ END CUSTOM CSP URLs ================ //
