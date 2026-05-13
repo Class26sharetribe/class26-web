@@ -26,11 +26,11 @@ export const LandingPageComponent = props => {
     pageAssetsData,
     inProgress,
     error,
-    realSellers = [],
+    experts = [],
     sellerFetchInProgress,
     sellerFetchError,
   } = props;
-  const sellers = [...mockSellerUsers, ...realSellers];
+  // const experts = [...mockSellerUsers, ...realSellers];
 
   return (
     <PageBuilder
@@ -42,7 +42,7 @@ export const LandingPageComponent = props => {
       sectionContentAfter={{
         'landing-hero': (
           <SectionSellerCarousel
-            sellers={sellers}
+            sellers={experts}
             inProgress={sellerFetchInProgress}
             error={sellerFetchError}
           />
@@ -74,7 +74,7 @@ const mapStateToProps = state => {
     pageAssetsData,
     featuredListingData,
     getListingEntitiesById,
-    realSellers,
+    experts: realSellers,
     sellerFetchInProgress,
     sellerFetchError,
     inProgress,

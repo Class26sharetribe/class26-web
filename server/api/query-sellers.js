@@ -29,7 +29,7 @@ module.exports = (req, res) => {
 
   return integrationSdk.users
     .query({
-      pub_userType: 'seller',
+      pub_userType: 'provider',
       // The landing page currently shows sellers ordered by creation time.
       sort: 'createdAt',
       page: 1,
