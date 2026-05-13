@@ -4,13 +4,19 @@ import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import MuxPlayer from '@mux/mux-player-react';
 
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory, useLocation } from 'react-router-dom';
+
 import { useConfiguration } from '../../context/configurationContext';
+import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 
 import { useIntl, FormattedMessage } from '../../util/reactIntl';
 import { getMuxJwtToken } from '../../util/api';
 import { requireListingImage } from '../../util/configHelpers';
 import { lazyLoadWithDimensions } from '../../util/uiHelpers';
 import { createSlug } from '../../util/urlHelpers';
+
+import { updateProfileThunk } from '../../containers/ProfileSettingsPage/ProfileSettingsPage.duck';
 
 import {
   AspectRatioWrapper,
@@ -21,7 +27,11 @@ import {
 
 import Avatar from '../Avatar/Avatar';
 
-import { getListingCardTranslations, resolveCourseCardContent } from './ListingCard.helpers';
+import {
+  getListingCardTranslations,
+  resolveCourseCardContent,
+  handleToggleFavorites,
+} from './ListingCard.helpers';
 
 import css from './ListingCard.module.css';
 import { formatCourseDuration } from '../../util/courseHelpers';
@@ -117,6 +127,12 @@ const ListingCardCourse = props => {
   } = props;
 
   const intl = useIntl();
+  const dispatch = useDispatch();
+  const routeConfiguration = useRouteConfiguration();
+  const location = useLocation();
+  const history = useHistory();
+  const currentUser = useSelector(state => state.user.currentUser);
+
   const [courseVideoPlaying, setCourseVideoPlaying] = useState(false);
   const [muxToken, setMuxToken] = useState(null);
   const [muxTokenLoading, setMuxTokenLoading] = useState(false);
@@ -138,6 +154,8 @@ const ListingCardCourse = props => {
   } = listing;
   const id = listing?.id?.uuid;
   const slug = createSlug(title);
+  const savedFavorites = currentUser?.attributes?.profile?.privateData?.favorites || [];
+  const isFavorite = savedFavorites.includes(id);
   const firstImage = listing?.images?.[0] || null;
   const variants = firstImage
     ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
@@ -199,6 +217,14 @@ const ListingCardCourse = props => {
   const onSaveClick = e => {
     e.preventDefault();
     e.stopPropagation();
+    handleToggleFavorites({
+      currentUser,
+      routes: routeConfiguration,
+      location,
+      history,
+      params: { id },
+      onUpdateFavorites: payload => dispatch(updateProfileThunk(payload)),
+    })(isFavorite);
   };
 
   return (
@@ -299,9 +325,16 @@ const ListingCardCourse = props => {
           <p className={css.courseDescription}>{description}</p>
 
           <div className={css.courseActions}>
-            <button type="button" className={css.courseBtnSecondary} onClick={onSaveClick}>
+            <button
+              type="button"
+              className={classNames(css.courseBtnSecondary, { [css.courseBtnSaved]: isFavorite })}
+              onClick={onSaveClick}
+              aria-pressed={isFavorite}
+            >
               <BookmarkIcon />
-              <FormattedMessage id="ListingCard.saveForLater" />
+              <FormattedMessage
+                id={isFavorite ? 'ListingCard.savedForLater' : 'ListingCard.saveForLater'}
+              />
             </button>
             <NamedLink className={css.courseBtnPrimary} name="ListingPage" params={{ id, slug }}>
               <FormattedMessage id="ListingCard.discoverMore" />

@@ -439,6 +439,15 @@
   }
 }
 
+.courseBtnSaved {
+  border-color: var(--colorSuccess, #00a069);
+  color: var(--colorSuccess, #00a069);
+
+  &:hover {
+    border-color: var(--colorSuccess, #00a069);
+  }
+}
+
 .bookmarkIcon {
   flex-shrink: 0;
   display: block;

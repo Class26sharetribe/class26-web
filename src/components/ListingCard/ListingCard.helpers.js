@@ -2,8 +2,65 @@ import { displayPrice, isPriceVariationsEnabled } from '../../util/configHelpers
 import { formatMoney } from '../../util/currency';
 import { richText } from '../../util/richText';
 import { isBookingProcessAlias } from '../../transactions/transaction';
+import { createResourceLocatorString } from '../../util/routes';
 
 import css from './ListingCard.module.css';
+
+/**
+ * Toggle a listing in/out of the current user's saved favourites.
+ * Redirects unauthenticated users to the signup page.
+ *
+ * Usage:
+ *   handleToggleFavorites({ currentUser, routes, location, history, params, onUpdateFavorites })(isFavorite)
+ *
+ * @param {Object} parameters
+ * @param {Object|null} parameters.currentUser
+ * @param {Array}  parameters.routes - route configuration
+ * @param {Object} parameters.location - react-router location
+ * @param {Object} parameters.history  - react-router history
+ * @param {Object} parameters.params   - must include `id` (listing UUID string)
+ * @param {Function} parameters.onUpdateFavorites - called with the privateData payload
+ * @returns {Function} - call with `isFavorite` boolean
+ */
+export const handleToggleFavorites = parameters => isFavorite => {
+  const { currentUser, routes, location, history } = parameters;
+
+  if (!currentUser) {
+    const state = {
+      from: `${location.pathname}${location.search}${location.hash}`,
+    };
+    history.push(createResourceLocatorString('SignupPage', routes, {}, {}), state);
+  } else {
+    const { params, onUpdateFavorites } = parameters;
+    const {
+      attributes: { profile },
+    } = currentUser;
+    const { favorites = [] } = profile.privateData || {};
+
+    let payload;
+
+    if (!profile.privateData || !profile.privateData?.favorites) {
+      payload = {
+        privateData: {
+          favorites: [params.id],
+        },
+      };
+    } else if (isFavorite) {
+      payload = {
+        privateData: {
+          favorites: favorites.filter(f => f !== params.id),
+        },
+      };
+    } else {
+      payload = {
+        privateData: {
+          favorites: [...favorites, params.id],
+        },
+      };
+    }
+    onUpdateFavorites(payload);
+  }
+};
 
 const MIN_LENGTH_FOR_LONG_WORDS = 10;
 

@@ -16,6 +16,7 @@ import PasswordRecoveryPage from './PasswordRecoveryPage/PasswordRecoveryPage.du
 import PasswordResetPage from './PasswordResetPage/PasswordResetPage.duck';
 import PaymentMethodsPage from './PaymentMethodsPage/PaymentMethodsPage.duck';
 import ManageAccountPage from './ManageAccountPage/ManageAccountPage.duck';
+import SavedCoursesPage from './SavedCoursesPage/SavedCoursesPage.duck';
 import ProfilePage from './ProfilePage/ProfilePage.duck';
 import ProfileSettingsPage from './ProfileSettingsPage/ProfileSettingsPage.duck';
 import RequestQuotePage from './RequestQuotePage/RequestQuotePage.duck';
@@ -37,6 +38,7 @@ export {
   PasswordResetPage,
   PaymentMethodsPage,
   ManageAccountPage,
+  SavedCoursesPage,
   ProfilePage,
   ProfileSettingsPage,
   RequestQuotePage,

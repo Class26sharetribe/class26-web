@@ -558,6 +558,7 @@
   "ListingCard.unsupportedPriceTitle": "Unsupported currency ({currency})",
   "ListingCard.screenreader.label": "{listingTitle}, {formattedPrice}",
   "ListingCard.saveForLater": "Save for Later",
+  "ListingCard.savedForLater": "Remove from Saved",
   "ListingCard.discoverMore": "Discover More",
   "ListingCard.courseVideoClose": "Close video",
   "ListingCard.courseByAuthor": "by {author}",
@@ -1698,5 +1699,20 @@
   "ExpertSignupPage.expertTermsAcceptText": "I accept the {expertCollaborationAgreementLink}, {expertCommunityGuidelinesLink} and the {expertConductPolicyLink}",
   "ExpertSignupPage.expertTermsAcceptRequired": "You need to accept the Expert Collaboration Agreement, Community Guidelines and Expert Conduct Policy",
   "ExpertSignupPage.expertCollaborationAgreementLinkText": "Expert Collaboration Agreement",
-  "ExpertSignupPage.expertConductPolicyLinkText": "Expert Conduct Policy"
+  "ExpertSignupPage.expertConductPolicyLinkText": "Expert Conduct Policy",
+  "PersonalAreaPage.title": "Personal Area",
+  "PersonalAreaPage.heading": "Personal Area",
+  "PersonalAreaPage.myClassesTab": "My Classes",
+  "PersonalAreaPage.savedForLaterTab": "Saved for Later",
+  "PersonalAreaPage.personalProfileTab": "Personal Profile",
+  "PersonalAreaPage.accountSettingsTab": "Account Settings",
+  "PersonalAreaPage.myClassesContent": "My Classes content coming soon.",
+  "PersonalAreaPage.savedForLaterContent": "Saved for Later content coming soon.",
+  "PersonalAreaPage.personalProfileContent": "Personal Profile content coming soon.",
+  "PersonalAreaPage.accountSettingsContent": "Account Settings content coming soon.",
+  "PersonalAreaPage.screenreader.nav": "Personal area navigation",
+
+  "SavedCoursesPage.title": "Saved Courses",
+  "SavedCoursesPage.fetchError": "Something went wrong loading your saved courses. Please try again.",
+  "SavedCoursesPage.noSavedCourses": "You haven't saved any courses yet."
 }
