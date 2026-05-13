@@ -2,6 +2,11 @@ import React from 'react';
 import loadable from '@loadable/component';
 
 import getPageDataLoadingAPI from '../containers/pageDataLoadingAPI';
+import {
+  SEARCH_PAGE_TYPE_COURSES,
+  SEARCH_PAGE_TYPE_LISTING_TYPE,
+  SEARCH_PAGE_TYPE_SELLERS,
+} from '../containers/SearchPage/SearchPage.duck';
 import NotFoundPage from '../containers/NotFoundPage/NotFoundPage';
 import PreviewResolverPage from '../containers/PreviewResolverPage/PreviewResolverPage';
 
@@ -33,8 +38,8 @@ const PrivacyPolicyPage = loadable(() => import(/* webpackChunkName: "PrivacyPol
 const ProfilePage = loadable(() => import(/* webpackChunkName: "ProfilePage" */ '../containers/ProfilePage/ProfilePage'));
 const ProfileSettingsPage = loadable(() => import(/* webpackChunkName: "ProfileSettingsPage" */ '../containers/ProfileSettingsPage/ProfileSettingsPage'));
 const RequestQuotePage = loadable(() => import(/* webpackChunkName: "RequestQuotePage" */ '../containers/RequestQuotePage/RequestQuotePage'));
-const SearchPageWithMap = loadable(() => import(/* webpackChunkName: "SearchPageWithMap" */ /* webpackPrefetch: true */  '../containers/SearchPage/SearchPageWithMap'));
-const SearchPageWithGrid = loadable(() => import(/* webpackChunkName: "SearchPageWithGrid" */ /* webpackPrefetch: true */  '../containers/SearchPage/SearchPageWithGrid'));
+const SearchPageForCourses = loadable(() => import(/* webpackChunkName: "SearchPageForCourses" */ /* webpackPrefetch: true */  '../containers/SearchPage/SearchPageForCourses'));
+const SearchPageForSellers = loadable(() => import(/* webpackChunkName: "SearchPageForSellers" */ /* webpackPrefetch: true */  '../containers/SearchPage/SearchPageForSellers'));
 const StripePayoutPage = loadable(() => import(/* webpackChunkName: "StripePayoutPage" */ '../containers/StripePayoutPage/StripePayoutPage'));
 const TermsOfServicePage = loadable(() => import(/* webpackChunkName: "TermsOfServicePage" */ '../containers/TermsOfServicePage/TermsOfServicePage'));
 const TransactionPage = loadable(() => import(/* webpackChunkName: "TransactionPage" */ '../containers/TransactionPage/TransactionPage'));
@@ -59,6 +64,9 @@ const draftId = '00000000-0000-0000-0000-000000000000';
 const draftSlug = 'draft';
 
 const RedirectToLandingPage = () => <NamedRedirect name="LandingPage" />;
+const RedirectToCoursesSearchPage = props => (
+  <NamedRedirect name="SearchPageForCourses" search={props.location?.search} />
+);
 
 // NOTE: Most server-side endpoints are prefixed with /api. Requests to those
 // endpoints are indended to be handled in the server instead of the browser and
@@ -69,8 +77,6 @@ const RedirectToLandingPage = () => <NamedRedirect name="LandingPage" />;
 // Our routes are exact by default.
 // See behaviour from Routes.js where Route is created.
 const routeConfiguration = (layoutConfig, accessControlConfig) => {
-  const isSearchPageWithMap = layoutConfig.searchPage?.variantType === 'map';
-  const SearchPage = isSearchPageWithMap ? SearchPageWithMap : SearchPageWithGrid;
   const ListingPage = layoutConfig.listingPage?.variantType === 'carousel' 
     ? ListingPageCarousel 
     : ListingPageCoverPhoto;
@@ -103,18 +109,46 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
     {
       path: '/s',
       name: 'SearchPage',
+      component: RedirectToCoursesSearchPage,
+    },
+    {
+      path: '/s/courses',
+      name: 'SearchPageForCourses',
       ...authForPrivateMarketplace,
-      component: SearchPage,
-      loadData: pageDataLoadingAPI.SearchPage.loadData,
-      prioritizeMapLibraryLoading: isSearchPageWithMap,
+      component: SearchPageForCourses,
+      loadData: (params, search, config) =>
+        pageDataLoadingAPI.SearchPage.loadData(
+          { ...params, searchPageType: SEARCH_PAGE_TYPE_COURSES },
+          search,
+          config
+        ),
+    },
+    {
+      path: '/s/experts',
+      name: 'SearchPageForSellers',
+      ...authForPrivateMarketplace,
+      component: SearchPageForSellers,
+      loadData: (params, search, config) =>
+        pageDataLoadingAPI.SearchPage.loadData(
+          { ...params, searchPageType: SEARCH_PAGE_TYPE_SELLERS },
+          search,
+          config
+        ),
     },
     {
       path: '/s/:listingType',
       name: 'SearchPageWithListingType',
       ...authForPrivateMarketplace,
-      component: SearchPage,
-      loadData: pageDataLoadingAPI.SearchPage.loadData,
-      prioritizeMapLibraryLoading: isSearchPageWithMap,
+      component: SearchPageForCourses,
+      loadData: (params, search, config) =>
+        pageDataLoadingAPI.SearchPage.loadData(
+          {
+            ...params,
+            searchPageType: SEARCH_PAGE_TYPE_LISTING_TYPE,
+          },
+          search,
+          config
+        ),
     },
     {
       path: '/l',

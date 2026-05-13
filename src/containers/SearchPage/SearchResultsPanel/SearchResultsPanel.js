@@ -208,15 +208,15 @@ const SearchResultsPanel = props => {
     intl,
   } = props;
   const classes = classNames(rootClassName || css.root, className);
+  const hasSellerResults = Array.isArray(sellers);
 
-  if (!sellers) {
-    const pageName = listingTypeParam ? 'SearchPageWithListingType' : 'SearchPage';
+  if (!hasSellerResults) {
     const paginationLinks =
       pagination && pagination.totalPages > 1 ? (
         <PaginationLinks
           className={css.pagination}
-          pageName={pageName}
-          pagePathParams={{ listingType: listingTypeParam }}
+          pageName={listingTypeParam ? 'SearchPageWithListingType' : 'SearchPageForCourses'}
+          pagePathParams={listingTypeParam ? { listingType: listingTypeParam } : {}}
           pageSearchParams={search}
           pagination={pagination}
           aria-label={intl.formatMessage({ id: 'SearchResultsPanel.screenreader.pagination' })}
