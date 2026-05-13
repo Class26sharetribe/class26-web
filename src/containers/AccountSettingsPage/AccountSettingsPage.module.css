@@ -1,0 +1,38 @@
+@import '../../styles/customMediaQueries.css';
+
+.root {
+  width: 100%;
+}
+
+.desktopTopbar,
+.mobileTopbar {
+  box-shadow: none;
+}
+
+.sectionTitle {
+  margin-top: 0;
+  margin-bottom: 24px;
+  padding-top: 0;
+}
+
+.dangerTitle {
+  color: var(--colorFail);
+}
+
+.form {
+  margin-bottom: 0;
+}
+
+.paymentForm {
+  margin-bottom: 0;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--colorGrey100);
+  margin: 40px 0;
+
+  @media (--viewportMedium) {
+    margin: 48px 0;
+  }
+}

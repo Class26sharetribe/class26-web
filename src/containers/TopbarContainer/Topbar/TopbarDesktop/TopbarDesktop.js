@@ -1,21 +1,26 @@
-import React, { useState, useEffect } from 'react';
 import classNames from 'classnames';
+import { useEffect, useState } from 'react';
 
-import { FormattedMessage } from '../../../../util/reactIntl';
-import { ACCOUNT_SETTINGS_PAGES } from '../../../../routing/routeConfiguration';
 import {
-  Avatar,
   InlineTextButton,
   LinkedLogo,
   Menu,
-  MenuLabel,
   MenuContent,
   MenuItem,
+  MenuLabel,
   NamedLink,
 } from '../../../../components';
+import { ACCOUNT_SETTINGS_PAGES } from '../../../../routing/routeConfiguration';
+import { FormattedMessage } from '../../../../util/reactIntl';
+import { getCurrentUserTypeRoles } from '../../../../util/userHelpers';
+import {
+  MY_CLASSES_TAB,
+  SAVED_FOR_LATER_TAB,
+  PERSONAL_PROFILE_TAB,
+  ACCOUNT_SETTINGS_TAB,
+} from '../../../PersonalAreaPage/PersonalAreaPage';
 
 import TopbarSearchForm from '../TopbarSearchForm/TopbarSearchForm';
-import CustomLinksMenu from './CustomLinksMenu/CustomLinksMenu';
 
 import css from './TopbarDesktop.module.css';
 
@@ -49,9 +54,32 @@ const InboxLink = ({ notificationCount, inboxTab }) => {
       params={{ tab: inboxTab }}
     >
       <span className={css.topbarLinkLabel}>
-        <svg style={{ fill: 'transparent' }} width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M22.9167 5.2814V19.5837C22.9167 20.8483 21.7841 21.875 20.389 21.875H4.61106C3.216 21.875 2.08337 20.8483 2.08337 19.5837V5.2814C2.08337 4.01682 3.216 2.99012 4.61106 2.99012H20.389C21.7841 2.99012 22.9167 4.01682 22.9167 5.2814Z" stroke="#101828" stroke-width="2" stroke-miterlimit="1.5" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M22.9167 5.27577L12.5 14.7182L2.08334 5.27577" stroke="#101828" stroke-width="2" stroke-miterlimit="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        <svg
+          style={{ fill: 'transparent' }}
+          width="25"
+          height="25"
+          viewBox="0 0 25 25"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M22.9167 5.2814V19.5837C22.9167 20.8483 21.7841 21.875 20.389 21.875H4.61106C3.216 21.875 2.08337 20.8483 2.08337 19.5837V5.2814C2.08337 4.01682 3.216 2.99012 4.61106 2.99012H20.389C21.7841 2.99012 22.9167 4.01682 22.9167 5.2814Z"
+            stroke="#101828"
+            stroke-width="2"
+            stroke-miterlimit="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M22.9167 5.27577L12.5 14.7182L2.08334 5.27577"
+            stroke="#101828"
+            stroke-width="2"
+            stroke-miterlimit="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
         </svg>
 
         {/* <FormattedMessage id="TopbarDesktop.inbox" /> */}
@@ -61,28 +89,162 @@ const InboxLink = ({ notificationCount, inboxTab }) => {
   );
 };
 
-const ProfileMenu = ({ currentPage, currentUser, onLogout, showManageListingsLink, intl }) => {
+const ProfileMenu = ({
+  currentPage,
+  currentUser,
+  onLogout,
+  showManageListingsLink,
+  intl,
+  config,
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const { provider: isProvider } = getCurrentUserTypeRoles(config, currentUser);
+
   const currentPageClass = page => {
     const isAccountSettingsPage =
       page === 'AccountSettingsPage' && ACCOUNT_SETTINGS_PAGES.includes(currentPage);
     return currentPage === page || isAccountSettingsPage ? css.currentPage : null;
   };
 
+  const close = () => setIsOpen(false);
+
   return (
-    <Menu skipFocusOnNavigation={true}>
+    <Menu isOpen={isOpen} onToggleActive={setIsOpen} skipFocusOnNavigation={true}>
       <MenuLabel
         id="profile-menu-label"
         className={css.profileMenuLabel}
         isOpenClassName={css.profileMenuIsOpen}
         ariaLabel={intl.formatMessage({ id: 'TopbarDesktop.screenreader.profileMenu' })}
       >
-        <svg style={{ fill: 'transparent' }} width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M20.8333 21.875V19.7917C20.8333 18.6866 20.3943 17.6268 19.6129 16.8454C18.8315 16.064 17.7717 15.625 16.6666 15.625H8.33329C7.22822 15.625 6.16842 16.064 5.38701 16.8454C4.60561 17.6268 4.16663 18.6866 4.16663 19.7917V21.875M16.6666 7.29167C16.6666 9.59285 14.8011 11.4583 12.5 11.4583C10.1988 11.4583 8.33329 9.59285 8.33329 7.29167C8.33329 4.99048 10.1988 3.125 12.5 3.125C14.8011 3.125 16.6666 4.99048 16.6666 7.29167Z" stroke="#101828" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <svg
+          style={{ fill: 'transparent' }}
+          width="25"
+          height="25"
+          viewBox="0 0 25 25"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M20.8333 21.875V19.7917C20.8333 18.6866 20.3943 17.6268 19.6129 16.8454C18.8315 16.064 17.7717 15.625 16.6666 15.625H8.33329C7.22822 15.625 6.16842 16.064 5.38701 16.8454C4.60561 17.6268 4.16663 18.6866 4.16663 19.7917V21.875M16.6666 7.29167C16.6666 9.59285 14.8011 11.4583 12.5 11.4583C10.1988 11.4583 8.33329 9.59285 8.33329 7.29167C8.33329 4.99048 10.1988 3.125 12.5 3.125C14.8011 3.125 16.6666 4.99048 16.6666 7.29167Z"
+            stroke="#101828"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
         </svg>
 
         {/* <Avatar className={css.avatar} user={currentUser} disableProfileLink /> */}
       </MenuLabel>
       <MenuContent className={css.profileMenuContent}>
+        {/* Heading — Expert Dashboard (provider) or Personal Area (customer) */}
+        <MenuItem key="menuHeading">
+          <span className={css.menuHeading}>
+            <FormattedMessage
+              id={
+                isProvider
+                  ? 'TopbarDesktop.expertDashboardHeading'
+                  : 'TopbarDesktop.personalAreaHeading'
+              }
+            />
+          </span>
+        </MenuItem>
+
+        {/* Provider: My Listings */}
+        {isProvider ? (
+          <MenuItem key="MyListings">
+            <div onClick={close}>
+              <NamedLink className={css.menuLink} name="ManageListingsPage">
+                <span className={css.menuItemBorder} />
+                <FormattedMessage id="TopbarDesktop.myListingsLink" />
+              </NamedLink>
+            </div>
+          </MenuItem>
+        ) : null}
+
+        {/* Customer: My Classes */}
+        {!isProvider ? (
+          <MenuItem key="MyClassesTab">
+            <div onClick={close}>
+              <NamedLink
+                className={css.menuLink}
+                name="PersonalAreaPage"
+                params={{ tab: MY_CLASSES_TAB }}
+              >
+                <span className={css.menuItemBorder} />
+                <FormattedMessage id="TopbarDesktop.myClassesLink" />
+              </NamedLink>
+            </div>
+          </MenuItem>
+        ) : null}
+
+        {/* Customer: Saved for Later */}
+        {!isProvider ? (
+          <MenuItem key="SavedForLaterTab">
+            <div onClick={close}>
+              <NamedLink
+                className={css.menuLink}
+                name="PersonalAreaPage"
+                params={{ tab: SAVED_FOR_LATER_TAB }}
+              >
+                <span className={css.menuItemBorder} />
+                <FormattedMessage id="TopbarDesktop.savedForLaterLink" />
+              </NamedLink>
+            </div>
+          </MenuItem>
+        ) : null}
+
+        {/* Account Settings (both) */}
+        <MenuItem key="AccountSettings">
+          <div onClick={close}>
+            <NamedLink
+              className={css.menuLink}
+              name="PersonalAreaPage"
+              params={{ tab: ACCOUNT_SETTINGS_TAB }}
+            >
+              <span className={css.menuItemBorder} />
+              <FormattedMessage id="TopbarDesktop.accountSettingsLink" />
+            </NamedLink>
+          </div>
+        </MenuItem>
+
+        {/* Provider: Reviews */}
+        {isProvider ? (
+          <MenuItem key="ExpertReviews">
+            <div onClick={close}>
+              <NamedLink className={css.menuLink} name="InboxPage" params={{ tab: 'sales' }}>
+                <span className={css.menuItemBorder} />
+                <FormattedMessage id="TopbarDesktop.reviewsLink" />
+              </NamedLink>
+            </div>
+          </MenuItem>
+        ) : null}
+
+        {/* Provider: Expert Profile / Customer: Public Profile */}
+        <MenuItem key="profileLink">
+          <div onClick={close}>
+            <NamedLink
+              className={css.menuLink}
+              name={isProvider ? 'ProfileSettingsPage' : 'PersonalAreaPage'}
+              params={isProvider ? undefined : { tab: PERSONAL_PROFILE_TAB }}
+            >
+              <span className={css.menuItemBorder} />
+              <FormattedMessage
+                id={
+                  isProvider ? 'TopbarDesktop.expertProfileLink' : 'TopbarDesktop.publicProfileLink'
+                }
+              />
+            </NamedLink>
+          </div>
+        </MenuItem>
+
+        <MenuItem key="logout">
+          <InlineTextButton rootClassName={css.logoutButton} onClick={onLogout}>
+            <span className={css.menuItemBorder} />
+            <FormattedMessage id="TopbarDesktop.logout" />
+          </InlineTextButton>
+        </MenuItem>
+
+        {/* Legacy menu items — kept for reference
         {showManageListingsLink ? (
           <MenuItem key="ManageListingsPage">
             <NamedLink
@@ -112,12 +274,7 @@ const ProfileMenu = ({ currentPage, currentUser, onLogout, showManageListingsLin
             <FormattedMessage id="TopbarDesktop.accountSettingsLink" />
           </NamedLink>
         </MenuItem>
-        <MenuItem key="logout">
-          <InlineTextButton rootClassName={css.logoutButton} onClick={onLogout}>
-            <span className={css.menuItemBorder} />
-            <FormattedMessage id="TopbarDesktop.logout" />
-          </InlineTextButton>
-        </MenuItem>
+        */}
       </MenuContent>
     </Menu>
   );
@@ -186,6 +343,7 @@ const TopbarDesktop = props => {
       onLogout={onLogout}
       showManageListingsLink={showCreateListingsLink}
       intl={intl}
+      config={config}
     />
   ) : null;
 
@@ -232,8 +390,6 @@ const TopbarDesktop = props => {
         <NamedLink name="SearchPageForSellers" className={css.topbarLink}>
           <span className={css.topbarLinkLabel}>Experts</span>
         </NamedLink>
-
-
       </div>
 
       {profileMenuMaybe}

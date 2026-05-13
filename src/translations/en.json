@@ -1728,5 +1728,15 @@
   "ProfileSettingsForm.instagramPlaceholder": "yourname",
   "ProfileSettingsForm.twitterPlaceholder": "yourname",
   "ProfileSettingsForm.youtubePlaceholder": "yourname",
-  "ProfileSettingsForm.websitePlaceholder": "yourwebsite.com"
+  "ProfileSettingsForm.websitePlaceholder": "yourwebsite.com",
+  "AccountSettingsPage.title": "Account settings",
+  "AccountSettingsPage.heading": "Account settings",
+  "TopbarDesktop.personalAreaHeading": "Personal Area",
+  "TopbarDesktop.myClassesLink": "My Classes",
+  "TopbarDesktop.savedForLaterLink": "Saved for Later",
+  "TopbarDesktop.publicProfileLink": "Public Profile",
+  "TopbarDesktop.expertDashboardHeading": "Expert Dashboard",
+  "TopbarDesktop.myListingsLink": "My Listings",
+  "TopbarDesktop.reviewsLink": "Reviews",
+  "TopbarDesktop.expertProfileLink": "Expert Profile"
 }

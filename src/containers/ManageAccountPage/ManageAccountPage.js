@@ -57,6 +57,7 @@ export const ManageAccountPageComponent = props => {
     resetPasswordError,
     updateProfileInProgress = false,
     updateProfileError,
+    embedded = false,
   } = props;
 
   const user = ensureCurrentUser(currentUser);
@@ -116,6 +117,52 @@ export const ManageAccountPageComponent = props => {
     showPayoutDetails,
   };
 
+  const pageContent = (
+    <div className={css.content}>
+      <H3 as="h1">
+        <FormattedMessage id="ManageAccountPage.heading" />
+      </H3>
+      {hasUserTypeFields ? (
+        <>
+          <PrivateDetailsForm
+            className={css.form}
+            currentUser={currentUser}
+            initialValues={{
+              ...initialValuesForUserFields(protectedData, 'protected', userType, userFields),
+              ...initialValuesForUserFields(privateData, 'private', userType, userFields),
+            }}
+            updateProfileError={updateProfileError}
+            updateInProgress={updateProfileInProgress}
+            onSubmit={values => handleFieldSubmit(values, userType)}
+            marketplaceName={config.marketplaceName}
+            userFields={nonPublicUserFields}
+            userTypeConfig={userTypeConfig}
+            intl={intl}
+          />
+          <hr className={css.accountPageDivider} />
+          <H4 as="h3" className={css.deleteAccountSubtitle}>
+            <FormattedMessage id="ManageAccountPage.deleteAccountSubtitle" />
+          </H4>
+        </>
+      ) : null}
+      {user.id ? (
+        <DeleteAccountForm
+          intl={intl}
+          deleteAccountError={deleteAccountError}
+          onSubmitDeleteAccount={handleDeleteSubmit}
+          marketplaceName={config.marketplaceName}
+          currentUser={currentUser}
+          deleteAccountInProgress={deleteAccountInProgress}
+          onResetPassword={onResetPassword}
+          resetPasswordInProgress={resetPasswordInProgress}
+          resetPasswordError={resetPasswordError}
+        />
+      ) : null}
+    </div>
+  );
+
+  if (embedded) return pageContent;
+
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
       <LayoutSideNavigation
@@ -137,47 +184,7 @@ export const ManageAccountPageComponent = props => {
         footer={<FooterContainer />}
         intl={intl}
       >
-        <div className={css.content}>
-          <H3 as="h1">
-            <FormattedMessage id="ManageAccountPage.heading" />
-          </H3>
-          {hasUserTypeFields ? (
-            <>
-              <PrivateDetailsForm
-                className={css.form}
-                currentUser={currentUser}
-                initialValues={{
-                  ...initialValuesForUserFields(protectedData, 'protected', userType, userFields),
-                  ...initialValuesForUserFields(privateData, 'private', userType, userFields),
-                }}
-                updateProfileError={updateProfileError}
-                updateInProgress={updateProfileInProgress}
-                onSubmit={values => handleFieldSubmit(values, userType)}
-                marketplaceName={config.marketplaceName}
-                userFields={nonPublicUserFields}
-                userTypeConfig={userTypeConfig}
-                intl={intl}
-              />
-              <hr className={css.accountPageDivider} />
-              <H4 as="h3" className={css.deleteAccountSubtitle}>
-                <FormattedMessage id="ManageAccountPage.deleteAccountSubtitle" />
-              </H4>
-            </>
-          ) : null}
-          {user.id ? (
-            <DeleteAccountForm
-              intl={intl}
-              deleteAccountError={deleteAccountError}
-              onSubmitDeleteAccount={handleDeleteSubmit}
-              marketplaceName={config.marketplaceName}
-              currentUser={currentUser}
-              deleteAccountInProgress={deleteAccountInProgress}
-              onResetPassword={onResetPassword}
-              resetPasswordInProgress={resetPasswordInProgress}
-              resetPasswordError={resetPasswordError}
-            />
-          ) : null}
-        </div>
+        {pageContent}
       </LayoutSideNavigation>
     </Page>
   );
@@ -214,11 +221,8 @@ const mapDispatchToProps = dispatch => ({
   onUpdateProfile: values => dispatch(updateProfile(values)),
 });
 
-const ManageAccountPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(ManageAccountPageComponent);
+const ManageAccountPage = compose(connect(mapStateToProps, mapDispatchToProps))(
+  ManageAccountPageComponent
+);
 
 export default ManageAccountPage;

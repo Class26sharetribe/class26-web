@@ -170,6 +170,45 @@ const PaymentMethodsPageComponent = props => {
     showPayoutDetails,
   };
 
+  const pageContent = (
+    <div className={css.content}>
+      <H3 as="h1">
+        <FormattedMessage id="PaymentMethodsPage.heading" />
+      </H3>
+      {!stripeCustomerFetched ? null : (
+        <>
+          {showCardDetails ? (
+            <SavedCardDetails
+              card={card}
+              onManageDisableScrolling={onManageDisableScrolling}
+              onChange={setCardState}
+              onDeleteCard={handleRemovePaymentMethod}
+              deletePaymentMethodInProgress={deletePaymentMethodInProgress}
+            />
+          ) : null}
+          {showForm ? (
+            <PaymentMethodsForm
+              className={css.paymentForm}
+              formId="PaymentMethodsForm"
+              initialValues={initialValuesForStripePayment}
+              onSubmit={handleSubmit}
+              handleRemovePaymentMethod={handleRemovePaymentMethod}
+              hasDefaultPaymentMethod={hasDefaultPaymentMethod}
+              addPaymentMethodError={addPaymentMethodError}
+              deletePaymentMethodError={deletePaymentMethodError}
+              createStripeCustomerError={createStripeCustomerError}
+              handleCardSetupError={handleCardSetupError}
+              inProgress={isSubmitting}
+            />
+          ) : null}
+        </>
+      )}
+    </div>
+  );
+
+  const { embedded = false } = props;
+  if (embedded) return pageContent;
+
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
       <LayoutSideNavigation
@@ -191,39 +230,7 @@ const PaymentMethodsPageComponent = props => {
         footer={<FooterContainer />}
         intl={intl}
       >
-        <div className={css.content}>
-          <H3 as="h1">
-            <FormattedMessage id="PaymentMethodsPage.heading" />
-          </H3>
-          {!stripeCustomerFetched ? null : (
-            <>
-              {showCardDetails ? (
-                <SavedCardDetails
-                  card={card}
-                  onManageDisableScrolling={onManageDisableScrolling}
-                  onChange={setCardState}
-                  onDeleteCard={handleRemovePaymentMethod}
-                  deletePaymentMethodInProgress={deletePaymentMethodInProgress}
-                />
-              ) : null}
-              {showForm ? (
-                <PaymentMethodsForm
-                  className={css.paymentForm}
-                  formId="PaymentMethodsForm"
-                  initialValues={initialValuesForStripePayment}
-                  onSubmit={handleSubmit}
-                  handleRemovePaymentMethod={handleRemovePaymentMethod}
-                  hasDefaultPaymentMethod={hasDefaultPaymentMethod}
-                  addPaymentMethodError={addPaymentMethodError}
-                  deletePaymentMethodError={deletePaymentMethodError}
-                  createStripeCustomerError={createStripeCustomerError}
-                  handleCardSetupError={handleCardSetupError}
-                  inProgress={isSubmitting}
-                />
-              ) : null}
-            </>
-          )}
-        </div>
+        {pageContent}
       </LayoutSideNavigation>
     </Page>
   );
@@ -265,11 +272,8 @@ const mapDispatchToProps = dispatch => ({
   onDeletePaymentMethod: params => dispatch(deletePaymentMethod(params)),
 });
 
-const PaymentMethodsPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(PaymentMethodsPageComponent);
+const PaymentMethodsPage = compose(connect(mapStateToProps, mapDispatchToProps))(
+  PaymentMethodsPageComponent
+);
 
 export default PaymentMethodsPage;
