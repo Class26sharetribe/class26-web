@@ -58,9 +58,6 @@ const getExpertSignupParams = values => {
     password,
     firstName: fname.trim(),
     lastName: lname.trim(),
-    publicData: {
-      userType: 'provider',
-    },
     protectedData: { terms },
     publicData: {
       userType: SELLER_USER_TYPE,
