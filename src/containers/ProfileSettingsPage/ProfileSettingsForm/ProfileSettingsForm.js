@@ -23,10 +23,20 @@ import {
   CustomExtendedDataField,
 } from '../../../components';
 
+import UsernameInputRow from './UsernameInputRow';
+import FieldUrlInput from '../../ExpertSignupPage/ExpertSignupForm/FieldUrlInput';
+import {
+  linkedinFieldIcon as LinkedinFieldIcon,
+  instagramFieldIcon as InstagramFieldIcon,
+  xFieldIcon as XFieldIcon,
+  youtubeFieldIcon as YoutubeFieldIcon,
+  websiteFieldIcon as WebsiteFieldIcon,
+} from '../../PageBuilder/Primitives/Link/Icons';
 import css from './ProfileSettingsForm.module.css';
 
 const ACCEPT_IMAGES = 'image/*';
 const UPLOAD_CHANGE_DELAY = 2000; // Show spinner so that browser has time to load img srcset
+const BIO_MAX_LENGTH = 500;
 
 const DisplayNameMaybe = props => {
   const { userTypeConfig, intl } = props;
@@ -51,9 +61,6 @@ const DisplayNameMaybe = props => {
 
   return (
     <div className={css.sectionContainer}>
-      <H4 as="h2" className={css.sectionTitle}>
-        <FormattedMessage id="ProfileSettingsForm.displayNameHeading" />
-      </H4>
       <FieldTextInput
         className={css.row}
         type="text"
@@ -67,9 +74,6 @@ const DisplayNameMaybe = props => {
         })}
         {...validateMaybe}
       />
-      <p className={css.extraInfo}>
-        <FormattedMessage id="ProfileSettingsForm.displayNameInfo" />
-      </p>
     </div>
   );
 };
@@ -103,7 +107,7 @@ class ProfileSettingsFormComponent extends Component {
     super(props);
 
     this.uploadDelayTimeoutId = null;
-    this.state = { uploadDelay: false };
+    this.state = { uploadDelay: false, usernameStatus: 'idle' };
     this.submittedValues = {};
   }
 
@@ -126,6 +130,7 @@ class ProfileSettingsFormComponent extends Component {
     return (
       <FinalForm
         {...this.props}
+        keepDirtyOnReinitialize
         mutators={{ ...arrayMutators }}
         render={fieldRenderProps => {
           const {
@@ -145,6 +150,7 @@ class ProfileSettingsFormComponent extends Component {
             form,
             formId,
             marketplaceName,
+            marketplaceRootURL,
             values,
             userFields,
             userTypeConfig,
@@ -182,6 +188,23 @@ class ProfileSettingsFormComponent extends Component {
           });
           const bioPlaceholder = intl.formatMessage({
             id: 'ProfileSettingsForm.bioPlaceholder',
+          });
+
+          // Social links
+          const linkedinPlaceholder = intl.formatMessage({
+            id: 'ProfileSettingsForm.linkedinPlaceholder',
+          });
+          const instagramPlaceholder = intl.formatMessage({
+            id: 'ProfileSettingsForm.instagramPlaceholder',
+          });
+          const twitterPlaceholder = intl.formatMessage({
+            id: 'ProfileSettingsForm.twitterPlaceholder',
+          });
+          const youtubePlaceholder = intl.formatMessage({
+            id: 'ProfileSettingsForm.youtubePlaceholder',
+          });
+          const websitePlaceholder = intl.formatMessage({
+            id: 'ProfileSettingsForm.websitePlaceholder',
           });
 
           const uploadingOverlay =
@@ -230,26 +253,6 @@ class ProfileSettingsFormComponent extends Component {
               />
             ) : null;
 
-          const chooseAvatarLabel =
-            profileImage.imageId || fileUploadInProgress ? (
-              <div className={css.avatarContainer}>
-                {imageFromFile}
-                {avatarComponent}
-                <div className={css.changeAvatar}>
-                  <FormattedMessage id="ProfileSettingsForm.changeAvatar" />
-                </div>
-              </div>
-            ) : (
-              <div className={css.avatarPlaceholder}>
-                <div className={css.avatarPlaceholderText}>
-                  <FormattedMessage id="ProfileSettingsForm.addYourProfilePicture" />
-                </div>
-                <div className={css.avatarPlaceholderTextMobile}>
-                  <FormattedMessage id="ProfileSettingsForm.addYourProfilePictureMobile" />
-                </div>
-              </div>
-            );
-
           const submitError = updateProfileError ? (
             <div className={css.error}>
               <FormattedMessage id="ProfileSettingsForm.updateProfileFailed" />
@@ -260,8 +263,15 @@ class ProfileSettingsFormComponent extends Component {
           const submitInProgress = updateInProgress;
           const submittedOnce = Object.keys(this.submittedValues).length > 0;
           const pristineSinceLastSubmit = submittedOnce && isEqual(values, this.submittedValues);
+          const usernameBlocking =
+            this.state.usernameStatus === 'checking' || this.state.usernameStatus === 'taken';
           const submitDisabled =
-            invalid || pristine || pristineSinceLastSubmit || uploadInProgress || submitInProgress;
+            invalid ||
+            pristine ||
+            pristineSinceLastSubmit ||
+            uploadInProgress ||
+            submitInProgress ||
+            usernameBlocking;
 
           const userFieldProps = getPropsForCustomUserFieldInputs(
             userFields,
@@ -279,115 +289,194 @@ class ProfileSettingsFormComponent extends Component {
             >
               <div className={css.sectionContainer}>
                 <H4 as="h2" className={css.sectionTitle}>
-                  <FormattedMessage id="ProfileSettingsForm.yourProfilePicture" />
+                  <FormattedMessage id="ProfileSettingsForm.usernameLabel" />
                 </H4>
-                <Field
-                  accept={ACCEPT_IMAGES}
-                  id="profileImage"
-                  name="profileImage"
-                  label={chooseAvatarLabel}
-                  type="file"
-                  form={null}
-                  uploadImageError={uploadImageError}
-                  disabled={uploadInProgress}
-                >
-                  {fieldProps => {
-                    const { accept, id, input, label, disabled, uploadImageError } = fieldProps;
-                    const { name, type } = input;
-                    const onChange = e => {
-                      const file = e.target.files[0];
-                      form.change(`profileImage`, file);
-                      form.blur(`profileImage`);
-                      if (file != null) {
-                        const tempId = `${file.name}_${Date.now()}`;
-                        onImageUpload({ id: tempId, file });
-                      }
-                    };
-
-                    let error = null;
-
-                    if (isUploadImageOverLimitError(uploadImageError)) {
-                      error = (
-                        <div className={css.error}>
-                          <FormattedMessage id="ProfileSettingsForm.imageUploadFailedFileTooLarge" />
-                        </div>
-                      );
-                    } else if (uploadImageError) {
-                      error = (
-                        <div className={css.error}>
-                          <FormattedMessage id="ProfileSettingsForm.imageUploadFailed" />
-                        </div>
-                      );
-                    }
-
-                    return (
-                      <div className={css.uploadAvatarWrapper}>
-                        <label className={css.label} htmlFor={id}>
-                          {label}
-                        </label>
-                        <input
-                          accept={accept}
-                          id={id}
-                          name={name}
-                          className={css.uploadAvatarInput}
-                          disabled={disabled}
-                          onChange={onChange}
-                          type={type}
-                        />
-                        {error}
-                      </div>
-                    );
-                  }}
+                <Field name="username">
+                  {fieldProps => (
+                    <UsernameInputRow
+                      input={fieldProps.input}
+                      meta={fieldProps.meta}
+                      marketplaceRootURL={marketplaceRootURL ? marketplaceRootURL + '/u' : ''}
+                      currentUsername={values.currentUsername}
+                      onStatusChange={status => this.setState({ usernameStatus: status })}
+                    />
+                  )}
                 </Field>
-                <div className={css.tip}>
-                  <FormattedMessage id="ProfileSettingsForm.tip" />
-                </div>
-                <div className={css.fileInfo}>
-                  <FormattedMessage id="ProfileSettingsForm.fileInfo" />
+              </div>
+
+              <div className={css.sectionContainer}>
+                <div className={css.profilePictureRow}>
+                  <div className={css.profilePictureInfo}>
+                    <H4 as="h2" className={css.sectionTitle}>
+                      <FormattedMessage id="ProfileSettingsForm.yourProfilePicture" />
+                    </H4>
+                    <p className={css.profilePictureSubtitle}>
+                      <FormattedMessage id="ProfileSettingsForm.profilePictureSubtitle" />
+                    </p>
+                  </div>
+                  <div className={css.profilePictureCurrentAvatar}>
+                    {fileUploadInProgress || delayAfterUpload ? (
+                      <div className={css.avatarUploadSpinner}>
+                        <IconSpinner />
+                      </div>
+                    ) : (
+                      avatarComponent || null
+                    )}
+                  </div>
+                  <Field
+                    accept="image/jpeg,image/png"
+                    id="profileImage"
+                    name="profileImage"
+                    type="file"
+                    form={null}
+                    uploadImageError={uploadImageError}
+                    disabled={uploadInProgress}
+                  >
+                    {fieldProps => {
+                      const { accept, id, input, disabled, uploadImageError } = fieldProps;
+                      const { name, type } = input;
+                      const onChange = e => {
+                        const file = e.target.files[0];
+                        form.change(`profileImage`, file);
+                        form.blur(`profileImage`);
+                        if (file != null) {
+                          const tempId = `${file.name}_${Date.now()}`;
+                          onImageUpload({ id: tempId, file });
+                        }
+                      };
+
+                      let error = null;
+
+                      if (isUploadImageOverLimitError(uploadImageError)) {
+                        error = (
+                          <div className={css.error}>
+                            <FormattedMessage id="ProfileSettingsForm.imageUploadFailedFileTooLarge" />
+                          </div>
+                        );
+                      } else if (uploadImageError) {
+                        error = (
+                          <div className={css.error}>
+                            <FormattedMessage id="ProfileSettingsForm.imageUploadFailed" />
+                          </div>
+                        );
+                      }
+
+                      return (
+                        <div className={css.uploadZoneOuter}>
+                          <label className={css.uploadZone} htmlFor={id}>
+                            <div className={css.uploadIconCircle}>
+                              <svg
+                                width="20"
+                                height="20"
+                                viewBox="0 0 20 20"
+                                fill="none"
+                                aria-hidden="true"
+                              >
+                                <path
+                                  d="M13.333 13.333 10 10m0 0L6.667 13.333M10 10v7.5M16.992 15.325A4.167 4.167 0 0 0 15 7.5h-1.05A6.667 6.667 0 1 0 3.334 14.167"
+                                  stroke="currentColor"
+                                  strokeWidth="1.5"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                              </svg>
+                            </div>
+                            <span className={css.uploadZoneClickText}>
+                              <FormattedMessage id="ProfileSettingsForm.clickToUpload" />
+                            </span>
+                            <span className={css.uploadZoneFormats}>
+                              <FormattedMessage id="ProfileSettingsForm.fileInfo" />
+                            </span>
+                          </label>
+                          <input
+                            accept={accept}
+                            id={id}
+                            name={name}
+                            className={css.uploadAvatarInput}
+                            disabled={disabled}
+                            onChange={onChange}
+                            type={type}
+                          />
+                          {error}
+                        </div>
+                      );
+                    }}
+                  </Field>
                 </div>
               </div>
               <div className={css.sectionContainer}>
-                <H4 as="h2" className={css.sectionTitle}>
-                  <FormattedMessage id="ProfileSettingsForm.yourName" />
-                </H4>
-                <div className={css.nameContainer}>
-                  <FieldTextInput
-                    className={css.firstName}
-                    type="text"
-                    id="firstName"
-                    name="firstName"
-                    label={firstNameLabel}
-                    placeholder={firstNamePlaceholder}
-                    validate={firstNameRequired}
-                  />
-                  <FieldTextInput
-                    className={css.lastName}
-                    type="text"
-                    id="lastName"
-                    name="lastName"
-                    label={lastNameLabel}
-                    placeholder={lastNamePlaceholder}
-                    validate={lastNameRequired}
-                  />
-                </div>
+                <FieldTextInput
+                  // className={css.firstName}
+                  type="text"
+                  id="firstName"
+                  name="firstName"
+                  label={firstNameLabel}
+                  placeholder={firstNamePlaceholder}
+                  validate={firstNameRequired}
+                />
+                {/* <div className={css.nameContainer}>
+                </div> */}
+                <FieldTextInput
+                  // className={css.lastName}
+                  type="text"
+                  id="lastName"
+                  name="lastName"
+                  label={lastNameLabel}
+                  placeholder={lastNamePlaceholder}
+                  validate={lastNameRequired}
+                />
               </div>
 
               <DisplayNameMaybe userTypeConfig={userTypeConfig} intl={intl} />
 
               <div className={classNames(css.sectionContainer)}>
-                <H4 as="h2" className={css.sectionTitle}>
-                  <FormattedMessage id="ProfileSettingsForm.bioHeading" />
-                </H4>
                 <FieldTextInput
                   type="textarea"
                   id="bio"
                   name="bio"
                   label={bioLabel}
                   placeholder={bioPlaceholder}
+                  maxLength={BIO_MAX_LENGTH}
                 />
-                <p className={css.extraInfo}>
-                  <FormattedMessage id="ProfileSettingsForm.bioInfo" values={{ marketplaceName }} />
+                <p className={css.bioCharCount}>
+                  {BIO_MAX_LENGTH - (values.bio?.length || 0)}{' '}
+                  <FormattedMessage id="ProfileSettingsForm.bioCharactersLeft" />
                 </p>
+              </div>
+              <div className={css.sectionContainer}>
+                <H4 as="h2" className={css.sectionTitle}>
+                  <FormattedMessage id="ProfileSettingsForm.socialLinksLabel" />
+                </H4>
+                <FieldUrlInput
+                  name="socialLinks.linkedin"
+                  id="socialLinks.linkedin"
+                  placeholder={linkedinPlaceholder}
+                  icon={<LinkedinFieldIcon />}
+                />
+                <FieldUrlInput
+                  name="socialLinks.instagram"
+                  id="socialLinks.instagram"
+                  placeholder={instagramPlaceholder}
+                  icon={<InstagramFieldIcon />}
+                />
+                <FieldUrlInput
+                  name="socialLinks.twitter"
+                  id="socialLinks.twitter"
+                  placeholder={twitterPlaceholder}
+                  icon={<XFieldIcon />}
+                />
+                <FieldUrlInput
+                  name="socialLinks.youtube"
+                  id="socialLinks.youtube"
+                  placeholder={youtubePlaceholder}
+                  icon={<YoutubeFieldIcon />}
+                />
+                <FieldUrlInput
+                  name="socialLinks.website"
+                  id="socialLinks.website"
+                  placeholder={websitePlaceholder}
+                  icon={<WebsiteFieldIcon />}
+                />
               </div>
               <div className={classNames(css.sectionContainer, css.lastSection)}>
                 {userFieldProps.map(({ key, ...fieldProps }) => (

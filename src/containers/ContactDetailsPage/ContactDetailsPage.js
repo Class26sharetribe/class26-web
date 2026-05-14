@@ -62,6 +62,7 @@ export const ContactDetailsPageComponent = props => {
     onResetPassword,
     resetPasswordInProgress = false,
     resetPasswordError,
+    embedded = false,
   } = props;
   const { userTypes = [] } = config.user;
 
@@ -113,6 +114,17 @@ export const ContactDetailsPageComponent = props => {
     showPayoutDetails,
   };
 
+  const pageContent = (
+    <div className={css.content}>
+      <H3 as="h1">
+        <FormattedMessage id="ContactDetailsPage.heading" />
+      </H3>
+      {contactInfoForm}
+    </div>
+  );
+
+  if (embedded) return pageContent;
+
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
       <LayoutSideNavigation
@@ -134,12 +146,7 @@ export const ContactDetailsPageComponent = props => {
         footer={<FooterContainer />}
         intl={intl}
       >
-        <div className={css.content}>
-          <H3 as="h1">
-            <FormattedMessage id="ContactDetailsPage.heading" />
-          </H3>
-          {contactInfoForm}
-        </div>
+        {pageContent}
       </LayoutSideNavigation>
     </Page>
   );

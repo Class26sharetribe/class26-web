@@ -47,6 +47,7 @@ export const PasswordChangePageComponent = props => {
     resetPasswordError,
     passwordChanged,
     scrollingDisabled,
+    embedded = false,
   } = props;
 
   const changePasswordForm =
@@ -75,6 +76,17 @@ export const PasswordChangePageComponent = props => {
     showPayoutDetails,
   };
 
+  const pageContent = (
+    <div className={css.content}>
+      <H3 as="h1">
+        <FormattedMessage id="PasswordChangePage.heading" />
+      </H3>
+      {changePasswordForm}
+    </div>
+  );
+
+  if (embedded) return pageContent;
+
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
       <LayoutSideNavigation
@@ -96,12 +108,7 @@ export const PasswordChangePageComponent = props => {
         footer={<FooterContainer />}
         intl={intl}
       >
-        <div className={css.content}>
-          <H3 as="h1">
-            <FormattedMessage id="PasswordChangePage.heading" />
-          </H3>
-          {changePasswordForm}
-        </div>
+        {pageContent}
       </LayoutSideNavigation>
     </Page>
   );

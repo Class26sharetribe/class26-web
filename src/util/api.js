@@ -176,6 +176,10 @@ export const querySellers = (queryParams = {}, marketplaceRootURL) => {
   });
 };
 
+export const checkUsername = username => {
+  return get('/api/check-username?' + new URLSearchParams({ username }).toString());
+};
+
 export const generatePresignedUrl = body => {
   return post('/api/presigned-url', body);
 };

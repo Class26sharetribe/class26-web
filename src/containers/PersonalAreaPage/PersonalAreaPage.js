@@ -1,6 +1,5 @@
 import React from 'react';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
 
@@ -11,6 +10,8 @@ import { H1, Page, TabNav } from '../../components';
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
 import FooterContainer from '../FooterContainer/FooterContainer';
 import SavedCoursesPage from '../SavedCoursesPage/SavedCoursesPage';
+import AccountSettingsPage from '../AccountSettingsPage/AccountSettingsPage';
+import ProfileSettingsTab from './ProfileSettingsTab/ProfileSettingsTab';
 
 import css from './PersonalAreaPage.module.css';
 
@@ -36,7 +37,8 @@ const TAB_CONTENT = {
  * @returns {JSX.Element}
  */
 export const PersonalAreaPageComponent = props => {
-  const { scrollingDisabled, params } = props;
+  const { params } = props;
+  const scrollingDisabled = useSelector(isScrollingDisabled);
   const intl = useIntl();
 
   const currentTab = params?.tab || MY_CLASSES_TAB;
@@ -88,7 +90,15 @@ export const PersonalAreaPageComponent = props => {
           />
         </div>
         <main id="main-content" className={css.content}>
-          {currentTab === SAVED_FOR_LATER_TAB ? <SavedCoursesPage /> : TAB_CONTENT[currentTab]}
+          {currentTab === SAVED_FOR_LATER_TAB ? (
+            <SavedCoursesPage />
+          ) : currentTab === PERSONAL_PROFILE_TAB ? (
+            <ProfileSettingsTab />
+          ) : currentTab === ACCOUNT_SETTINGS_TAB ? (
+            <AccountSettingsPage />
+          ) : (
+            TAB_CONTENT[currentTab]
+          )}
         </main>
       </div>
       <FooterContainer />
@@ -96,10 +106,6 @@ export const PersonalAreaPageComponent = props => {
   );
 };
 
-const mapStateToProps = state => ({
-  scrollingDisabled: isScrollingDisabled(state),
-});
-
-const PersonalAreaPage = compose(connect(mapStateToProps))(PersonalAreaPageComponent);
+const PersonalAreaPage = PersonalAreaPageComponent;
 
 export default PersonalAreaPage;
