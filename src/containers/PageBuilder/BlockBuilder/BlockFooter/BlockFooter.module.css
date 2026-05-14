@@ -62,5 +62,8 @@
     letter-spacing: 0px;
     color: #414651;
     margin-bottom: 12px;
+    @media (max-width:767px) {
+     color: #717680;
+    }
   }
 }

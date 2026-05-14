@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 
 import Field, { hasDataInFields } from '../../Field';
 import BlockBuilder from '../../BlockBuilder';
 
 import SectionContainer from '../SectionContainer';
+import FaqSectionBlocks from './FaqSectionBlocks';
 import css from './SectionColumns.module.css';
+
+const YOUR_CHANCE_SECTION_ID = 'your-chance';
+const FAQ_SECTION_ID = 'faq-section';
+import ReviewMobileBg from '../../../../assets/mobile-review.jpg';
 
 // The number of columns (numColumns) affects styling and responsive images
 const COLUMN_CONFIG = [
@@ -84,6 +89,61 @@ const SectionColumns = props => {
 
   const hasHeaderFields = hasDataInFields([title, description, callToAction], fieldOptions);
   const hasBlocks = blocks?.length > 0;
+  const isYourChanceSlider = sectionId === YOUR_CHANCE_SECTION_ID;
+  const isFaqAccordionSection = sectionId === FAQ_SECTION_ID;
+
+  const sliderRef = useRef(null);
+  const resizeObserverRef = useRef(null);
+  const [scrollProgress, setScrollProgress] = useState({ left: 0, width: 0 });
+
+  const updateScrollProgress = slider => {
+    if (!slider) return;
+    const { scrollLeft, scrollWidth, clientWidth } = slider;
+    if (scrollWidth <= clientWidth) {
+      setScrollProgress({ left: 0, width: 100 });
+      return;
+    }
+    const widthPercent = (clientWidth / scrollWidth) * 100;
+    const leftPercent = (scrollLeft / scrollWidth) * 100;
+    setScrollProgress({ left: leftPercent, width: widthPercent });
+  };
+
+  const onYourChanceScroll = e => {
+    updateScrollProgress(e.currentTarget);
+  };
+
+  const setYourChanceSliderNode = useCallback(node => {
+    if (resizeObserverRef.current) {
+      resizeObserverRef.current.disconnect();
+      resizeObserverRef.current = null;
+    }
+    sliderRef.current = node;
+    if (node) {
+      updateScrollProgress(node);
+      const ro = new ResizeObserver(() => {
+        updateScrollProgress(sliderRef.current);
+      });
+      ro.observe(node);
+      resizeObserverRef.current = ro;
+    }
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (resizeObserverRef.current) {
+        resizeObserverRef.current.disconnect();
+        resizeObserverRef.current = null;
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isYourChanceSlider) return undefined;
+    const frameId = requestAnimationFrame(() => {
+      updateScrollProgress(sliderRef.current);
+    });
+    return () => cancelAnimationFrame(frameId);
+  }, [isYourChanceSlider, blocks?.length]);
 
   if(sectionId == "landing-hero"){
     return (
@@ -129,26 +189,76 @@ const SectionColumns = props => {
       options={fieldOptions}
     >
       {hasHeaderFields ? (
-        <header className={defaultClasses.sectionDetails}>
+        <header className={defaultClasses.sectionDetails} style={{background: isYourChanceSlider ? `url(${ReviewMobileBg}) no-repeat` : ''}}>
           <Field data={title} className={defaultClasses.title} options={fieldOptions} />
           <Field data={description} className={defaultClasses.description} options={fieldOptions} />
           <Field data={callToAction} className={defaultClasses.ctaButton} options={fieldOptions} />
         </header>
       ) : null}
       {hasBlocks ? (
-        <div
-          className={classNames(defaultClasses.blockContainer, getColumnCSS(numColumns), {
-            [css.noSidePaddings]: isInsideContainer,
-          })}
-        >
-          <BlockBuilder
-            ctaButtonClass={defaultClasses.ctaButton}
-            blocks={blocks}
-            sectionId={sectionId}
-            responsiveImageSizes={getResponsiveImageSizes(numColumns)}
-            options={options}
-          />
-        </div>
+        isYourChanceSlider ? (
+          <div className={css.yourChanceSliderWrap}>
+            <div
+              className={classNames(
+                defaultClasses.blockContainer,
+                getColumnCSS(numColumns),
+                css.yourChanceBlocksScroller,
+                { [css.noSidePaddings]: isInsideContainer }
+              )}
+              ref={setYourChanceSliderNode}
+              onScroll={onYourChanceScroll}
+            >
+              <BlockBuilder
+                ctaButtonClass={defaultClasses.ctaButton}
+                blocks={blocks}
+                sectionId={sectionId}
+                responsiveImageSizes={getResponsiveImageSizes(numColumns)}
+                options={options}
+              />
+            </div>
+            {blocks.length > 1 &&
+            scrollProgress.width > 0 &&
+            scrollProgress.width < 100 ? (
+              <div className={css.scrollProgressTrack} aria-hidden="true">
+                <div
+                  className={css.scrollProgressActive}
+                  style={{
+                    left: `${scrollProgress.left}%`,
+                    width: `${scrollProgress.width}%`,
+                  }}
+                />
+              </div>
+            ) : null}
+          </div>
+        ) : isFaqAccordionSection ? (
+          <div
+            className={classNames(defaultClasses.blockContainer, getColumnCSS(numColumns), {
+              [css.noSidePaddings]: isInsideContainer,
+            })}
+          >
+            <FaqSectionBlocks
+              blocks={blocks}
+              sectionId={sectionId}
+              ctaButtonClass={defaultClasses.ctaButton}
+              responsiveImageSizes={getResponsiveImageSizes(numColumns)}
+              options={options}
+            />
+          </div>
+        ) : (
+          <div
+            className={classNames(defaultClasses.blockContainer, getColumnCSS(numColumns), {
+              [css.noSidePaddings]: isInsideContainer,
+            })}
+          >
+            <BlockBuilder
+              ctaButtonClass={defaultClasses.ctaButton}
+              blocks={blocks}
+              sectionId={sectionId}
+              responsiveImageSizes={getResponsiveImageSizes(numColumns)}
+              options={options}
+            />
+          </div>
+        )
       ) : null}
     </SectionContainer>
   );

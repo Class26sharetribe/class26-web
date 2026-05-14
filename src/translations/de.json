@@ -783,6 +783,7 @@
   "PageBuilder.SearchCTA.dateFilterPlaceholder": "Daten",
   "PageBuilder.SearchCTA.keywordFilterPlaceholder": "Was suchst du?",
   "PageBuilder.SearchCTA.locationPlaceholder": "Ort",
+  "SectionColumns.faq.fallbackQuestion": "Frage",
   "PaginationLinks.next": "Nächste Seite",
   "PaginationLinks.previous": "Vorige Seite",
   "PaginationLinks.toPage": "Zur Seite {page} gehen",

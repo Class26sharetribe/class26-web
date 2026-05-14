@@ -543,7 +543,6 @@ export const ListingCard = props => {
             </div>
             {/* {pills.length > 0 ? (
               <div className={css.pills}>
-                {pills.map(p => (
                   <div className={css.pill} key={String(p)}>
                     {String(p)}
                   </div>

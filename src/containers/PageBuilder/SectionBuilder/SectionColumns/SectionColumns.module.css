@@ -338,12 +338,32 @@
   &>div {
     &>div {
       padding-top: 104px;
+
+      @media (max-width:767px) {
+        padding-top: 0;
+        margin-top: -60px;
+      }
     }
   }
 
   & header {
     /* text-align: left; */
     display: block;
+
+    @media (min-width:768px) {
+      background: transparent !important;
+    }
+
+    @media (max-width:767px) {
+      min-height: 589px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-position: 48% 0% !important;
+      /* object-fit: cover; */
+      background-size: cover !important;
+    }
 
     & h2 {
       max-width: 100%;
@@ -358,8 +378,7 @@
       text-align: center;
 
       @media (max-width:767px) {
-        font-size: 32px;
-        line-height: 40px;
+        color: #FFFFFF;
       }
     }
 
@@ -369,6 +388,19 @@
       width: max-content;
       margin-top: 32px;
       background: #008057;
+      font-family: Nohemi;
+      font-weight: 500;
+      font-style: Medium;
+      font-size: 20px;
+      line-height: 28px;
+      letter-spacing: 0px;
+      border-radius: 4px;
+      padding: 12px 20px;
+
+      @media (max-width:767px) {
+        color: #101828;
+        background: #fff;
+      }
     }
 
     /* & p{
@@ -382,6 +414,12 @@
     border: 1px solid var(--border-border-primary, #D5D7DA);
     border-radius: 8px;
     padding: 32px;
+
+    @media (max-width:767px) {
+      background: #fff;
+      position: relative;
+      z-index: 2;
+    }
 
   }
 
@@ -401,6 +439,7 @@
     text-overflow: ellipsis;
     padding: 0;
     color: #414651;
+    margin: 0 0 24px;
   }
 
   & p {
@@ -413,6 +452,8 @@
     letter-spacing: 0%;
     text-align: center;
     color: #414651;
+    margin: 0;
+    padding: 0;
 
     & em {
       text-decoration: underline;
@@ -440,6 +481,15 @@
 
 :global(#what-is-class-26) {
   background: #fff;
+  padding: 64px 0;
+
+  @media (max-width:767px) {
+    padding: 64px 0 56px;
+
+    &>div {
+      padding-top: 0;
+    }
+  }
 
   & header {
     display: block;
@@ -456,11 +506,17 @@
       text-align: left;
       width: 100%;
       max-width: 100%;
+      padding: 0;
 
       @media (max-width:767px) {
         font-size: 32px;
         line-height: 40px;
+
       }
+    }
+
+    &~div {
+      padding-top: 20px;
     }
   }
 
@@ -470,7 +526,7 @@
     font-style: Semi Bold;
     font-size: 24px;
     leading-trim: NONE;
-    line-height: spacing/4;
+    line-height: 34px;
     letter-spacing: 0%;
 
   }
@@ -484,11 +540,36 @@
     line-height: spacing/3;
     letter-spacing: 0%;
 
+    @media (max-width:767px) {
+      margin: 20px 0 0;
+      padding: 0;
+    }
+
+  }
+
+  & a {
+    font-family: Nohemi;
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 16px;
+    leading-trim: NONE;
+    line-height: 24px;
+    letter-spacing: 0px;
+    box-shadow: none;
+
+    @media (max-width:767px) {
+      font-size: 14px;
+      line-height: 20px;
+    }
   }
 
   & [class*="SectionBuilder_blockContainer"] {
     &>div {
       margin-bottom: 32px;
+
+      @media (max-width:767px) {
+        margin-bottom: 8px;
+      }
     }
 
     &>div:nth-child(1) {
@@ -503,6 +584,12 @@
         letter-spacing: 0px;
         display: block;
         margin-bottom: 20px;
+        color: #101828;
+
+        @media (max-width:767px) {
+          font-size: 12px;
+          line-height: 18px;
+        }
       }
     }
 
@@ -518,6 +605,11 @@
         letter-spacing: 0px;
         display: block;
         margin-bottom: 20px;
+
+        @media (max-width:767px) {
+          font-size: 12px;
+          line-height: 18px;
+        }
       }
     }
 
@@ -533,6 +625,11 @@
         letter-spacing: 0px;
         display: block;
         margin-bottom: 20px;
+
+        @media (max-width:767px) {
+          font-size: 12px;
+          line-height: 18px;
+        }
       }
     }
 
@@ -548,13 +645,37 @@
         letter-spacing: 0px;
         display: block;
         margin-bottom: 20px;
+
+        @media (max-width:767px) {
+          font-size: 12px;
+          line-height: 18px;
+        }
       }
+    }
+  }
+
+  & [class*="BlockDefault_text"] {
+    @media (max-width:767px) {
+      margin-top: 20px;
     }
   }
 }
 
 :global(#faq-section) {
   background: #FAFAFA;
+
+  @media (max-width:767px) {
+    background: #fff;
+    padding-top: 0;
+
+    &>div {
+      padding-top: 0;
+    }
+
+    & [class*="SectionBuilder_blockContainer"] {
+      padding: 0;
+    }
+  }
 
   & header {
     display: block;
@@ -575,6 +696,8 @@
       @media (max-width:767px) {
         font-size: 32px;
         line-height: 40px;
+        margin-bottom: 20px;
+        padding: 0;
       }
     }
 
@@ -583,7 +706,6 @@
       font-weight: 400;
       font-style: Regular;
       font-size: 16px;
-      leading-trim: NONE;
       line-height: spacing/3;
       letter-spacing: 0%;
       text-align: left;
@@ -592,6 +714,10 @@
       margin: 0;
       justify-self: left;
       text-wrap: auto;
+
+      @media (max-width:767px) {
+        display: none;
+      }
     }
   }
 
@@ -619,4 +745,65 @@
     margin: 0;
     justify-self: left;
   }
+}
+
+/* Mobile horizontal slider + scroll progress for #your-chance (SectionColumns). */
+.yourChanceSliderWrap {
+  width: 100%;
+}
+
+.yourChanceBlocksScroller {
+  @media (max-width: 767px) {
+    display: flex !important;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 16px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 24px 16px 8px;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* BlockBuilder renders each block as a direct child (BlockContainer root). */
+    &>div {
+      flex: 0 0 calc(100% - 40px);
+      max-width: 100%;
+      min-width: 0;
+      scroll-snap-align: center;
+    }
+  }
+}
+
+.scrollProgressTrack {
+  display: none;
+
+  @media (max-width: 767px) {
+    display: block;
+    position: relative;
+    width: 200px;
+    height: 2px;
+    margin: 32px auto 2px;
+    background-color: #d5d7da;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+}
+
+.scrollProgressActive {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background-color: #0a1b3a;
+  border-radius: 2px;
+  transition:
+    left 120ms ease-out,
+    width 120ms ease-out;
 }
