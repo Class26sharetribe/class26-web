@@ -260,15 +260,7 @@ const searchListingsPayloadCreator = ({ searchParams, config }, thunkAPI) => {
     return { sort: defaultSort };
   };
 
-  const {
-    perPage,
-    price,
-    dates,
-    seats,
-    sort,
-    mapSearch,
-    ...restOfParams
-  } = searchParams;
+  const { perPage, price, dates, seats, sort, mapSearch, ...restOfParams } = searchParams;
   // The params related to default filters are prepared one-by-one
   // We could consider moving them to the prepareAPIParams function too.
   const priceMaybe = priceSearchParams(price);
@@ -454,8 +446,11 @@ export const loadData = (params, search, config) => (dispatch, getState) => {
     return dispatch(searchSellersCall);
   }
 
-  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } =
-    config.layout.listingImage;
+  const {
+    aspectWidth = 1,
+    aspectHeight = 1,
+    variantPrefix = 'listing-card',
+  } = config.layout.listingImage;
   const aspectRatio = aspectHeight / aspectWidth;
   const listingTypes =
     searchPageType === SEARCH_PAGE_TYPE_LISTING_TYPE && listingTypePathParam
@@ -468,7 +463,7 @@ export const loadData = (params, search, config) => (dispatch, getState) => {
       pub_listingType: listingTypes,
       page,
       perPage: RESULT_PAGE_SIZE,
-      include: ['author', 'images'],
+      include: ['author', 'images', 'author.profileImage'],
       'fields.listing': [
         'title',
         'description',
@@ -496,6 +491,8 @@ export const loadData = (params, search, config) => (dispatch, getState) => {
         'variants.scaled-medium',
         `variants.${variantPrefix}`,
         `variants.${variantPrefix}-2x`,
+        'variants.square-small',
+        'variants.square-small2x',
       ],
       ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
       ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),

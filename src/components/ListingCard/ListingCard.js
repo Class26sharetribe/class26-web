@@ -126,11 +126,6 @@ const ListingCardCourse = props => {
   const history = useHistory();
   const currentUser = useSelector(state => state.user.currentUser);
 
-  const [courseVideoPlaying, setCourseVideoPlaying] = useState(false);
-  const [muxToken, setMuxToken] = useState(null);
-  const [muxTokenLoading, setMuxTokenLoading] = useState(false);
-  const [muxTokenError, setMuxTokenError] = useState(null);
-
   const {
     priceLabel,
     badgePrimary,
