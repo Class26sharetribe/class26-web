@@ -3,12 +3,12 @@
 .content {
   @media (--viewportMedium) {
     margin: 32px auto 0 auto;
+    max-width: 824px;
     width: 100%;
-    max-width: 564px;
   }
 
   @media (--viewportLarge) {
-    margin: 0;
+    margin: 24px auto 16px;
   }
 }
 
@@ -18,7 +18,15 @@
 }
 
 .heading {
-  hyphens: auto;
+  font-family: Nohemi;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0px;
+  color: #006647;
+  margin: 0;
+  padding: 0;
 }
 
 .stripeConnectAccountForm {

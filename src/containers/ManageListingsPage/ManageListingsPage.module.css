@@ -1,7 +1,6 @@
 @import '../../styles/customMediaQueries.css';
 
-.root {
-}
+.root {}
 
 /* ================ Filter bar ================ */
 
@@ -9,12 +8,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 0 24px 24px 24px;
+  margin: 38px auto 32px auto;
+  max-width: 1280px;
+  width: 100%;
+  padding: 0 32px;
   gap: 12px;
 
-  @media (--viewportLarge) {
-    margin: 0 36px 32px 36px;
-  }
 }
 
 .filterTabsWrapper {
@@ -25,15 +24,24 @@
 }
 
 .filterTab {
-  composes: marketplaceSmallFontStyles from global;
+  font-family: Nohemi;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 14px;
+  leading-trim: CAP_HEIGHT;
+  line-height: 20px;
+  letter-spacing: 2%;
+  vertical-align: middle;
+  text-transform: uppercase;
+
   padding: 6px 14px;
   border-radius: 4px;
-  border: 1px solid var(--colorGrey200);
+  border: 1px solid var(--border-border-primary, #D5D7DA);
   background: transparent;
-  color: var(--colorGrey500);
+  color: #A4A7AE;
   cursor: pointer;
-  font-weight: var(--fontWeightMedium);
-  letter-spacing: 0.05em;
+
+
   text-transform: uppercase;
   white-space: nowrap;
   transition: border-color 0.15s, color 0.15s;
@@ -45,23 +53,30 @@
 }
 
 .filterTabActive {
-  border-color: var(--colorGrey700);
-  color: var(--colorGrey700);
-  font-weight: var(--fontWeightSemiBold);
+
+  color: #414651;
+
 }
 
 .newListingButton {
-  composes: marketplaceSmallFontStyles from global;
+
   display: inline-flex;
   align-items: center;
   gap: 4px;
   padding: 8px 18px;
   border-radius: 4px;
   background-color: var(--marketplaceColor);
-  color: var(--colorWhite);
-  font-weight: var(--fontWeightSemiBold);
+  font-family: Nohemi;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 14px;
+  leading-trim: NONE;
+  line-height: 20px;
+  letter-spacing: 0px;
+
   white-space: nowrap;
   text-decoration: none;
+  color: #fff;
 
   &:hover {
     background-color: var(--marketplaceColorDark);
@@ -110,13 +125,13 @@
   }
 
   @media (--viewportLarge) {
-    margin: 72px auto 0 auto;
-    max-width: calc(var(--contentMaxWidth) + 72px);
+    margin: 34px auto 0 auto;
+    max-width: 1280px;
+    padding: 0 32px;
+    width: 100%;
   }
 
-  @media (--viewportXLarge) {
-    max-width: var(--contentMaxWidth);
-  }
+
 }
 
 .noResultsContainer {
@@ -132,15 +147,16 @@
 }
 
 .heading {
-  margin: 0 24px 24px 24px;
-
-  @media (--viewportMedium) {
-    margin: 0 24px 32px 24px;
-  }
-
-  @media (--viewportLarge) {
-    margin: 0 36px 32px 36px;
-  }
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0%;
+  vertical-align: middle;
+  color: #101828;
+  padding: 0;
+  margin: 0;
 }
 
 .createListingParagraph,
@@ -159,12 +175,12 @@
 .listingCards {
   list-style: none;
   margin: 0;
-  padding: 0 24px;
 
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   gap: 24px;
   width: 100%;
+  margin-top: 34px;
 
   @media (min-width: 550px) {
     grid-template-columns: repeat(2, 1fr);
@@ -175,14 +191,15 @@
   }
 
   @media (--viewportLarge) {
-    grid-template-columns: repeat(3, 1fr);
-    padding: 0 36px;
+    grid-template-columns: repeat(2, 1fr);
+  
   }
 }
 
 .listingCard {
   margin-bottom: 36px;
   width: 100%;
+  padding: 0;
 }
 
 /**

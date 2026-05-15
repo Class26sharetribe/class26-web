@@ -240,7 +240,11 @@ export const ManageListingsPageComponent = props => {
         ))}
       </div>
       <NamedLink className={css.newListingButton} name="NewListingPage">
-        + <FormattedMessage id="ManageListingsPage.newListing" />
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6.66927 0.835022V12.5017M0.835938 6.66836H12.5026" stroke="white" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <FormattedMessage id="ManageListingsPage.newListing" />
+
       </NamedLink>
     </div>
   );

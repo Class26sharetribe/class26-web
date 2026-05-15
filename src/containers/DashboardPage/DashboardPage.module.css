@@ -13,7 +13,7 @@
   padding: 0 32px;
   margin: 0 auto;
   width: 100%;
-  margin-bottom: 40px;
+  margin-bottom: 64px;
 }
 
 .heading {
@@ -34,7 +34,7 @@
 .analyticsSection {
   max-width: 1280px;
   padding: 0 32px;
-  margin: 0 auto 48px;
+  margin: 0 auto 64px;
   width: 100%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -42,7 +42,7 @@
 }
 
 .analyticsCard {
-  background: #ECFDF3;
+  background: #CEFDE4;
   border-radius: 12px;
   padding: 32px 24px;
   display: flex;
@@ -53,17 +53,30 @@
 
 .analyticsValue {
   font-family: Nohemi;
-  font-weight: 700;
-  font-size: 32px;
-  line-height: 40px;
-  color: #05603A;
+  font-weight: 600;
+  font-style: Semi Bold;
+  font-size: 24px;
+  leading-trim: NONE;
+  line-height: spacing/4;
+  letter-spacing: 0%;
+  text-align: center;
+  
+  color: #006647;
+  padding: 0;
   margin: 0;
 }
 
 .analyticsLabel {
-  font-size: 14px;
-  line-height: 20px;
-  color: #027A48;
+  font-family: Nunito Sans;
+font-weight: 400;
+font-style: Regular;
+font-size: 16px;
+leading-trim: NONE;
+line-height: spacing/3;
+letter-spacing: 0%;
+text-align: center;
+
+  color: #414651;
   margin: 0;
 }
 

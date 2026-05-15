@@ -14,12 +14,69 @@
   opacity: 0.5;
 }
 
-.sectionContainer {
-  margin-bottom: 35px;
+.fieldRow {
+  margin-top: 24px;
+  margin-bottom: 24px;
+  padding-top: 6px;
+  padding-bottom: 0;
+  border-bottom: 1px solid var(--border-border-divider, #E9EAEB);
+  padding-bottom: 24px;
+
+  &>label {}
 
   @media (--viewportMedium) {
-    margin-bottom: 56px;
+    margin-bottom: 24px;
+    padding-top: 0;
+    display: flex;
+    justify-content: space-between;
+
+    & label {
+      padding: 0;
+    }
+
+    &>div {
+      max-width: 512px;
+      width: 100%;
+
+    }
   }
+}
+
+.fieldRow2 {
+  margin-top: 24px;
+  margin-bottom: 24px;
+  padding-top: 6px;
+  padding-bottom: 0;
+  border-bottom: 1px solid var(--border-border-divider, #E9EAEB);
+  padding-bottom: 24px;
+
+  &>label {
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+
+  @media (--viewportMedium) {
+    margin-bottom: 24px;
+    padding-top: 0;
+    display: flex;
+    justify-content: space-between;
+
+    & label {
+      padding: 0;
+    }
+
+    &>div {
+      max-width: 512px;
+      width: 100%;
+      & label {
+        opacity: 0;
+      }
+    }
+  }
+}
+.sectionContainer {
+
 }
 
 .formRow {
@@ -36,9 +93,24 @@
   width: 100%;
   margin-bottom: 24px;
   white-space: nowrap;
+  flex-direction: column;
+  gap: 20px;
+
+  & label {
+    & span {
+      font-family: Nunito Sans;
+      font-weight: 400;
+      font-style: Regular;
+      font-size: 16px;
+      leading-trim: NONE;
+      line-height: 24px;
+      letter-spacing: 0%;
+
+    }
+  }
 }
 
-.radioButtonRow > :first-child {
+.radioButtonRow> :first-child {
   margin-right: 36px;
 }
 
@@ -48,16 +120,34 @@
 
 .error {
   composes: marketplaceModalPasswordMargins from global;
+  font-size: 14px;
 }
 
 .termsText {
   composes: marketplaceModalHelperText from global;
   margin-bottom: 12px;
-  text-align: center;
+  text-align: right;
 
   @media (--viewportMedium) {
     margin-bottom: 16px;
   }
+}
+
+.submitButton{
+  margin-top: 24px;
+
+  font-family: Nohemi;
+  font-weight: 600;
+  font-style: Semi Bold;
+  font-size: 14px;
+  leading-trim: NONE;
+  line-height: 20px;
+  letter-spacing: 0%;
+  color: #FFFFFF;
+  width: max-content;
+  margin-left: auto;
+  min-height: 40px;
+  padding: 9px 16px;
 }
 
 .termsLink {

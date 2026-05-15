@@ -79,53 +79,58 @@ const CreateStripeAccountFields = props => {
 
   return (
     <div className={css.sectionContainer}>
-      <H4 as="h3">
-        <FormattedMessage id="StripeConnectAccountForm.accountTypeTitle" />
-      </H4>
-      <div className={css.radioButtonRow}>
-        <FieldRadioButton
-          id="individual"
-          name="accountType"
-          label={intl.formatMessage({
-            id: 'StripeConnectAccountForm.individualAccount',
-          })}
-          value="individual"
-          showAsRequired={showAsRequired}
-        />
-        <FieldRadioButton
-          id="company"
-          name="accountType"
-          label={intl.formatMessage({ id: 'StripeConnectAccountForm.companyAccount' })}
-          value="company"
-          showAsRequired={showAsRequired}
-        />
+      <div className={css.fieldRow}>
+        <label>
+          <FormattedMessage id="StripeConnectAccountForm.accountTypeTitle" />
+        </label>
+        <div className={css.radioButtonRow}>
+          <FieldRadioButton
+            id="individual"
+            name="accountType"
+            label={intl.formatMessage({
+              id: 'StripeConnectAccountForm.individualAccount',
+            })}
+            value="individual"
+            showAsRequired={showAsRequired}
+          />
+          <FieldRadioButton
+            id="company"
+            name="accountType"
+            label={intl.formatMessage({ id: 'StripeConnectAccountForm.companyAccount' })}
+            value="company"
+            showAsRequired={showAsRequired}
+          />
+        </div>
       </div>
 
       <FieldHidden name="businessProfileURL" />
       <FieldHidden name="businessProfileMCC" />
-
-      <FieldSelect
-        id="country"
-        name="country"
-        disabled={disabled}
-        className={css.selectCountry}
-        autoComplete="country"
-        label={countryLabel}
-        validate={validators.required(
-          intl.formatMessage({
-            id: 'StripeConnectAccountForm.countryRequired',
-          })
-        )}
-      >
-        <option disabled value="">
-          {intl.formatMessage({ id: 'StripeConnectAccountForm.countryPlaceholder' })}
-        </option>
-        {getSupportedCountryCodes(supportedCountries).map(c => (
-          <option key={c} value={c}>
-            {intl.formatMessage({ id: `StripeConnectAccountForm.countryNames.${c}` })}
+      <div className={css.fieldRow2}>
+        <label>{countryLabel}</label>
+        <FieldSelect
+          id="country"
+          name="country"
+          disabled={disabled}
+          className={css.selectCountry}
+          autoComplete="country"
+          label={countryLabel}
+          validate={validators.required(
+            intl.formatMessage({
+              id: 'StripeConnectAccountForm.countryRequired',
+            })
+          )}
+        >
+          <option disabled value="">
+            {intl.formatMessage({ id: 'StripeConnectAccountForm.countryPlaceholder' })}
           </option>
-        ))}
-      </FieldSelect>
+          {getSupportedCountryCodes(supportedCountries).map(c => (
+            <option key={c} value={c}>
+              {intl.formatMessage({ id: `StripeConnectAccountForm.countryNames.${c}` })}
+            </option>
+          ))}
+        </FieldSelect>
+      </div>
+
     </div>
   );
 };
@@ -330,6 +335,7 @@ const StripeConnectAccountForm = props => {
                 disabled={submitDisabled}
                 ready={ready}
                 title={submitButtonTitle}
+                className={css.submitButton}
               >
                 {submitButtonText || (
                   <FormattedMessage id="StripeConnectAccountForm.submitButtonText" />

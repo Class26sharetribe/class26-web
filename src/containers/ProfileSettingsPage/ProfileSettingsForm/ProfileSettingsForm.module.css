@@ -38,7 +38,17 @@
 
 .lastSection {
   margin-bottom: 24px;
-
+  & h1{
+    font-family: Nohemi;
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0px;
+    color: #101828;
+    margin: 0;
+    padding: 0;
+  }
   &:empty {
     padding-top: 0;
   }
@@ -48,6 +58,23 @@
 
     & .sectionTitle {
       margin-bottom: 16px;
+    }
+  }
+  display: flex;
+  flex-direction: row;
+  /* align-items: center; */
+  justify-content: space-between;
+  gap: 16px;
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+ 
+
+  &>fieldset {
+    max-width: 512px;
+    width: 100%;
+    & legend{
+      display: none;
     }
   }
 }
