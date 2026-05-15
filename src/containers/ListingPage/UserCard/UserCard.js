@@ -2,20 +2,32 @@ import React, { useEffect, useState } from 'react';
 import truncate from 'lodash/truncate';
 import classNames from 'classnames';
 
-import { FormattedMessage } from '../../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { richText } from '../../../util/richText';
 import { ensureUser, ensureCurrentUser } from '../../../util/data';
 import { propTypes } from '../../../util/types';
 
+import { AvatarLarge, InlineTextButton, NamedLink } from '../../../components';
+
 import {
-  AvatarLarge,
-  ExternalLink,
-  IconSocialMediaInstagram,
-  InlineTextButton,
-  NamedLink,
-} from '../../../components';
+  linkedinFieldIcon as LinkedinFieldIcon,
+  instagramFieldIcon as InstagramFieldIcon,
+  xFieldIcon as XFieldIcon,
+  youtubeFieldIcon as YoutubeFieldIcon,
+  websiteFieldIcon as WebsiteFieldIcon,
+} from '../../PageBuilder/Primitives/Link/Icons';
+
+import { buildSocialUrl } from '../../ProfilePage/ProfilePage.helper';
 
 import css from './UserCard.module.css';
+
+const SOCIAL_ENTRIES = [
+  { key: 'linkedin', Icon: LinkedinFieldIcon },
+  { key: 'instagram', Icon: InstagramFieldIcon },
+  { key: 'twitter', Icon: XFieldIcon },
+  { key: 'youtube', Icon: YoutubeFieldIcon },
+  { key: 'website', Icon: WebsiteFieldIcon },
+];
 
 // Approximated collapsed size so that there are ~three lines of text
 // in the desktop layout in the author section of the ListingPage.
@@ -83,6 +95,7 @@ const ExpandableBio = props => {
  */
 const UserCard = props => {
   const [mounted, setMounted] = useState(false);
+  const intl = useIntl();
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -103,8 +116,8 @@ const UserCard = props => {
   const ensuredCurrentUser = ensureCurrentUser(currentUser);
   const isCurrentUser =
     ensuredUser.id && ensuredCurrentUser.id && ensuredUser.id.uuid === ensuredCurrentUser.id.uuid;
-  const { displayName, bio } = ensuredUser.attributes.profile;
-  const profilePublicData = ensuredUser?.attributes?.profile?.publicData || {};
+  const { displayName, bio, publicData } = ensuredUser.attributes.profile;
+  const socialLinks = publicData?.socialLinks || {};
 
   const handleContactUserClick = () => {
     onContactUser(user);
@@ -132,70 +145,36 @@ const UserCard = props => {
     </InlineTextButton>
   ) : null;
 
-  const editProfileMobile = (
-    <span className={css.editProfileMobile}>
-      <span className={css.linkSeparator}>•</span>
-      <NamedLink name="ProfileSettingsPage">
-        <FormattedMessage id="ListingPage.editProfileLink" />
-      </NamedLink>
-    </span>
-  );
-
-  const editProfileDesktop =
-    mounted && isCurrentUser ? (
-      <NamedLink className={css.editProfileDesktop} name="ProfileSettingsPage">
-        <FormattedMessage id="ListingPage.editProfileLink" />
-      </NamedLink>
-    ) : null;
-
-    console.log('profilePublicData', user);
-
   const links = ensuredUser.id ? (
     <div className={linkClasses}>
-       
-      {user?.attributes?.profile?.bio && <ExpandableBio className={css.desktopBio} bio={user.attributes.profile.bio} />}
-    
+      {bio && <ExpandableBio className={css.desktopBio} bio={bio} />}
+
       <div className={css.profileLinksRow}>
         <NamedLink className={css.link} name="ProfilePage" params={{ id: ensuredUser.id.uuid }}>
           <FormattedMessage id="UserCard.viewProfileLink" />
         </NamedLink>
-        {mounted && isCurrentUser ? separator : null}
-        {mounted && isCurrentUser ? editProfileMobile : <></>}
       </div>
-     
+
       <div className={css.socialLinksRow}>
-        {profilePublicData?.linkedinUrl || profilePublicData?.linkedin ? (
-          <ExternalLink
-            className={css.socialLink}
-            href={profilePublicData.linkedinUrl || profilePublicData.linkedin}
-          >
-            <span className={css.linkedinMark} aria-hidden="true">
-              in
-            </span>
-            <span className={css.socialSrOnly}>LinkedIn</span>
-          </ExternalLink>
-        ) : (
-          <span className={classNames(css.socialLink, css.socialLinkDisabled)} aria-disabled="true">
-            <span className={css.linkedinMark} aria-hidden="true">
-              in
-            </span>
-            <span className={css.socialSrOnly}>LinkedIn</span>
-          </span>
-        )}
-        {profilePublicData?.instagramUrl || profilePublicData?.instagram ? (
-          <ExternalLink
-            className={css.socialLink}
-            href={profilePublicData.instagramUrl || profilePublicData.instagram}
-          >
-            <IconSocialMediaInstagram className={css.socialIcon} />
-            <span className={css.socialSrOnly}>Instagram</span>
-          </ExternalLink>
-        ) : (
-          <span className={classNames(css.socialLink, css.socialLinkDisabled)} aria-disabled="true">
-            <IconSocialMediaInstagram className={css.socialIcon} />
-            <span className={css.socialSrOnly}>Instagram</span>
-          </span>
-        )}
+        {SOCIAL_ENTRIES.map(({ key, Icon }) => {
+          const href = buildSocialUrl(key, socialLinks[key]);
+          if (!href) return null;
+          const label = intl.formatMessage({ id: `ProfilePage.socialLink.${key}` });
+          return (
+            <a
+              key={key}
+              className={css.socialLink}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={label}
+            >
+              <span className={css.socialIcon} aria-hidden="true">
+                <Icon />
+              </span>
+            </a>
+          );
+        })}
       </div>
     </div>
   ) : null;
@@ -207,9 +186,7 @@ const UserCard = props => {
         <div className={css.info}>
           <div className={css.headingRow}>
             <h3 className={css.name}>{displayName}</h3>
-            {editProfileDesktop}
           </div>
-          {hasBio ? <ExpandableBio className={css.desktopBio} bio={bio} /> : null}
           {links}
         </div>
       </div>

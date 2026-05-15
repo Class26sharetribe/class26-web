@@ -21,6 +21,9 @@ import {
   STOCK_MULTIPLE_ITEMS,
   STOCK_INFINITE_MULTIPLE_ITEMS,
   LISTING_STATE_PUBLISHED,
+  LISTING_TYPE_INDIVIDUAL_COACHING,
+  LISTING_TYPE_GROUP_COACHING,
+  LISTING_TYPE_VIDEO_COURSE,
 } from '../../util/types';
 import { formatMoney } from '../../util/currency';
 import { createSlug, parse, stringify } from '../../util/urlHelpers';
@@ -41,6 +44,8 @@ import PriceVariantPicker from './PriceVariantPicker/PriceVariantPicker';
 import SubmitFinePrint from './SubmitFinePrint/SubmitFinePrint';
 
 import css from './OrderPanel.module.css';
+import { formatCourseDuration } from '../../util/courseHelpers';
+import { GreenCheckIcon } from '../ListingCard/ListingCard';
 
 const BookingTimeForm = loadable(() =>
   import(/* webpackChunkName: "BookingTimeForm" */ './BookingTimeForm/BookingTimeForm')
@@ -308,8 +313,15 @@ const OrderPanel = props => {
   } = props;
 
   const publicData = listing?.attributes?.publicData || {};
-  const { listingType, unitType, transactionProcessAlias = '', priceVariants, startTimeInterval } =
-    publicData || {};
+  const {
+    listingType,
+    unitType,
+    transactionProcessAlias = '',
+    priceVariants,
+    startTimeInterval,
+    totalSessions,
+    courseModules,
+  } = publicData || {};
 
   const processName = resolveLatestProcessName(transactionProcessAlias.split('/')[0]);
   const lineItemUnitType = lineItemUnitTypeMaybe || `line-item/${unitType}`;
@@ -426,6 +438,8 @@ const OrderPanel = props => {
   const classes = classNames(rootClassName || css.root, className);
   const titleClasses = classNames(titleClassName || css.orderTitle);
 
+  const durationText = !!courseModules ? formatCourseDuration(courseModules) : null;
+
   return (
     <div className={classes}>
       <ModalInMobile
@@ -459,7 +473,28 @@ const OrderPanel = props => {
           marketplaceCurrency={marketplaceCurrency}
         />
 
-        <div className={css.author}>
+        <div className={css.courseHighlight}>
+          <GreenCheckIcon />
+          <span className={css.courseHighlightText}>
+            {listingType === LISTING_TYPE_INDIVIDUAL_COACHING ? (
+              <FormattedMessage
+                id="ListingCard.highlightIndividualCoaching"
+                values={{ totalSessions }}
+              />
+            ) : listingType === LISTING_TYPE_GROUP_COACHING ? (
+              <FormattedMessage
+                id="ListingCard.highlightGroupCoaching"
+                values={{ totalSessions }}
+              />
+            ) : listingType === LISTING_TYPE_VIDEO_COURSE ? (
+              <FormattedMessage id="ListingCard.highlightVideoCourse" values={{ durationText }} />
+            ) : (
+              <FormattedMessage id="ListingCard.highlightDefault" />
+            )}
+          </span>
+        </div>
+
+        {/* <div className={css.author}>
           <AvatarSmall user={author} className={css.providerAvatar} />
           <span className={css.providerNameLinked}>
             <FormattedMessage id="OrderPanel.author" values={{ name: authorLink }} />
@@ -467,7 +502,7 @@ const OrderPanel = props => {
           <span className={css.providerNamePlain}>
             <FormattedMessage id="OrderPanel.author" values={{ name: authorDisplayName }} />
           </span>
-        </div>
+        </div> */}
 
         {showPriceMissing ? (
           <PriceMissing />

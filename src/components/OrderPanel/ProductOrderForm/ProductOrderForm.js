@@ -259,7 +259,7 @@ const renderForm = formRenderProps => {
         intl={intl}
       /> */}
 
-      {showBreakdown ? (
+      {/* {showBreakdown ? (
         <div className={css.breakdownWrapper}>
           <H6 as="h3" className={css.bookingBreakdownTitle}>
             <FormattedMessage id="ProductOrderForm.breakdownTitle" />
@@ -273,7 +273,7 @@ const renderForm = formRenderProps => {
             processName={PURCHASE_PROCESS_NAME}
           />
         </div>
-      ) : null}
+      ) : null} */}
 
       <FetchLineItemsError error={fetchLineItemsError} />
 
@@ -287,7 +287,8 @@ const renderForm = formRenderProps => {
         </PrimaryButton>
       </div>
       <p className={css.finePrint}>
-        {payoutDetailsWarning ? (
+        {payoutDetailsWarning ? payoutDetailsWarning : null}
+        {/* {payoutDetailsWarning ? (
           payoutDetailsWarning
         ) : hasStock && isOwnListing ? (
           <FormattedMessage id="ProductOrderForm.ownListing" />
@@ -295,7 +296,7 @@ const renderForm = formRenderProps => {
           <FormattedMessage id="ProductOrderForm.finePrint" />
         ) : showContactUser ? (
           <FormattedMessage id="ProductOrderForm.finePrintNoStock" values={{ contactSellerLink }} />
-        ) : null}
+        ) : null} */}
       </p>
     </Form>
   );

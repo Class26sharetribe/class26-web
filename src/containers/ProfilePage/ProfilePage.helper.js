@@ -31,7 +31,7 @@ const SOCIAL_URL_BUILDERS = {
   linkedin: v => {
     if (isFullUrl(v)) return v;
     if (/^linkedin\.com/i.test(v)) return `https://${v}`;
-    return `https://linkedin.com/in/${stripAt(v)}`;
+    return `https://linkedin.com/${stripAt(v)}`;
   },
   // Instagram: no @ in URLs — /{handle}
   instagram: v => {
