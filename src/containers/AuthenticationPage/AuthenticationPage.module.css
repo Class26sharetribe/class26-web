@@ -35,6 +35,7 @@
   flex-direction: column;
   background: #fff;
   padding-bottom: 20px;
+  position: relative;
 
   @media (max-width: 768px) {
     max-width: 100%;
@@ -235,6 +236,7 @@
 
   /* This is not a real modal, z-index should not be modal's z-index */
   z-index: 1;
+  align-items: center;
 }
 
 .closeText {

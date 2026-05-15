@@ -27,11 +27,12 @@
   padding-bottom: 0;
   border-bottom: 1px solid var(--border-border-divider, #E9EAEB);
   padding-bottom: 24px;
-& > label{
-  @media (max-width: 768px) {
-    display: none;
+
+  &>label {
+    @media (max-width: 768px) {
+      display: none;
+    }
   }
-}
 
   @media (--viewportMedium) {
     margin-bottom: 24px;
@@ -46,11 +47,14 @@
     &>div {
       max-width: 512px;
       width: 100%;
-
       & label {
         opacity: 0;
       }
     }
+  }
+
+  &:empty {
+    display: none;
   }
 }
 
@@ -173,12 +177,13 @@
 }
 
 .bottomWrapper {
+
   /* margin-top: 46px;
 
   @media (--viewportMedium) {
     margin-top: 96px;
   } */
-   & button{
+  & button {
     margin-top: 24px;
 
     font-family: Nohemi;
@@ -193,7 +198,7 @@
     margin-left: auto;
     min-height: 40px;
     padding: 9px 16px;
-   }
+  }
 }
 
 .error {
