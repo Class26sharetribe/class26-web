@@ -6,6 +6,7 @@
   @media (--viewportMedium) {
     margin-top: 4px;
   }
+
   @media (--viewportLarge) {
     margin-top: 3px;
   }
@@ -15,58 +16,296 @@
   color: var(--colorFail);
 }
 
-.aside {
-  box-shadow: none;
+/* —— Profile hero (customer vs provider) —— */
+
+.profileHero {
+  width: 100%;
+  padding: 24px 24px 30px;
+  max-width: 920px;
+  margin: 0 auto;
+  margin-top: 64px;
+
+  @media (--viewportMedium) {
+    padding: 32px 32px 48px;
+  }
 }
 
-.asideContent {
-  width: 100%;
+.profileHeroCustomer {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 24px;
+
+  @media (--viewportMedium) {
+    flex-direction: row;
+    align-items: center;
+    gap: 40px;
+  }
+}
+
+.profileHeroCustomerPhoto {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+
+  @media (--viewportMedium) {
+    flex: 0 0 47%;
+    max-width: 400px;
+    justify-content: flex-start;
+  }
+}
+
+.profileHeroAvatarCustomer {
+  border-radius: 14px;
+  width: min(100%, 280px) !important;
+  height: min(100vw - 48px, 280px) !important;
+  max-width: 280px;
+  margin: 0;
+
+  @media (--viewportMedium) {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1;
+    max-width: none;
+  }
+}
+
+.profileHeroCustomerMain {
+  flex: 1;
+  min-width: 0;
+}
+
+.profileHeroCustomerTitleRow {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  border-bottom: 1px solid var(--colorGrey100);
-
-  @media (--viewportLarge) {
-    flex-direction: column;
-    border-bottom: none;
-  }
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
 }
 
-.avatar {
-  margin: 30px 26px 29px 0;
-  flex-shrink: 0;
-
-  @media (--viewportLarge) {
-    margin: 0 96px 48px 0;
-  }
-}
-.avatarPlaceholder {
-  composes: avatar;
-  width: 96px;
-}
-
-.mobileHeading {
-  flex-shrink: 0;
-  margin: 60px 0 0 0;
+.profileHeroProvider {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 24px;
 
   @media (--viewportMedium) {
-    margin: 49px 0 0 0;
+    flex-direction: row;
+    align-items: center;
+    gap: 48px;
   }
-  @media (--viewportLarge) {
-    display: none;
+}
+
+.profileHeroProviderMain {
+  flex: 1;
+  min-width: 0;
+  order: 1;
+
+  @media (--viewportMedium) {
+    flex: 1 1 55%;
   }
+}
+
+.profilePage {
+  background-color: #fff;
+}
+
+.profileHeroProviderTitleRow {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.profileHeroProviderPhoto {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  order: 2;
+
+  @media (--viewportMedium) {
+    flex: 0 0 47%;
+    max-width: 400px;
+    justify-content: flex-end;
+  }
+}
+
+.profileHeroAvatarProvider {
+  border-radius: 18px;
+  width: min(100%, 280px) !important;
+  height: min(120vw, 360px) !important;
+  max-width: 280px;
+  margin: 0;
+
+  @media (--viewportMedium) {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 3 / 4;
+    max-width: none;
+  }
+}
+
+.profileHeroName {
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+  font-family: Nohemi;
+  font-weight: 600;
+  font-style: Semi Bold;
+  font-size: 40px;
+  line-height: 48px;
+  letter-spacing: 0px;
+  color: #0f172a;
+
+  @media (--viewportMedium) {
+
+    font-size: 64px;
+    line-height: 80px;
+  }
+}
+
+.profileHeroStatus {
+  font-family: Nohemi;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0px;
+
+  & a {
+    text-decoration: underline;
+    text-decoration-style: solid;
+    text-decoration-offset: 0%;
+    text-decoration-thickness: 0%;
+    text-decoration-skip-ink: auto;
+  }
+
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 12px 0 0 0;
+  color: #414651;
+
+  @media (--viewportMedium) {
+    margin-top: 8px;
+  }
+}
+
+.profileHeroStatusDot {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  margin-top: 6px;
+  border-radius: 50%;
+  background-color: var(--colorSuccess);
+}
+
+.profileHeroStatusLink {
+  composes: a from global;
+  text-decoration: underline;
+  color: inherit;
+}
+
+.profileHeroBio {
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  line-height: spacing/3;
+  letter-spacing: 0%;
+
+  margin: 18px 0 0 0;
+  white-space: pre-line;
+  color: #414651;
+  font-size: 15px;
+  line-height: 24px;
+
+  @media (--viewportMedium) {
+    margin-top: 16px;
+
+  }
+}
+
+.profileBadgeList {
+  list-style: none;
+  margin: 12px 0 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  @media (--viewportMedium) {
+    margin-top: 16px;
+  }
+}
+
+.profileBadge {
+  composes: textSmall from global;
+  margin: 0;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: var(--fontWeightSemiBold);
+}
+
+.profileBadgeExpertise {
+  background-color: #ecfdf5;
+  color: #065f46;
+}
+
+.profileBadgeLanguage {
+  background-color: #f3e8ff;
+  color: #6b21a8;
+}
+
+.profileSocialRow {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+
+  @media (--viewportMedium) {
+    margin-top: 24px;
+  }
+}
+
+.profileSocialLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: #374151;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: opacity var(--transitionStyleButton);
+
+  &:hover {
+    opacity: 0.75;
+  }
+}
+
+.profileSocialIconWrap {
+  display: flex;
+  line-height: 0;
+}
+
+.profileSocialIconWrap :global(svg) {
+  width: 24px;
+  height: 24px;
 }
 
 .editLinkMobile {
-  margin-top: 17px;
-
-  /* Pull the link to the end of the container */
-  margin-left: auto;
+  flex-shrink: 0;
+  margin-top: 2px;
 
   @media (--viewportMedium) {
-    margin-top: 20px;
-  }
-  @media (--viewportLarge) {
     display: none;
   }
 }
@@ -74,18 +313,11 @@
 .editLinkDesktop {
   display: none;
 
-  @media (--viewportLarge) {
+  @media (--viewportMedium) {
     display: inline;
+    flex-shrink: 0;
+    margin-top: 8px;
     padding: 6px 0 2px 0;
-  }
-}
-
-.desktopHeading {
-  display: none;
-
-  @media (--viewportLarge) {
-    display: block;
-    margin: 0 0 24px 0;
   }
 }
 
@@ -102,6 +334,7 @@
   @media (--viewportMedium) {
     margin: 4px 0 51px 0;
   }
+
   @media (--viewportLarge) {
     margin: 0 0 56px 0;
     max-width: 600px;
@@ -116,19 +349,39 @@
   @media (--viewportMedium) {
     padding-bottom: 22px;
   }
+
+  @media (--viewportLarge) {
+    /**
+     * Calculate right padding to match Footer right border
+     * and left padding together with border should be 60px.
+     */
+    padding: 40px 36px 0 36px;
+    /* max-width: 1354px;
+    margin: 0 auto;
+    width: 100%; */
+  }
+
+  @media (min-width: 1440px) {
+    padding: 40px 0 0 calc((100vw - 1216px) / 2);
+  }
 }
 
 .listingsTitle {
   color: var(--colorGrey700);
   margin-bottom: 0;
 
-  @media (--viewportMedium) {
-    margin-top: 48px;
-    margin-bottom: 8px;
-  }
+  font-family: Nohemi;
+  font-weight: 600;
+  font-style: Semi Bold;
+  font-size: 48px;
+  leading-trim: NONE;
+  line-height: 60px;
+  letter-spacing: 0px;
+  color: #101828;
+
   @media (--viewportLarge) {
-    margin-top: 56px;
-    margin-bottom: 8px;
+    margin-top: 0px;
+    margin-bottom: 40px;
   }
 }
 
@@ -136,46 +389,22 @@
   /* Avoid extra borders in mobile when bio is missing */
   border-top: none;
 
-  @media (--viewportLarge) {
-    border-top: 1px solid var(--colorGrey100);
-  }
+
 }
 
 .listings {
   margin: 0;
   display: flex;
   flex-wrap: wrap;
+  flex-direction: column;
+  gap: 80px;
+  margin-bottom: 80px;
 }
 
 .listing {
   width: 100%;
 
-  /* Single column in mobile */
-  margin-top: 34px;
-  &:first-of-type {
-    margin-top: 18px;
-  }
 
-  @media (--viewportMedium) {
-    /* Two columns in desktop */
-    width: calc(50% - 12px);
-    margin-bottom: 36px;
-
-    /* Horizontal space */
-    &:nth-of-type(odd) {
-      margin-right: 12px;
-    }
-    &:nth-of-type(even) {
-      margin-left: 12px;
-    }
-
-    /* Vertical space */
-    margin-top: 0;
-    &:nth-of-type(1),
-    &:nth-of-type(2) {
-      margin-top: 20px;
-    }
-  }
 }
 
 .mobileReviewsTitle {
@@ -188,19 +417,20 @@
 }
 
 .desktopReviews {
-  border-top: 1px solid var(--colorGrey100);
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 32px;
+  margin-top: 40px;
+  margin-bottom: 40px;
 
-  @media (--viewportMedium) {
-    margin-bottom: 48px;
-  }
-
-  @media (--viewportLarge) {
-    margin-bottom: 0;
+  @media (max-width: 767px) {
+    padding: 0 16px;
   }
 }
 
 .desktopReviewsWrapper {
-  max-width: 600px;
+  width: 100%;
+
   margin-top: 28px;
 }
 
@@ -315,6 +545,7 @@
   overflow: hidden;
   border-radius: 8px;
 }
+
 .iframe {
   position: absolute;
   top: 0;

@@ -126,7 +126,7 @@ describe('ProfilePage', () => {
         config,
       });
     });
-    expect(screen.getByText('ProfilePage.desktopHeading')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1, name: 'userId display name' })).toBeInTheDocument();
     expect(screen.getByText('I am a great cook!')).toBeInTheDocument();
   });
 
