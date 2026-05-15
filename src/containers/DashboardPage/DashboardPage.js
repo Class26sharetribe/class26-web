@@ -10,6 +10,8 @@ import { H1, IconsCollection, Page, TabNav } from '../../components';
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
 import FooterContainer from '../FooterContainer/FooterContainer';
 import ManageListingsPage from '../ManageListingsPage/ManageListingsPage';
+import AccountSettingsPage from '../AccountSettingsPage/AccountSettingsPage';
+import ProfileSettingsTab from '../PersonalAreaPage/ProfileSettingsTab/ProfileSettingsTab';
 
 import css from './DashboardPage.module.css';
 
@@ -108,14 +110,14 @@ const DashboardPage = props => {
         <main id="main-content" className={css.content}>
           {currentTab === MY_LISTINGS_TAB ? (
             <ManageListingsPage embedded />
+          ) : currentTab === EXPERT_PROFILE_TAB ? (
+            <ProfileSettingsTab />
+          ) : currentTab === ACCOUNT_SETTINGS_TAB ? (
+            <AccountSettingsPage />
           ) : null}
           <div className={css.contentWrapper}>
             {currentTab === REVIEWS_TAB ? (
               <FormattedMessage id="DashboardPage.reviewsContent" />
-            ) : currentTab === EXPERT_PROFILE_TAB ? (
-              <FormattedMessage id="DashboardPage.expertProfileContent" />
-            ) : currentTab === ACCOUNT_SETTINGS_TAB ? (
-              <FormattedMessage id="DashboardPage.accountSettingsContent" />
             ) : null}
           </div>
         </main>

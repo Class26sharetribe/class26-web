@@ -1,5 +1,6 @@
-import { MY_LISTINGS_TAB } from './DashboardPage';
+import { MY_LISTINGS_TAB, ACCOUNT_SETTINGS_TAB } from './DashboardPage';
 import { loadData as loadManageListings } from '../ManageListingsPage/ManageListingsPage.duck';
+import { loadData as loadStripePayoutData } from '../StripePayoutPage/StripePayoutPage.duck';
 
 // ================ Load data ================ //
 
@@ -10,6 +11,9 @@ import { loadData as loadManageListings } from '../ManageListingsPage/ManageList
 export const loadData = (params, search, config) => dispatch => {
   if (params.tab === MY_LISTINGS_TAB) {
     return dispatch(loadManageListings(params, search, config));
+  }
+  if (params.tab === ACCOUNT_SETTINGS_TAB) {
+    return dispatch(loadStripePayoutData());
   }
   return Promise.resolve();
 };
