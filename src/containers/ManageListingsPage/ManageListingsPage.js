@@ -66,7 +66,7 @@ const Heading = props => {
 
   return true ? (
     <H3 as="h1" className={css.heading}>
-      <FormattedMessage id={headingMessageId} values={{ count: pagination.totalItems ?? 0 }} />
+      <FormattedMessage id={headingMessageId} values={{ count: pagination?.totalItems ?? 0 }} />
     </H3>
   ) : hasNoResults ? (
     <div className={css.noResultsContainer}>

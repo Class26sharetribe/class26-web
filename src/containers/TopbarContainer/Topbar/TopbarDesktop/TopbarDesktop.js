@@ -17,8 +17,14 @@ import {
   MY_CLASSES_TAB,
   SAVED_FOR_LATER_TAB,
   PERSONAL_PROFILE_TAB,
-  ACCOUNT_SETTINGS_TAB,
+  ACCOUNT_SETTINGS_TAB as PERSONAL_AREA_ACCOUNT_SETTINGS_TAB,
 } from '../../../PersonalAreaPage/PersonalAreaPage';
+import {
+  MY_LISTINGS_TAB,
+  REVIEWS_TAB,
+  EXPERT_PROFILE_TAB,
+  ACCOUNT_SETTINGS_TAB as DASHBOARD_ACCOUNT_SETTINGS_TAB,
+} from '../../../DashboardPage/DashboardPage';
 
 import TopbarSearchForm from '../TopbarSearchForm/TopbarSearchForm';
 import IconsCollection from '../../../../components/IconsCollection/IconsCollection';
@@ -154,7 +160,11 @@ const ProfileMenu = ({
         {isProvider ? (
           <MenuItem key="MyListings">
             <div onClick={close}>
-              <NamedLink className={css.menuLink} name="ManageListingsPage">
+              <NamedLink
+                className={css.menuLink}
+                name="DashboardPage"
+                params={{ tab: MY_LISTINGS_TAB }}
+              >
                 <span className={css.menuItemBorder} />
                 <span className={css.menuLinkRow}>
                   <IconsCollection iconName="my-listings" />
@@ -214,8 +224,11 @@ const ProfileMenu = ({
           <div onClick={close}>
             <NamedLink
               className={css.menuLink}
-              name="PersonalAreaPage"
-              params={{ tab: ACCOUNT_SETTINGS_TAB }}
+              name={isProvider ? 'DashboardPage' : 'PersonalAreaPage'}
+              params={isProvider
+                ? { tab: DASHBOARD_ACCOUNT_SETTINGS_TAB }
+                : { tab: PERSONAL_AREA_ACCOUNT_SETTINGS_TAB }
+              }
             >
               <span className={css.menuItemBorder} />
               <span className={css.menuLinkRow}>
@@ -232,7 +245,11 @@ const ProfileMenu = ({
         {isProvider ? (
           <MenuItem key="ExpertReviews">
             <div onClick={close}>
-              <NamedLink className={css.menuLink} name="InboxPage" params={{ tab: 'sales' }}>
+              <NamedLink
+                className={css.menuLink}
+                name="DashboardPage"
+                params={{ tab: REVIEWS_TAB }}
+              >
                 <span className={css.menuItemBorder} />
                 <span className={css.menuLinkRow}>
                   <IconsCollection iconName="reviews" />
@@ -250,8 +267,11 @@ const ProfileMenu = ({
           <div onClick={close}>
             <NamedLink
               className={css.menuLink}
-              name={isProvider ? 'ProfileSettingsPage' : 'PersonalAreaPage'}
-              params={isProvider ? undefined : { tab: PERSONAL_PROFILE_TAB }}
+              name={isProvider ? 'DashboardPage' : 'PersonalAreaPage'}
+              params={isProvider
+                ? { tab: EXPERT_PROFILE_TAB }
+                : { tab: PERSONAL_PROFILE_TAB }
+              }
             >
               <span className={css.menuItemBorder} />
               <span className={css.menuLinkRow}>
