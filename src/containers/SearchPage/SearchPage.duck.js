@@ -3,6 +3,7 @@ import { createImageVariantConfig } from '../../util/sdkLoader';
 import { isErrorUserPendingApproval, isForbiddenError, storableError } from '../../util/errors';
 import { convertUnitToSubUnit, unitDivisor } from '../../util/currency';
 import {
+  LISTING_TYPE_DIGITAL_DOWNLOAD,
   LISTING_TYPE_GROUP_COACHING,
   LISTING_TYPE_INDIVIDUAL_COACHING,
   LISTING_TYPE_VIDEO_COURSE,
@@ -42,6 +43,7 @@ const COURSE_LISTING_TYPES = [
   LISTING_TYPE_INDIVIDUAL_COACHING,
   LISTING_TYPE_GROUP_COACHING,
   LISTING_TYPE_VIDEO_COURSE,
+  LISTING_TYPE_DIGITAL_DOWNLOAD,
 ];
 
 // ================ Helper Functions ================ //

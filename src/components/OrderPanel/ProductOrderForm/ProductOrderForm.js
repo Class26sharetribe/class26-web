@@ -287,7 +287,11 @@ const renderForm = formRenderProps => {
         </PrimaryButton>
       </div>
       <p className={css.finePrint}>
-        {payoutDetailsWarning ? payoutDetailsWarning : null}
+        {payoutDetailsWarning ? (
+          payoutDetailsWarning
+        ) : hasStock && isOwnListing ? (
+          <FormattedMessage id="ProductOrderForm.ownListing" />
+        ) : null}
         {/* {payoutDetailsWarning ? (
           payoutDetailsWarning
         ) : hasStock && isOwnListing ? (
