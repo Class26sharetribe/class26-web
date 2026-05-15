@@ -51,16 +51,8 @@ const LazyImage = lazyLoadWithDimensions(ResponsiveImage, { loadAfterInitialRend
  * @returns {{ type: string, playbackId: string } | null}
  */
 const getMuxVideoFromMediaGallery = mediaGallery => {
-  if (!Array.isArray(mediaGallery)) {
-    return null;
-  }
-  const item = mediaGallery.find(
-    entry =>
-      entry?.type === 'video' &&
-      typeof entry?.playbackId === 'string' &&
-      entry.playbackId.length > 0
-  );
-  return item || null;
+  const item = mediaGallery.find(entry => entry.type === 'video');
+  return item?.playbackId;
 };
 
 // Default card: must match `landingPage-css` / design (portrait 3:4, text + pills on image)
@@ -163,57 +155,21 @@ const ListingCardCourse = props => {
     : [];
   const ImageComponent = lazyLoadImage ? LazyImage : ResponsiveImage;
 
-  const courseMuxVideo = getMuxVideoFromMediaGallery(publicData?.mediaGallery);
-
   const categories = config.categoryConfiguration?.categories || [];
   const {
     categoryLevel1: categoryLevel1Value,
     totalSessions,
     listingType,
     courseModules,
+    mediaGallery = [],
   } = publicData;
+
+  const playbackId = getMuxVideoFromMediaGallery(mediaGallery);
   const categoryLevel1Label = categoryLevel1Value
     ? categories.find(c => c.id === categoryLevel1Value)?.name || categoryLevel1Value
     : null;
   const authorId = author?.id?.uuid;
   const durationText = !!courseModules ? formatCourseDuration(courseModules) : null;
-
-  const playbackId = courseMuxVideo?.playbackId;
-
-  useEffect(() => {
-    if (!courseVideoPlaying || !playbackId) {
-      setMuxToken(null);
-      setMuxTokenError(null);
-      setMuxTokenLoading(false);
-      return;
-    }
-
-    let cancelled = false;
-    setMuxTokenLoading(true);
-    setMuxToken(null);
-    setMuxTokenError(null);
-
-    getMuxJwtToken({ playbackId })
-      .then(data => {
-        if (!cancelled) {
-          setMuxToken(data.token);
-        }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setMuxTokenError(intl.formatMessage({ id: 'MuxPlayerModal.tokenError' }));
-        }
-      })
-      .finally(() => {
-        if (!cancelled) {
-          setMuxTokenLoading(false);
-        }
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [courseVideoPlaying, playbackId, intl]);
 
   const onSaveClick = e => {
     e.preventDefault();
@@ -332,7 +288,7 @@ const ListingCardCourse = props => {
               onClick={onSaveClick}
               aria-pressed={isFavorite}
             >
-             {!isFavorite ? <BookmarkIcon /> : <IconClose />}
+              {!isFavorite ? <BookmarkIcon /> : <IconClose />}
               <FormattedMessage
                 id={isFavorite ? 'ListingCard.savedForLater' : 'ListingCard.saveForLater'}
               />
@@ -345,20 +301,17 @@ const ListingCardCourse = props => {
 
         <div className={css.courseMedia}>
           {playbackId ? (
-            <>
-              <MuxPlayer
-                className={css.courseMuxPlayer}
-                playbackId={playbackId}
-                // tokens={{ playback: muxToken }}
-                streamType="on-demand"
-                accentColor="#FFFFFF"
-                primaryColor="#ddd"
-                secondaryColor="transparent"
-                autoPlay
-                playsInline
-                // skipJwt={true}
-              />
-            </>
+            <MuxPlayer
+              className={css.courseMuxPlayer}
+              playbackId={playbackId}
+              streamType="on-demand"
+              accentColor="#FFFFFF"
+              primaryColor="#ddd"
+              secondaryColor="transparent"
+              autoPlay
+              playsInline
+              skipJwt={true}
+            />
           ) : (
             <>
               <NamedLink

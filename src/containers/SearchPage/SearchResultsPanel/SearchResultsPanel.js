@@ -269,7 +269,6 @@ const SearchResultsPanel = props => {
 
   return (
     <div className={classes}>
-      
       <ul className={css.sellerCards}>
         {sellers.map(seller => (
           <li key={seller.id.uuid} className={css.resultItem}>
