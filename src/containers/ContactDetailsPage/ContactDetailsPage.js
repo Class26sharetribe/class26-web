@@ -116,8 +116,8 @@ export const ContactDetailsPageComponent = props => {
 
   const pageContent = (
     <div className={css.content}>
-      <H3 as="h1">
-        <FormattedMessage id="ContactDetailsPage.heading" />
+      <H3 as="h1" className={css.title}>
+      Login
       </H3>
       {contactInfoForm}
     </div>

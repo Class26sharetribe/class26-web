@@ -172,7 +172,7 @@ const PaymentMethodsPageComponent = props => {
 
   const pageContent = (
     <div className={css.content}>
-      <H3 as="h1">
+      <H3 as="h1" className={css.title}>
         <FormattedMessage id="PaymentMethodsPage.heading" />
       </H3>
       {!stripeCustomerFetched ? null : (

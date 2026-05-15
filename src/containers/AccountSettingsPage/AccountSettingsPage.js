@@ -29,15 +29,15 @@ const AccountSettingsPage = () => {
   return (
     <div className={css.root}>
       <ContactDetailsPage embedded />
-      <hr className={css.divider} />
+      {/* <hr className={css.divider} /> */}
       <PasswordChangePage embedded />
       {showPaymentMethods ? (
         <>
-          <hr className={css.divider} />
+          {/* <hr className={css.divider} /> */}
           <PaymentMethodsPage embedded />
         </>
       ) : null}
-      <hr className={css.divider} />
+      {/* <hr className={css.divider} /> */}
       <ManageAccountPage embedded />
     </div>
   );

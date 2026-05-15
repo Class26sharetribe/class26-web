@@ -10,22 +10,41 @@
 
 .sectionContainer {
   padding: 0;
-  margin-bottom: 36px;
+  margin-bottom: 24px;
 
   @media (--viewportMedium) {
     padding: 0;
-    margin-bottom: 56px;
+    margin-top: 24px;
+    padding-top: 24px;
+    padding-bottom: 0px;
+    border-top: 1px solid var(--border-border-divider, #E9EAEB);
   }
+
+  /* &:empty {
+    display: none;
+  } */
 }
 
 .sectionTitle {
+  font-family: Nohemi;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0px;
+  color: #101828;
+  margin: 0;
 }
 
 .lastSection {
-  margin-bottom: 69px;
+  margin-bottom: 24px;
+
+  &:empty {
+    padding-top: 0;
+  }
 
   @media (--viewportMedium) {
-    margin-bottom: 111px;
+    margin-bottom: 24px;
 
     & .sectionTitle {
       margin-bottom: 16px;
@@ -49,6 +68,7 @@
 
 .label {
   width: var(--ProfileSettingsForm_avatarSize);
+
   @media (--viewportMedium) {
     width: var(--ProfileSettingsForm_avatarSizeDesktop);
   }
@@ -96,6 +116,7 @@
     display: none;
   }
 }
+
 .avatarPlaceholderText {
   display: none;
 
@@ -178,7 +199,8 @@
 
   /* Image fitted to container */
   object-fit: cover;
-  background-color: var(--colorGrey100); /* Loading BG color */
+  background-color: var(--colorGrey100);
+  /* Loading BG color */
   border-radius: calc(var(--ProfileSettingsForm_avatarSize) / 2);
   overflow: hidden;
 
@@ -280,6 +302,18 @@
 .submitButton {
   margin-top: 24px;
   margin-bottom: 56px;
+  font-family: Nohemi;
+  font-weight: 600;
+  font-style: Semi Bold;
+  font-size: 14px;
+  leading-trim: NONE;
+  line-height: 20px;
+  letter-spacing: 0%;
+  color: #FFFFFF;
+  width: max-content;
+  margin-left: auto;
+  min-height: 40px;
+  padding: 9px 16px;
 }
 
 .bioCharCount {
@@ -292,11 +326,14 @@
 
 .profilePictureRow {
   display: flex;
-  align-items: center;
+  /* align-items: center; */
   gap: 18px;
 
   @media (--viewportMedium) {
-    gap: 24px;
+    gap: 20px;
+  }
+  @media (max-width: 768px) {
+    flex-direction: column;
   }
 }
 
@@ -306,9 +343,17 @@
 }
 
 .profilePictureSubtitle {
-  composes: textSmall from global;
-  color: var(--colorGrey600);
-  margin: 4px 0 0 0;
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: spacing/3;
+  letter-spacing: 0%;
+
+  color: #414651;
+  margin: 0px 0 0 0;
+  padding: 0;
 }
 
 .profilePictureCurrentAvatar {
@@ -336,7 +381,9 @@
 }
 
 .uploadZoneOuter {
-  flex: 1;
+  /* flex: 1; */
+  width: 100%;
+  max-width: 428px;
   min-width: 0;
 }
 
@@ -347,7 +394,7 @@
   justify-content: center;
   gap: 6px;
   padding: 18px 12px;
-  border: 1.5px dashed var(--colorGrey300);
+  border: 1px solid var(--border-border-divider, #E9EAEB);
   border-radius: var(--borderRadiusMedium);
   cursor: pointer;
   text-align: center;
@@ -359,7 +406,7 @@
   }
 
   @media (--viewportMedium) {
-    padding: 24px 16px;
+    padding: 16px 24px;
   }
 }
 
@@ -367,31 +414,56 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: #e8f5ea;
+  background-color: #CEFDE4;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #2e7d32;
+  color: #006647;
   margin-bottom: 2px;
 
-  @media (--viewportMedium) {
-    width: 48px;
-    height: 48px;
+  & svg {
+    fill: transparent;
   }
+
+  @media (--viewportMedium) {}
 }
 
 .uploadZoneClickText {
-  composes: textSmall from global;
-  font-weight: var(--fontWeightMedium);
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: spacing/3;
+  letter-spacing: 0%;
+  text-decoration: underline;
+  text-decoration-style: solid;
+  text-decoration-offset: 0%;
+  text-decoration-thickness: 0%;
+  color: #414651;
   text-decoration: underline;
   color: var(--colorBlack);
   margin: 0;
 }
 
 .uploadZoneFormats {
-  composes: textSmall from global;
-  color: var(--colorGrey600);
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 14px;
+  leading-trim: NONE;
+  line-height: spacing/2, 5;
+  letter-spacing: 0%;
+  text-align: center;
+
+  color: #A4A7AE;
   margin: 0;
+}
+
+.socialLinksContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 /* ===== Username field ===== */
@@ -399,7 +471,7 @@
 .usernameInputRow {
   display: flex;
   align-items: center;
-  border: 1px solid var(--colorGrey300);
+  border: 1px solid var(--border-border-primary, #D5D7DA);
   border-radius: var(--borderRadiusMedium);
   overflow: hidden;
   background: var(--colorWhite);
@@ -410,30 +482,53 @@
 }
 
 .usernamePrefix {
-  composes: textSmall from global;
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0%;
+
   flex-shrink: 0;
-  padding: 10px 0 10px 12px;
-  color: var(--colorGrey600);
+  padding: 10px 16px 10px 16px;
+  color: #A4A7AE;
   white-space: nowrap;
-  background: var(--colorGrey50, #f9f9f9);
-  border-right: 1px solid var(--colorGrey300);
+  /* background: var(--colorGrey50, #f9f9f9); */
+  border-right: 1px solid #D5D7DA;
 
   @media (--viewportMedium) {
-    padding: 11px 0 11px 14px;
+    padding: 12px 16px 12px 16px;
   }
 }
 
 .usernameInput {
-  composes: textSmall from global;
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0%;
+
   flex: 1;
   border: none;
   outline: none;
   padding: 10px 8px;
   background: transparent;
   min-width: 0;
+  transition: none !important;
+
 
   @media (--viewportMedium) {
     padding: 11px 10px;
+  }
+
+  &:focus,
+  &:hover {
+    outline: none;
+    box-shadow: none !important;
+    border: none !important;
   }
 }
 
@@ -445,8 +540,7 @@
   width: 40px;
   height: 40px;
   border: none;
-  border-left: 1px solid var(--colorGrey300);
-  background: var(--colorWhite);
+
   color: var(--colorGrey600);
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease;
@@ -465,6 +559,10 @@
     width: 44px;
     height: 44px;
   }
+
+  & svg {
+    fill: transparent;
+  }
 }
 
 .usernameStatus {
@@ -482,4 +580,21 @@
 
 .usernameStatusTaken {
   color: var(--colorFail);
+}
+
+
+.usernameContainer {
+  display: flex;
+  flex-direction: row;
+  /* align-items: center; */
+  justify-content: space-between;
+  gap: 16px;
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+
+  &>div {
+    max-width: 512px;
+    width: 100%;
+  }
 }

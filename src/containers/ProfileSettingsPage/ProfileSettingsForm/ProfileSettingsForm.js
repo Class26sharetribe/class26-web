@@ -51,29 +51,33 @@ const DisplayNameMaybe = props => {
 
   const validateMaybe = isRequired
     ? {
-        validate: validators.required(
-          intl.formatMessage({
-            id: 'ProfileSettingsForm.displayNameRequired',
-          })
-        ),
-      }
+      validate: validators.required(
+        intl.formatMessage({
+          id: 'ProfileSettingsForm.displayNameRequired',
+        })
+      ),
+    }
     : {};
 
   return (
     <div className={css.sectionContainer}>
-      <FieldTextInput
-        className={css.row}
-        type="text"
-        id="displayName"
-        name="displayName"
-        label={intl.formatMessage({
+      <div className={css.usernameContainer}>
+        <h2 className={css.sectionTitle}>{intl.formatMessage({
           id: 'ProfileSettingsForm.displayNameLabel',
-        })}
-        placeholder={intl.formatMessage({
-          id: 'ProfileSettingsForm.displayNamePlaceholder',
-        })}
-        {...validateMaybe}
-      />
+        })}</h2>
+        <FieldTextInput
+          className={css.row}
+          type="text"
+          id="displayName"
+          name="displayName"
+          label={""}
+          placeholder={intl.formatMessage({
+            id: 'ProfileSettingsForm.displayNamePlaceholder',
+          })}
+          {...validateMaybe}
+        />
+      </div>
+
     </div>
   );
 };
@@ -288,20 +292,22 @@ class ProfileSettingsFormComponent extends Component {
               }}
             >
               <div className={css.sectionContainer}>
-                <H4 as="h2" className={css.sectionTitle}>
-                  <FormattedMessage id="ProfileSettingsForm.usernameLabel" />
-                </H4>
-                <Field name="username">
-                  {fieldProps => (
-                    <UsernameInputRow
-                      input={fieldProps.input}
-                      meta={fieldProps.meta}
-                      marketplaceRootURL={marketplaceRootURL ? marketplaceRootURL + '/u' : ''}
-                      currentUsername={values.currentUsername}
-                      onStatusChange={status => this.setState({ usernameStatus: status })}
-                    />
-                  )}
-                </Field>
+                <div className={css.usernameContainer}>
+                  <H4 as="h2" className={css.sectionTitle}>
+                    <FormattedMessage id="ProfileSettingsForm.usernameLabel" />
+                  </H4>
+                  <Field name="username">
+                    {fieldProps => (
+                      <UsernameInputRow
+                        input={fieldProps.input}
+                        meta={fieldProps.meta}
+                        marketplaceRootURL={marketplaceRootURL ? marketplaceRootURL + '/u' : ''}
+                        currentUsername={values.currentUsername}
+                        onStatusChange={status => this.setState({ usernameStatus: status })}
+                      />
+                    )}
+                  </Field>
+                </div>
               </div>
 
               <div className={css.sectionContainer}>
@@ -405,78 +411,102 @@ class ProfileSettingsFormComponent extends Component {
                 </div>
               </div>
               <div className={css.sectionContainer}>
-                <FieldTextInput
-                  // className={css.firstName}
-                  type="text"
-                  id="firstName"
-                  name="firstName"
-                  label={firstNameLabel}
-                  placeholder={firstNamePlaceholder}
-                  validate={firstNameRequired}
-                />
+                <div className={css.usernameContainer}>
+
+                  <h2 className={css.sectionTitle}>{firstNameLabel}</h2>
+
+                  <FieldTextInput
+                    // className={css.firstName}
+                    type="text"
+                    id="firstName"
+                    name="firstName"
+                    label={""}
+                    placeholder={firstNamePlaceholder}
+                    validate={firstNameRequired}
+                  />
+                </div>
+
                 {/* <div className={css.nameContainer}>
                 </div> */}
-                <FieldTextInput
-                  // className={css.lastName}
-                  type="text"
-                  id="lastName"
-                  name="lastName"
-                  label={lastNameLabel}
-                  placeholder={lastNamePlaceholder}
-                  validate={lastNameRequired}
-                />
+
+
+              </div>
+              <div className={css.sectionContainer}>
+                <div className={css.usernameContainer}>
+                  <h2 className={css.sectionTitle}>{lastNameLabel}</h2>
+                  <FieldTextInput
+                    // className={css.lastName}
+                    type="text"
+                    id="lastName"
+                    name="lastName"
+                    label={""}
+                    placeholder={lastNamePlaceholder}
+                    validate={lastNameRequired}
+                  />
+                </div>
               </div>
 
               <DisplayNameMaybe userTypeConfig={userTypeConfig} intl={intl} />
 
               <div className={classNames(css.sectionContainer)}>
-                <FieldTextInput
-                  type="textarea"
-                  id="bio"
-                  name="bio"
-                  label={bioLabel}
-                  placeholder={bioPlaceholder}
-                  maxLength={BIO_MAX_LENGTH}
-                />
-                <p className={css.bioCharCount}>
-                  {BIO_MAX_LENGTH - (values.bio?.length || 0)}{' '}
-                  <FormattedMessage id="ProfileSettingsForm.bioCharactersLeft" />
-                </p>
+                <div className={css.usernameContainer}>
+                  <h2 className={css.sectionTitle}>{bioLabel}</h2>
+                  <div>
+                    <FieldTextInput
+                      type="textarea"
+                      id="bio"
+                      name="bio"
+                      label={"Description"}
+                      placeholder={bioPlaceholder}
+                      maxLength={BIO_MAX_LENGTH}
+                    />
+                    <p className={css.bioCharCount}>
+                      {BIO_MAX_LENGTH - (values.bio?.length || 0)}{' '}
+                      <FormattedMessage id="ProfileSettingsForm.bioCharactersLeft" />
+                    </p>
+                  </div>
+                </div>
               </div>
               <div className={css.sectionContainer}>
-                <H4 as="h2" className={css.sectionTitle}>
-                  <FormattedMessage id="ProfileSettingsForm.socialLinksLabel" />
-                </H4>
-                <FieldUrlInput
-                  name="socialLinks.linkedin"
-                  id="socialLinks.linkedin"
-                  placeholder={linkedinPlaceholder}
-                  icon={<LinkedinFieldIcon />}
-                />
-                <FieldUrlInput
-                  name="socialLinks.instagram"
-                  id="socialLinks.instagram"
-                  placeholder={instagramPlaceholder}
-                  icon={<InstagramFieldIcon />}
-                />
-                <FieldUrlInput
-                  name="socialLinks.twitter"
-                  id="socialLinks.twitter"
-                  placeholder={twitterPlaceholder}
-                  icon={<XFieldIcon />}
-                />
-                <FieldUrlInput
-                  name="socialLinks.youtube"
-                  id="socialLinks.youtube"
-                  placeholder={youtubePlaceholder}
-                  icon={<YoutubeFieldIcon />}
-                />
-                <FieldUrlInput
-                  name="socialLinks.website"
-                  id="socialLinks.website"
-                  placeholder={websitePlaceholder}
-                  icon={<WebsiteFieldIcon />}
-                />
+                <div className={css.usernameContainer}>
+
+
+                  <H4 as="h2" className={css.sectionTitle}>
+                    <FormattedMessage id="ProfileSettingsForm.socialLinksLabel" />
+                  </H4>
+                  <div className={css.socialLinksContainer}>
+                    <FieldUrlInput
+                      name="socialLinks.linkedin"
+                      id="socialLinks.linkedin"
+                      placeholder={linkedinPlaceholder}
+                      icon={<LinkedinFieldIcon />}
+                    />
+                    <FieldUrlInput
+                      name="socialLinks.instagram"
+                      id="socialLinks.instagram"
+                      placeholder={instagramPlaceholder}
+                      icon={<InstagramFieldIcon />}
+                    />
+                    <FieldUrlInput
+                      name="socialLinks.twitter"
+                      id="socialLinks.twitter"
+                      placeholder={twitterPlaceholder}
+                      icon={<XFieldIcon />}
+                    />
+                    <FieldUrlInput
+                      name="socialLinks.youtube"
+                      id="socialLinks.youtube"
+                      placeholder={youtubePlaceholder}
+                      icon={<YoutubeFieldIcon />}
+                    />
+                    <FieldUrlInput
+                      name="socialLinks.website"
+                      id="socialLinks.website"
+                      placeholder={websitePlaceholder}
+                      icon={<WebsiteFieldIcon />}
+                    />
+                  </div>
+                </div>
               </div>
               <div className={classNames(css.sectionContainer, css.lastSection)}>
                 {userFieldProps.map(({ key, ...fieldProps }) => (

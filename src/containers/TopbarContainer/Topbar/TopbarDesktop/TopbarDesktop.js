@@ -21,6 +21,7 @@ import {
 } from '../../../PersonalAreaPage/PersonalAreaPage';
 
 import TopbarSearchForm from '../TopbarSearchForm/TopbarSearchForm';
+import IconsCollection from '../../../../components/IconsCollection/IconsCollection';
 
 import css from './TopbarDesktop.module.css';
 
@@ -155,7 +156,12 @@ const ProfileMenu = ({
             <div onClick={close}>
               <NamedLink className={css.menuLink} name="ManageListingsPage">
                 <span className={css.menuItemBorder} />
-                <FormattedMessage id="TopbarDesktop.myListingsLink" />
+                <span className={css.menuLinkRow}>
+                  <IconsCollection iconName="my-listings" />
+                  <span className={css.menuLinkLabel}>
+                    <FormattedMessage id="TopbarDesktop.myListingsLink" />
+                  </span>
+                </span>
               </NamedLink>
             </div>
           </MenuItem>
@@ -171,7 +177,12 @@ const ProfileMenu = ({
                 params={{ tab: MY_CLASSES_TAB }}
               >
                 <span className={css.menuItemBorder} />
-                <FormattedMessage id="TopbarDesktop.myClassesLink" />
+                <span className={css.menuLinkRow}>
+                  <IconsCollection iconName="my-classes" />
+                  <span className={css.menuLinkLabel}>
+                    <FormattedMessage id="TopbarDesktop.myClassesLink" />
+                  </span>
+                </span>
               </NamedLink>
             </div>
           </MenuItem>
@@ -187,7 +198,12 @@ const ProfileMenu = ({
                 params={{ tab: SAVED_FOR_LATER_TAB }}
               >
                 <span className={css.menuItemBorder} />
-                <FormattedMessage id="TopbarDesktop.savedForLaterLink" />
+                <span className={css.menuLinkRow}>
+                  <IconsCollection iconName="saved-for-later" />
+                  <span className={css.menuLinkLabel}>
+                    <FormattedMessage id="TopbarDesktop.savedForLaterLink" />
+                  </span>
+                </span>
               </NamedLink>
             </div>
           </MenuItem>
@@ -202,7 +218,12 @@ const ProfileMenu = ({
               params={{ tab: ACCOUNT_SETTINGS_TAB }}
             >
               <span className={css.menuItemBorder} />
-              <FormattedMessage id="TopbarDesktop.accountSettingsLink" />
+              <span className={css.menuLinkRow}>
+                <IconsCollection iconName="account-settings" />
+                <span className={css.menuLinkLabel}>
+                  <FormattedMessage id="TopbarDesktop.accountSettingsLink" />
+                </span>
+              </span>
             </NamedLink>
           </div>
         </MenuItem>
@@ -213,7 +234,12 @@ const ProfileMenu = ({
             <div onClick={close}>
               <NamedLink className={css.menuLink} name="InboxPage" params={{ tab: 'sales' }}>
                 <span className={css.menuItemBorder} />
-                <FormattedMessage id="TopbarDesktop.reviewsLink" />
+                <span className={css.menuLinkRow}>
+                  <IconsCollection iconName="reviews" />
+                  <span className={css.menuLinkLabel}>
+                    <FormattedMessage id="TopbarDesktop.reviewsLink" />
+                  </span>
+                </span>
               </NamedLink>
             </div>
           </MenuItem>
@@ -228,11 +254,20 @@ const ProfileMenu = ({
               params={isProvider ? undefined : { tab: PERSONAL_PROFILE_TAB }}
             >
               <span className={css.menuItemBorder} />
-              <FormattedMessage
-                id={
-                  isProvider ? 'TopbarDesktop.expertProfileLink' : 'TopbarDesktop.publicProfileLink'
-                }
-              />
+              <span className={css.menuLinkRow}>
+                <IconsCollection
+                  iconName={isProvider ? 'expert-profile' : 'public-profile'}
+                />
+                <span className={css.menuLinkLabel}>
+                  <FormattedMessage
+                    id={
+                      isProvider
+                        ? 'TopbarDesktop.expertProfileLink'
+                        : 'TopbarDesktop.publicProfileLink'
+                    }
+                  />
+                </span>
+              </span>
             </NamedLink>
           </div>
         </MenuItem>
@@ -240,7 +275,12 @@ const ProfileMenu = ({
         <MenuItem key="logout">
           <InlineTextButton rootClassName={css.logoutButton} onClick={onLogout}>
             <span className={css.menuItemBorder} />
-            <FormattedMessage id="TopbarDesktop.logout" />
+            <span className={css.logoutButtonRow}>
+              <IconsCollection iconName="logout" />
+              <span className={css.logoutButtonLabel}>
+                <FormattedMessage id="TopbarDesktop.logout" />
+              </span>
+            </span>
           </InlineTextButton>
         </MenuItem>
 

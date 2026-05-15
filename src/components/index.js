@@ -46,6 +46,7 @@ export { default as IconSuccess } from './IconSuccess/IconSuccess';
 export { default as IconTrash } from './IconTrash/IconTrash';
 export { default as IconVideo } from './IconVideo/IconVideo';
 export { default as IconZap } from './IconZap/IconZap';
+export { default as IconsCollection } from './IconsCollection/IconsCollection';
 
 // Typography
 export { Heading, H1, H2, H3, H4, H5, H6  } from './Heading/Heading';

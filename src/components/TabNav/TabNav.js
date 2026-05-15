@@ -5,16 +5,26 @@ import { NamedLink } from '../../components';
 import css from './TabNav.module.css';
 
 const Tab = props => {
-  const { className, id, disabled, text, selected, linkProps } = props;
+  const { className, id, disabled, text, selected, linkProps, icon } = props;
   const linkClasses = classNames(css.link, {
     [css.selectedLink]: selected,
     [css.disabled]: disabled,
   });
 
+  const linkBody =
+    icon != null ? (
+      <span className={css.linkWithIcon}>
+        {icon}
+        <span className={css.linkLabel}>{text}</span>
+      </span>
+    ) : (
+      text
+    );
+
   return (
     <div id={id} className={className}>
       <NamedLink className={linkClasses} {...linkProps}>
-        {text}
+        {linkBody}
       </NamedLink>
     </div>
   );
@@ -23,6 +33,7 @@ const Tab = props => {
 /**
  * @typedef {Object} TabConfig
  * @property {string} text - The text to be rendered in the tab
+ * @property {import('react').ReactNode} [icon] - Optional icon shown before the label
  * @property {boolean} disabled - Whether the tab is disabled
  * @property {boolean} selected - Whether the tab is selected
  * @property {Object} linkProps - The props to be passed to the link component

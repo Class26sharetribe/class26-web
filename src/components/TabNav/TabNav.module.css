@@ -18,6 +18,18 @@
   }
 }
 
+.linkWithIcon {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.linkLabel {
+  display: inline-block;
+}
+
 .link {
   display: inline-block;
   white-space: nowrap;

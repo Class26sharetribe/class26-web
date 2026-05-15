@@ -157,7 +157,7 @@ const DeleteAccountForm = props => {
               value="deleteAccountSelected"
               useSuccessColor
             />
-            <br />
+          {/*  <br /> */}
             <p className={css.confirmChangesInfo}>
               <FormattedMessage
                 id="DeleteAccountForm.confirmDeleteInfo"

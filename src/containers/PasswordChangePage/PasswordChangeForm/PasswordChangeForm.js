@@ -200,6 +200,9 @@ class PasswordChangeForm extends Component {
               }}
             >
               <div className={css.newPasswordSection}>
+              <label className={css.sectionTitle}>{newPasswordLabel}</label>
+                <div>
+                  
                 <FieldTextInput
                   type="password"
                   id={formId ? `${formId}.newPassword` : 'newPassword'}
@@ -213,10 +216,12 @@ class PasswordChangeForm extends Component {
                     passwordMaxLength
                   )}
                 />
+                </div>
               </div>
 
               <div className={confirmClasses} aria-hidden={pristine}>
-                <H4 as="h3" className={css.confirmChangesTitle}>
+<div>
+<H4 as="h3" className={css.confirmChangesTitle}>
                   <FormattedMessage id="PasswordChangeForm.confirmChangesTitle" />
                 </H4>
                 <p className={css.confirmChangesInfo}>
@@ -227,6 +232,7 @@ class PasswordChangeForm extends Component {
                     values={{ resetPasswordLink }}
                   />
                 </p>
+</div>
 
                 <FieldTextInput
                   className={css.password}

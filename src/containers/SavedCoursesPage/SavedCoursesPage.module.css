@@ -2,6 +2,18 @@
 
 .root {
   width: 100%;
+  @media (--viewportMedium) {
+    margin: 32px auto 0 auto;
+    max-width: 824px;
+    width: 100%;
+  }
+
+  @media (--viewportLarge) {
+    margin: 40px auto 16px;
+  }
+  @media (max-width: 768px) {
+    padding: 24px 16px;
+  }
 }
 
 .spinner {

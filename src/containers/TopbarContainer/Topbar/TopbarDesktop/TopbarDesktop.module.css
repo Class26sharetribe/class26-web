@@ -27,6 +27,7 @@
   border-bottom: 0px solid;
   transition: var(--transitionStyleButton);
 }
+
 /* 
 .logoLink:hover {
   border-bottom: 4px solid var(--marketplaceColor);
@@ -218,9 +219,27 @@
   margin: 16px 0;
 }
 
+.menuHeading {
+  font-family: Nohemi;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0px;
+  color: #101828;
+  padding: 16px 16px;
+  display: block;
+}
+
 .profileMenuContent {
-  min-width: 276px;
-  padding-top: 20px;
+  min-width: 336px;
+  padding-top: 0px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 6px -2px #0A0D1208;
+  padding-top: 16px;
+
+  box-shadow: 0px 12px 16px -4px #0A0D1214;
+
 }
 
 /* left animated "border" like hover element */
@@ -233,16 +252,36 @@
   transition: width var(--transitionStyleButton);
 }
 
+.menuLinkRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.menuLinkLabel {
+  flex: 1;
+  min-width: 0;
+}
+
 .menuLink {
-  composes: textSmall from global;
+  font-family: Nohemi;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0px;
+  color: #101828;
   position: relative;
   display: block;
 
   /* Dimensions */
   width: 100%;
-  min-width: 276px;
+  min-width: 336px;
   margin: 0;
-  padding: 4px 24px;
+  padding: 16px;
 
   /* Layout details */
   color: var(--colorGrey700);
@@ -262,6 +301,19 @@
   @media (--viewportMedium) {
     margin: 0;
   }
+}
+
+.logoutButtonRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.logoutButtonLabel {
+  flex: 1;
+  min-width: 0;
 }
 
 .logoutButton {

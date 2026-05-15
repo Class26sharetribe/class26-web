@@ -39,25 +39,31 @@ const PhoneNumberMaybe = props => {
 
   const validateMaybe = isRequired
     ? {
-        validate: validators.required(
-          intl.formatMessage({
-            id: 'ContactDetailsForm.phoneRequired',
-          })
-        ),
-      }
+      validate: validators.required(
+        intl.formatMessage({
+          id: 'ContactDetailsForm.phoneRequired',
+        })
+      ),
+    }
     : {};
 
   return (
-    <FieldPhoneNumberInput
-      className={css.phone}
-      name="phoneNumber"
-      id={formId ? `${formId}.phoneNumber` : 'phoneNumber'}
-      label={intl.formatMessage({ id: 'ContactDetailsForm.phoneLabel' })}
-      placeholder={intl.formatMessage({
+    <>
+      <label className={css.sectionTitle}>{intl.formatMessage({
         id: 'ContactDetailsForm.phonePlaceholder',
-      })}
-      {...validateMaybe}
-    />
+      })}</label>
+      <FieldPhoneNumberInput
+        className={css.phone}
+        name="phoneNumber"
+        id={formId ? `${formId}.phoneNumber` : 'phoneNumber'}
+        label={intl.formatMessage({ id: 'ContactDetailsForm.phoneLabel' })}
+        placeholder={intl.formatMessage({
+          id: 'ContactDetailsForm.phonePlaceholder',
+        })}
+        {...validateMaybe}
+      />
+    </>
+
   );
 };
 
@@ -373,22 +379,30 @@ class ContactDetailsFormComponent extends Component {
               }}
             >
               <div className={css.contactDetailsSection}>
-                <FieldTextInput
-                  type="email"
-                  name="email"
-                  id={formId ? `${formId}.email` : 'email'}
-                  label={emailLabel}
-                  placeholder={emailPlaceholder}
-                  validate={validators.composeValidators(emailRequired, emailValid)}
-                  customErrorText={emailTouched ? null : emailTakenErrorText}
-                />
-                {emailVerifiedInfo}
+                <label className={css.sectionTitle}>{emailLabel}</label>
+                <div>
+                  <FieldTextInput
+                    type="email"
+                    name="email"
+                    id={formId ? `${formId}.email` : 'email'}
+                    label={emailLabel}
+                    placeholder={emailPlaceholder}
+                    validate={validators.composeValidators(emailRequired, emailValid)}
+                    customErrorText={emailTouched ? null : emailTakenErrorText}
+                  />
+                  {emailVerifiedInfo}
+                </div>
 
+
+              </div>
+              <div className={css.contactDetailsSection}>
+                {/* <label className={css.sectionTitle}>{phoneNumberLabel}</label> */}
                 <PhoneNumberMaybe formId={formId} userTypeConfig={userTypeConfig} intl={intl} />
               </div>
 
               <div className={confirmClasses} aria-hidden={!emailChanged}>
-                <H4 as="h3" className={css.confirmChangesTitle}>
+            <div>
+            <H4 as="h3" className={css.confirmChangesTitle}>
                   <FormattedMessage id="ContactDetailsForm.confirmChangesTitle" />
                 </H4>
                 <p className={css.confirmChangesInfo}>
@@ -399,6 +413,7 @@ class ContactDetailsFormComponent extends Component {
                     values={{ resetPasswordLink }}
                   />
                 </p>
+            </div>
 
                 <FieldTextInput
                   className={css.password}

@@ -233,35 +233,44 @@ class PaymentMethodsForm extends Component {
 
     return hasStripeKey ? (
       <Form className={classes} onSubmit={handleSubmit}>
-        <label className={css.paymentLabel} htmlFor={`${formId}-card`}>
-          <FormattedMessage id="PaymentMethodsForm.paymentCardDetails" />
-        </label>
+        <div className={css.cardDetailsRow}>
+          <label className={css.paymentLabel} htmlFor={`${formId}-card`}>
+            <FormattedMessage id="PaymentMethodsForm.paymentCardDetails" />
+          </label>
 
-        <div
-          className={cardClasses}
-          id={`${formId}-card`}
-          ref={el => {
-            this.cardContainer = el;
-          }}
-        />
-        <div className={css.infoText}>{infoText}</div>
+          <div>
+            <div
+              className={cardClasses}
+              id={`${formId}-card`}
+              ref={el => {
+                this.cardContainer = el;
+              }}
+            />
+            <div className={css.infoText}>{infoText}</div>
+          </div>
+        </div>
         {hasCardError ? <span className={css.error}>{this.state.error}</span> : null}
+
         <div className={css.paymentAddressField}>
-          <H4 as="h3">
-            <FormattedMessage id="PaymentMethodsForm.billingDetails" />
-          </H4>
+          <div className={css.cardDetailsRow}>
+            <H4 as="h3" className={css.billingDetailsTitle}>
+              <FormattedMessage id="PaymentMethodsForm.billingDetails" />
+            </H4>
 
-          <FieldTextInput
-            className={css.field}
-            type="text"
-            id="name"
-            name="name"
-            autoComplete="cc-name"
-            label={billingDetailsNameLabel}
-            placeholder={billingDetailsNamePlaceholder}
-          />
+            <div>
+              <FieldTextInput
+                className={css.field}
+                type="text"
+                id="name"
+                name="name"
+                autoComplete="cc-name"
+                label={billingDetailsNameLabel}
+                placeholder={billingDetailsNamePlaceholder}
+              />
 
-          {billingAddress}
+              {billingAddress}
+            </div>
+          </div>
         </div>
 
         <div className={css.submitContainer}>

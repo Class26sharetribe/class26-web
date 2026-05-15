@@ -78,7 +78,7 @@ export const PasswordChangePageComponent = props => {
 
   const pageContent = (
     <div className={css.content}>
-      <H3 as="h1">
+      <H3 as="h1" className={css.title}>
         <FormattedMessage id="PasswordChangePage.heading" />
       </H3>
       {changePasswordForm}

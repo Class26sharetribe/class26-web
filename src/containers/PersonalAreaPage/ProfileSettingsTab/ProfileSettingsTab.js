@@ -33,10 +33,18 @@ const ViewProfileLink = props => {
       name="ProfilePageVariant"
       params={{ id: userUUID, variant: PROFILE_PAGE_PENDING_APPROVAL_VARIANT }}
     >
+      <svg style={{fill: 'transparent'}} width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5.83301 14.1667L14.1663 5.83334M14.1663 14.1667V5.83334H5.83301" stroke="white" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+
       <FormattedMessage id="ProfileSettingsPage.viewProfileLink" />
     </NamedLink>
   ) : userUUID ? (
     <NamedLink className={css.profileLink} name="ProfilePage" params={{ id: userUUID }}>
+      <svg style={{fill: 'transparent'}} width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5.83301 14.1667L14.1663 5.83334M14.1663 14.1667V5.83334H5.83301" stroke="white" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+
       <FormattedMessage id="ProfileSettingsPage.viewProfileLink" />
     </NamedLink>
   ) : null;

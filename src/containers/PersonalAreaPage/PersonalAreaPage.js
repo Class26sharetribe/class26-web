@@ -5,7 +5,7 @@ import { FormattedMessage, useIntl } from '../../util/reactIntl';
 
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 
-import { H1, Page, TabNav } from '../../components';
+import { H1, IconsCollection, Page, TabNav } from '../../components';
 
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
 import FooterContainer from '../FooterContainer/FooterContainer';
@@ -48,24 +48,28 @@ export const PersonalAreaPageComponent = props => {
   const tabs = [
     {
       text: <FormattedMessage id="PersonalAreaPage.myClassesTab" />,
+      icon: <IconsCollection iconName="my-classes" />,
       selected: currentTab === MY_CLASSES_TAB,
       id: 'MyClassesTab',
       linkProps: { name: 'PersonalAreaPage', params: { tab: MY_CLASSES_TAB } },
     },
     {
       text: <FormattedMessage id="PersonalAreaPage.savedForLaterTab" />,
+      icon: <IconsCollection iconName="saved-for-later" />,
       selected: currentTab === SAVED_FOR_LATER_TAB,
       id: 'SavedForLaterTab',
       linkProps: { name: 'PersonalAreaPage', params: { tab: SAVED_FOR_LATER_TAB } },
     },
     {
       text: <FormattedMessage id="PersonalAreaPage.personalProfileTab" />,
+      icon: <IconsCollection iconName="public-profile" />,
       selected: currentTab === PERSONAL_PROFILE_TAB,
       id: 'ProfileTab',
       linkProps: { name: 'PersonalAreaPage', params: { tab: PERSONAL_PROFILE_TAB } },
     },
     {
       text: <FormattedMessage id="PersonalAreaPage.accountSettingsTab" />,
+      icon: <IconsCollection iconName="account-settings" />,
       selected: currentTab === ACCOUNT_SETTINGS_TAB,
       id: 'AccountSettingsTab',
       linkProps: { name: 'PersonalAreaPage', params: { tab: ACCOUNT_SETTINGS_TAB } },
@@ -97,7 +101,9 @@ export const PersonalAreaPageComponent = props => {
           ) : currentTab === ACCOUNT_SETTINGS_TAB ? (
             <AccountSettingsPage />
           ) : (
-            TAB_CONTENT[currentTab]
+            <div className={css.contentWrapper}>
+              {TAB_CONTENT[currentTab]}
+            </div>
           )}
         </main>
       </div>
