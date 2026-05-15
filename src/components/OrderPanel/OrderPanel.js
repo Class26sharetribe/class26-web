@@ -310,6 +310,8 @@ const OrderPanel = props => {
     fetchLineItemsError,
     payoutDetailsWarning,
     showListingImage,
+    currentUser,
+    onSaveClick,
   } = props;
 
   const publicData = listing?.attributes?.publicData || {};
@@ -564,6 +566,9 @@ const OrderPanel = props => {
             shippingEnabled={shippingEnabled && displayShipping}
             displayDeliveryMethod={displayPickup || displayShipping}
             onContactUser={onContactUser}
+            listingType={listingType}
+            currentUser={currentUser}
+            onSaveClick={onSaveClick}
             {...sharedProps}
           />
         ) : showInquiryForm ? (

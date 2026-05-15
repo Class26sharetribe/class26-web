@@ -1776,5 +1776,6 @@
   "ManageListingsPage.youHavePublishedListings": "You have {count} published {count, plural, one {listing} other {listings}}",
   "ManageListingsPage.youHaveDraftListings": "You have {count} draft {count, plural, one {listing} other {listings}}",
   "ManageListingsPage.youHaveClosedListings": "You have {count} closed {count, plural, one {listing} other {listings}}",
-  "ManageListingsPage.youHavePendingListings": "You have {count} {count, plural, one {listing} other {listings}} waiting for admin approval"
+  "ManageListingsPage.youHavePendingListings": "You have {count} {count, plural, one {listing} other {listings}} waiting for admin approval",
+  "ProductOrderForm.ctaButtonDigitalDownload": "Buy now"
 }

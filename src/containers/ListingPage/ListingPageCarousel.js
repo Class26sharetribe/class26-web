@@ -67,6 +67,8 @@ import ListingPageModulesAndLessons from './ListingPageModulesAndLessons';
 import ListingPageFaqs from './ListingPageFaqs';
 
 import css from './ListingPage.module.css';
+import { handleToggleFavorites } from '../../components/ListingCard/ListingCard.helpers.js';
+import { updateProfileThunk } from '../ProfileSettingsPage/ProfileSettingsPage.duck.js';
 
 const MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE = 16;
 
@@ -102,6 +104,7 @@ export const ListingPageComponent = props => {
     config,
     routeConfiguration,
     showOwnListingsOnly,
+    onUpdateFavorites,
     ...restOfProps
   } = props;
 
@@ -265,6 +268,16 @@ export const ListingPageComponent = props => {
     }
   };
 
+  const onSaveClick = isFavorite => {
+    handleToggleFavorites({
+      currentUser,
+      routes: routeConfiguration,
+      location,
+      history,
+      params: { id: listingId?.uuid },
+      onUpdateFavorites,
+    })(isFavorite);
+  };
 
   return (
     <Page
@@ -377,6 +390,8 @@ export const ListingPageComponent = props => {
                 dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
                 marketplaceName={config.marketplaceName}
                 showListingImage={showListingImage}
+                onSaveClick={onSaveClick}
+                currentUser={currentUser}
               />
             </div>
           </div>
@@ -544,6 +559,9 @@ const ListingPage = props => {
       dispatch(fetchTimeSlots(listingId, start, end, timeZone, options)),
     [dispatch]
   );
+  const onUpdateFavorites = useCallback(payload => dispatch(updateProfileThunk(payload)), [
+    dispatch,
+  ]);
 
   return (
     <ListingPageAccessWrapper
@@ -571,6 +589,7 @@ const ListingPage = props => {
       onSendInquiry={onSendInquiry}
       onInitializeCardPaymentData={onInitializeCardPaymentData}
       onFetchTimeSlots={onFetchTimeSlots}
+      onUpdateFavorites={onUpdateFavorites}
     />
   );
 };

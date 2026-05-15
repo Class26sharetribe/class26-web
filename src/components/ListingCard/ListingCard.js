@@ -62,7 +62,7 @@ const CARD_ASPECT_HEIGHT = 4;
 export const LISTING_CARD_VARIANT_DEFAULT = 'default';
 export const LISTING_CARD_VARIANT_COURSE = 'course';
 
-const BookmarkIcon = () => (
+export const BookmarkIcon = () => (
   <svg
     className={css.bookmarkIcon}
     width="16"
