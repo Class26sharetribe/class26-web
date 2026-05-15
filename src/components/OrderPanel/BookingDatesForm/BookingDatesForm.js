@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
@@ -21,15 +21,110 @@ import { LINE_ITEM_DAY, propTypes } from '../../../util/types';
 import { timeSlotsPerDate } from '../../../util/generators';
 import { BOOKING_PROCESS_NAME } from '../../../transactions/transaction';
 
-import { Form, PrimaryButton, FieldDateRangePicker, FieldSelect, H6 } from '../../../components';
+import {
+  Form,
+  PrimaryButton,
+  FieldDateRangePicker,
+  FieldSelect,
+  H6,
+  IconClose,
+} from '../../../components';
 
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
 
 import FetchLineItemsError from '../FetchLineItemsError/FetchLineItemsError.js';
 
 import css from './BookingDatesForm.module.css';
+import { BookmarkIcon } from '../../ListingCard/ListingCard.js';
+
+const SessionSchedule = ({ sessionDates, timeZone, intl }) => {
+  if (!sessionDates?.length) return null;
+
+  return (
+    <div className={css.sessionSchedule}>
+      {sessionDates.map((session, index) => {
+        const { date, startTime } = session;
+        const [year, month, day] = date.split('-').map(Number);
+        const dateObj = new Date(year, month - 1, day, 12, 0, 0);
+
+        const formattedDate = intl.formatDate(dateObj, {
+          weekday: 'long',
+          month: 'long',
+          day: 'numeric',
+          year: 'numeric',
+          timeZone: timeZone || undefined,
+        });
+
+        let formattedTime = null;
+        if (startTime) {
+          const [hours, minutes] = startTime.split(':').map(Number);
+          const timeObj = new Date(year, month - 1, day, hours, minutes || 0);
+          formattedTime = intl.formatTime(timeObj, {
+            hour: 'numeric',
+            hour12: true,
+            timeZone: timeZone || undefined,
+            timeZoneName: 'short',
+          });
+        }
+
+        const label = intl.formatMessage({ id: 'OrderPanel.sessionLabel' }, { index: index + 1 });
+
+        return (
+          <div key={index} className={css.sessionRow}>
+            <span className={css.sessionTerm}>{label}:</span>
+            <span className={css.sessionDate}>
+              {formattedDate}
+              {formattedTime ? ` – ${formattedTime}` : ''}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
 
 const TODAY = new Date();
+
+/**
+ * Derives booking startDate/endDate from sessionDates.
+ * - startDate = earliest session date (or today+1 if it has already passed)
+ * - endDate   = midnight of the day after the latest session date (matching FinalForm convention)
+ */
+const getSessionInitialDates = sessionDates => {
+  if (!sessionDates?.length) return null;
+
+  const todayMidnight = new Date();
+  todayMidnight.setHours(0, 0, 0, 0);
+  const tomorrow = new Date(todayMidnight);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  const sorted = [...sessionDates].sort((a, b) => a.date.localeCompare(b.date));
+
+  const [ey, em, ed] = sorted[0].date.split('-').map(Number);
+  const earliest = new Date(ey, em - 1, ed);
+  const startDate = earliest < todayMidnight ? tomorrow : earliest;
+
+  const [ly, lm, ld] = sorted[sorted.length - 1].date.split('-').map(Number);
+  const endDate = new Date(ly, lm - 1, ld + 1); // midnight of day after last session
+
+  return { startDate, endDate };
+};
+
+/**
+ * Reports seatsOptions back to the parent OrderPanel via a callback.
+ * Lives inside FinalForm render so it can access form values; uses useEffect
+ * to avoid triggering side effects during render.
+ */
+const SeatsOptionsReporter = ({ seatsOptions, onChange }) => {
+  const prevLengthRef = useRef(null);
+  useEffect(() => {
+    if (prevLengthRef.current !== seatsOptions.length) {
+      prevLengthRef.current = seatsOptions.length;
+      onChange?.(seatsOptions);
+    }
+  });
+  return null;
+};
 
 const nextMonthFn = (currentMoment, timeZone, offset = 1) =>
   getStartOf(currentMoment, 'month', timeZone, offset, 'months');
@@ -537,16 +632,30 @@ export const BookingDatesForm = props => {
     priceVariantFieldComponent: PriceVariantFieldComponent,
     preselectedPriceVariant,
     isPublishedListing,
+    currentUser,
+    onSaveClick,
+    sessionDates,
+    onSeatsOptionsChange,
     ...rest
   } = props;
+
   const intl = useIntl();
   const [currentMonth, setCurrentMonth] = useState(getStartOf(TODAY, 'month', timeZone));
-  const initialValuesMaybe =
+  const sessionInitialDates = getSessionInitialDates(sessionDates);
+  const bookingDatesInitial = sessionInitialDates
+    ? { bookingDates: sessionInitialDates, seats: 1 }
+    : {};
+
+  const priceVariantInitial =
     priceVariants.length > 1 && preselectedPriceVariant
-      ? { initialValues: { priceVariantName: preselectedPriceVariant?.name } }
+      ? { priceVariantName: preselectedPriceVariant?.name }
       : priceVariants.length === 1
-      ? { initialValues: { priceVariantName: priceVariants?.[0]?.name } }
+      ? { priceVariantName: priceVariants?.[0]?.name }
       : {};
+
+  const mergedInitialValues = { ...bookingDatesInitial, ...priceVariantInitial };
+  const initialValuesMaybe =
+    Object.keys(mergedInitialValues).length > 0 ? { initialValues: mergedInitialValues } : {};
 
   const allTimeSlots = getAllTimeSlots(monthlyTimeSlots);
   const monthId = monthIdString(currentMonth);
@@ -602,6 +711,9 @@ export const BookingDatesForm = props => {
     onFetchTransactionLineItems,
     seatsEnabled
   );
+
+  const savedFavorites = currentUser?.attributes?.profile?.privateData?.favorites || [];
+  const isFavorite = savedFavorites.includes(listingId?.uuid);
 
   return (
     <FinalForm
@@ -703,16 +815,17 @@ export const BookingDatesForm = props => {
 
         return (
           <Form onSubmit={handleSubmit} className={classes} enforcePagePreloadFor="CheckoutPage">
-            {PriceVariantFieldComponent ? (
+            <SeatsOptionsReporter seatsOptions={seatsOptions} onChange={onSeatsOptionsChange} />
+            {/* {PriceVariantFieldComponent ? (
               <PriceVariantFieldComponent
                 priceVariants={priceVariants}
                 priceVariantName={priceVariantName}
                 onPriceVariantChange={onPriceVariantChange(formRenderProps)}
                 disabled={!isPublishedListing}
               />
-            ) : null}
+            ) : null} */}
 
-            <FieldDateRangePicker
+            {/* <FieldDateRangePicker
               className={css.bookingDates}
               name="bookingDates"
               isDaily={isDaily}
@@ -794,9 +907,9 @@ export const BookingDatesForm = props => {
                   },
                 });
               }}
-            />
+            /> */}
 
-            {seatsEnabled ? (
+            {/* {seatsEnabled ? (
               <FieldSelect
                 name="seats"
                 id="seats"
@@ -824,7 +937,7 @@ export const BookingDatesForm = props => {
                   </option>
                 ))}
               </FieldSelect>
-            ) : null}
+            ) : null} */}
 
             {showEstimatedBreakdown ? (
               <div className={css.priceBreakdownContainer}>
@@ -844,7 +957,23 @@ export const BookingDatesForm = props => {
             ) : null}
             <FetchLineItemsError error={fetchLineItemsError} />
 
+            <SessionSchedule sessionDates={sessionDates} timeZone={timeZone} intl={intl} />
+
             <div className={css.submitButton}>
+              {!isOwnListing && (
+                <button
+                  type="button"
+                  // className={classNames(css.courseBtnSecondary, { [css.courseBtnSaved]: isFavorite })}
+                  onClick={() => onSaveClick(isFavorite)}
+                  aria-pressed={isFavorite}
+                >
+                  {!isFavorite ? <BookmarkIcon /> : <IconClose />}
+                  <FormattedMessage
+                    id={isFavorite ? 'ListingCard.savedForLater' : 'ListingCard.saveForLater'}
+                  />
+                </button>
+              )}
+
               <PrimaryButton
                 type="submit"
                 inProgress={fetchLineItemsInProgress}

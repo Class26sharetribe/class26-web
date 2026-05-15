@@ -148,6 +148,7 @@ const PriceMaybe = props => {
     intl,
     marketplaceCurrency,
     showCurrencyMismatch = false,
+    seatsOptions,
   } = props;
   const { listingType, unitType } = publicData || {};
 
@@ -190,6 +191,7 @@ const PriceMaybe = props => {
       <p className={css.price}>
         <FormattedMessage id="OrderPanel.price" values={{ priceValue, pricePerUnit }} />
       </p>
+      {seatsOptions?.length > 0 && <p>{seatsOptions.length} seats available for this class</p>}
     </div>
   );
 };
@@ -276,6 +278,7 @@ const hasValidPriceVariants = priceVariants => {
  */
 const OrderPanel = props => {
   const [mounted, setMounted] = useState(false);
+  const [seatsOptions, setSeatsOptions] = useState([]);
   const intl = useIntl();
   const location = useLocation();
   const history = useHistory();
@@ -323,6 +326,7 @@ const OrderPanel = props => {
     startTimeInterval,
     totalSessions,
     courseModules,
+    sessionDates,
   } = publicData || {};
 
   const processName = resolveLatestProcessName(transactionProcessAlias.split('/')[0]);
@@ -427,6 +431,9 @@ const OrderPanel = props => {
     fetchLineItemsInProgress,
     fetchLineItemsError,
     payoutDetailsWarning,
+    listingType,
+    currentUser,
+    onSaveClick,
   };
 
   const showClosedListingHelpText = listing.id && isClosed;
@@ -473,6 +480,7 @@ const OrderPanel = props => {
           validListingTypes={validListingTypes}
           intl={intl}
           marketplaceCurrency={marketplaceCurrency}
+          seatsOptions={seatsOptions}
         />
 
         <div className={css.courseHighlight}>
@@ -553,6 +561,8 @@ const OrderPanel = props => {
             monthlyTimeSlots={monthlyTimeSlots}
             onFetchTimeSlots={onFetchTimeSlots}
             timeZone={timeZone}
+            sessionDates={sessionDates}
+            onSeatsOptionsChange={setSeatsOptions}
             finePrintComponent={SubmitFinePrint}
             {...priceVariantsMaybe}
             {...sharedProps}
@@ -566,9 +576,6 @@ const OrderPanel = props => {
             shippingEnabled={shippingEnabled && displayShipping}
             displayDeliveryMethod={displayPickup || displayShipping}
             onContactUser={onContactUser}
-            listingType={listingType}
-            currentUser={currentUser}
-            onSaveClick={onSaveClick}
             {...sharedProps}
           />
         ) : showInquiryForm ? (
