@@ -23,6 +23,7 @@ import {
   NamedLink,
   ResponsiveImage,
   ListingCardThumbnail,
+  IconClose,
 } from '../../components';
 
 import Avatar from '../Avatar/Avatar';
@@ -331,7 +332,7 @@ const ListingCardCourse = props => {
               onClick={onSaveClick}
               aria-pressed={isFavorite}
             >
-              <BookmarkIcon />
+             {!isFavorite ? <BookmarkIcon /> : <IconClose />}
               <FormattedMessage
                 id={isFavorite ? 'ListingCard.savedForLater' : 'ListingCard.saveForLater'}
               />

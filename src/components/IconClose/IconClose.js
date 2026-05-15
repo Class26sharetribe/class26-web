@@ -38,20 +38,10 @@ const IconClose = props => {
   }
 
   return (
-    <svg
-      className={classes}
-      width="12"
-      height="12"
-      viewBox="0 0 12 12"
-      xmlns="http://www.w3.org/2000/svg"
-      role="img"
-      {...ariaLabelMaybe}
-    >
-      <g transform="translate(-1 -1)" fillRule="evenodd">
-        <rect transform="rotate(45 7 7)" x="-1" y="6" width="16" height="2" rx="1" />
-        <rect transform="rotate(-45 7 7)" x="-1" y="6" width="16" height="2" rx="1" />
-      </g>
+    <svg className={classes}   {...ariaLabelMaybe} width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M15 5L5 15M5 5L15 15" stroke="#101828" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" />
     </svg>
+
   );
 };
 
