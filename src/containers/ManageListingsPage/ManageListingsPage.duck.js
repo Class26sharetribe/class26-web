@@ -5,6 +5,7 @@ import { createImageVariantConfig } from '../../util/sdkLoader';
 import { parse } from '../../util/urlHelpers';
 
 import { fetchCurrentUser } from '../../ducks/user.duck';
+import { LISTING_STATE_PUBLISHED } from '../../util/types';
 
 // Pagination page size might need to be dynamic on responsive page layouts
 // Current design has max 3 columns 42 is divisible by 2 and 3
@@ -137,7 +138,7 @@ export const discardDraft = listingId => (dispatch, getState, sdk) => {
 
 // ================ Slice ================ //
 
-const resultIds = data => data.data.map(l => l.id);
+const resultIds = data => data.data.filter(elm => !elm.attributes.deleted).map(l => l.id);
 
 const updateListingAttributes = (state, listingEntity) => {
   const oldListing = state.ownEntities.ownListing[listingEntity.id.uuid];
@@ -188,7 +189,7 @@ const manageListingsPageSlice = createSlice({
         state.queryParams = action.meta.arg;
         state.queryInProgress = true;
         state.queryListingsError = null;
-        state.currentPageResultIds = [];
+        // state.currentPageResultIds = [];
       })
       .addCase(queryOwnListingsThunk.fulfilled, (state, action) => {
         state.currentPageResultIds = resultIds(action.payload.data);
@@ -273,6 +274,7 @@ export default manageListingsPageSlice.reducer;
 export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   const queryParams = parse(search);
   const page = queryParams.page || 1;
+  const activeState = queryParams.state || LISTING_STATE_PUBLISHED;
   dispatch(clearOpenListingError());
 
   const {
@@ -288,6 +290,7 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
       queryOwnListings({
         ...queryParams,
         page,
+        states: [activeState],
         perPage: RESULT_PAGE_SIZE,
         include: ['images', 'currentStock'],
         'fields.image': [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`],

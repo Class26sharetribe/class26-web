@@ -48,6 +48,7 @@ const VideoMeetingPage = loadable(() => import(/* webpackChunkName: "VideoMeetin
 const ExpertSignupPage = loadable(() => import(/* webpackChunkName: "ExpertSignupPage" */ '../containers/ExpertSignupPage/ExpertSignupPage'));
 const ExpertSignupThankYouPage = loadable(() => import(/* webpackChunkName: "ExpertSignupThankYouPage" */ '../containers/ExpertSignupThankYouPage/ExpertSignupThankYouPage'));
 const PersonalAreaPage = loadable(() => import(/* webpackChunkName: "PersonalAreaPage" */ '../containers/PersonalAreaPage/PersonalAreaPage'));
+const DashboardPage = loadable(() => import(/* webpackChunkName: "DashboardPage" */ '../containers/DashboardPage/DashboardPage'));
 
 // Styleguide helps you to review current components and develop new ones
 const StyleguidePage = loadable(() => import(/* webpackChunkName: "StyleguidePage" */ '../containers/StyleguidePage/StyleguidePage'));
@@ -377,6 +378,21 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       authPage: 'LoginPage',
       component: PersonalAreaPage,
       loadData: pageDataLoadingAPI.PersonalAreaPage.loadData,
+    },
+    {
+      path: '/dashboard',
+      name: 'DashboardBasePage',
+      auth: true,
+      authPage: 'LoginPage',
+      component: () => <NamedRedirect name="DashboardPage" params={{ tab: 'courses' }} />,
+    },
+    {
+      path: '/dashboard/:tab',
+      name: 'DashboardPage',
+      auth: true,
+      authPage: 'LoginPage',
+      component: DashboardPage,
+      loadData: pageDataLoadingAPI.DashboardPage.loadData,
     },
     {
       path: '/account',

@@ -1,0 +1,145 @@
+@import '../../styles/customMediaQueries.css';
+
+.root {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - var(--topbarHeight));
+  padding-top: 80px;
+  background: #fff;
+}
+
+.headingSection {
+  max-width: 1280px;
+  padding: 0 32px;
+  margin: 0 auto;
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+.heading {
+  margin: 0;
+  font-family: Nohemi;
+  font-weight: 600;
+  font-style: Semi Bold;
+  font-size: 64px;
+  leading-trim: NONE;
+  line-height: 80px;
+  letter-spacing: 0px;
+  color: #101828;
+  padding: 0;
+}
+
+/* ===== Analytics cards ===== */
+
+.analyticsSection {
+  max-width: 1280px;
+  padding: 0 32px;
+  margin: 0 auto 48px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.analyticsCard {
+  background: #ECFDF3;
+  border-radius: 12px;
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.analyticsValue {
+  font-family: Nohemi;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 40px;
+  color: #05603A;
+  margin: 0;
+}
+
+.analyticsLabel {
+  font-size: 14px;
+  line-height: 20px;
+  color: #027A48;
+  margin: 0;
+}
+
+/* ===== Tab nav ===== */
+
+.tabNavWrapper {
+  max-width: 1280px;
+  padding: 0 32px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.tabs {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  justify-content: space-between;
+  gap: 32px;
+  border-bottom: 1px solid var(--border-border-divider, #E9EAEB);
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  @media (--viewportMedium) {
+    gap: 40px;
+  }
+}
+
+.tab {
+  margin-left: 0;
+  flex-shrink: 0;
+  flex: 1;
+
+  & a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: Nohemi;
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 16px;
+    leading-trim: NONE;
+    line-height: 24px;
+    letter-spacing: 0px;
+    vertical-align: middle;
+    color: #414651;
+    margin-bottom: 0;
+    padding: 16px 0;
+    background-image: none !important;
+
+    &[class*="NamedLink_active"] {
+      border-bottom: 2px solid #006647;
+      border-right: 0;
+      color: #101828;
+      background-image: none;
+    }
+
+    &:hover {
+      border-bottom: 2px solid #006647;
+      border-right: 0;
+      background-image: none;
+    }
+  }
+}
+
+.content {
+  flex-grow: 1;
+}
+
+.contentWrapper {
+  max-width: 1280px;
+  padding: 40px 32px;
+  margin: 0 auto;
+  width: 100%;
+}

@@ -9,6 +9,7 @@ import { showPaymentDetailsForUser } from '../../util/userHelpers';
 import ContactDetailsPage from '../ContactDetailsPage/ContactDetailsPage';
 import PasswordChangePage from '../PasswordChangePage/PasswordChangePage';
 import PaymentMethodsPage from '../PaymentMethodsPage/PaymentMethodsPage';
+import StripePayoutPage from '../StripePayoutPage/StripePayoutPage';
 import ManageAccountPage from '../ManageAccountPage/ManageAccountPage';
 
 import css from './AccountSettingsPage.module.css';
@@ -24,20 +25,14 @@ const AccountSettingsPage = () => {
   const config = useConfiguration();
   const currentUser = useSelector(state => state.user.currentUser);
 
-  const { showPaymentMethods } = showPaymentDetailsForUser(config, currentUser);
+  const { showPaymentMethods, showPayoutDetails } = showPaymentDetailsForUser(config, currentUser);
 
   return (
     <div className={css.root}>
       <ContactDetailsPage embedded />
-      {/* <hr className={css.divider} /> */}
       <PasswordChangePage embedded />
-      {showPaymentMethods ? (
-        <>
-          {/* <hr className={css.divider} /> */}
-          <PaymentMethodsPage embedded />
-        </>
-      ) : null}
-      {/* <hr className={css.divider} /> */}
+      {showPayoutDetails ? <StripePayoutPage embedded /> : null}
+      {showPaymentMethods ? <PaymentMethodsPage embedded /> : null}
       <ManageAccountPage embedded />
     </div>
   );

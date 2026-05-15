@@ -3,6 +3,72 @@
 .root {
 }
 
+/* ================ Filter bar ================ */
+
+.filterBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 24px 24px 24px;
+  gap: 12px;
+
+  @media (--viewportLarge) {
+    margin: 0 36px 32px 36px;
+  }
+}
+
+.filterTabsWrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filterTab {
+  composes: marketplaceSmallFontStyles from global;
+  padding: 6px 14px;
+  border-radius: 4px;
+  border: 1px solid var(--colorGrey200);
+  background: transparent;
+  color: var(--colorGrey500);
+  cursor: pointer;
+  font-weight: var(--fontWeightMedium);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: border-color 0.15s, color 0.15s;
+
+  &:hover {
+    border-color: var(--colorGrey400);
+    color: var(--colorGrey700);
+  }
+}
+
+.filterTabActive {
+  border-color: var(--colorGrey700);
+  color: var(--colorGrey700);
+  font-weight: var(--fontWeightSemiBold);
+}
+
+.newListingButton {
+  composes: marketplaceSmallFontStyles from global;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 18px;
+  border-radius: 4px;
+  background-color: var(--marketplaceColor);
+  color: var(--colorWhite);
+  font-weight: var(--fontWeightSemiBold);
+  white-space: nowrap;
+  text-decoration: none;
+
+  &:hover {
+    background-color: var(--marketplaceColorDark);
+    text-decoration: none;
+  }
+}
+
 .tabs {
   display: none;
 

@@ -20,6 +20,7 @@ import { loadData as SearchPageLoader } from './SearchPage/SearchPage.duck';
 import { loadData as StripePayoutPageLoader } from './StripePayoutPage/StripePayoutPage.duck';
 import { loadData as TermsOfServicePageLoader } from './TermsOfServicePage/TermsOfServicePage.duck';
 import { loadData as PersonalAreaPageLoader } from './PersonalAreaPage/PersonalAreaPage.duck';
+import { loadData as DashboardPageLoader } from './DashboardPage/DashboardPage.duck';
 import { loadData as ExpertSignupPageLoader } from './ExpertSignupPage/ExpertSignupPage.duck';
 import {
   loadData as TransactionPageLoader,
@@ -84,6 +85,9 @@ const getPageDataLoadingAPI = () => {
     },
     PersonalAreaPage: {
       loadData: PersonalAreaPageLoader,
+    },
+    DashboardPage: {
+      loadData: DashboardPageLoader,
     },
     ExpertSignupPage: {
       loadData: ExpertSignupPageLoader,

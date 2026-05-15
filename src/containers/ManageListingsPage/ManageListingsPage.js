@@ -9,7 +9,13 @@ import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { pathByRouteName } from '../../util/routes';
 import { hasPermissionToPostListings, showCreateListingLinkForUser } from '../../util/userHelpers';
 import { NO_ACCESS_PAGE_POST_LISTINGS } from '../../util/urlHelpers';
-import { propTypes } from '../../util/types';
+import {
+  LISTING_STATE_CLOSED,
+  LISTING_STATE_DRAFT,
+  LISTING_STATE_PENDING_APPROVAL,
+  LISTING_STATE_PUBLISHED,
+  propTypes,
+} from '../../util/types';
 import { isErrorNoPermissionToPostListings } from '../../util/errors';
 import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
 
@@ -37,17 +43,30 @@ import {
 import css from './ManageListingsPage.module.css';
 import DiscardDraftModal from './DiscardDraftModal/DiscardDraftModal';
 
+const LISTING_TABS = [
+  { id: LISTING_STATE_PUBLISHED, labelId: 'ManageListingsPage.tabPublished' },
+  { id: LISTING_STATE_PENDING_APPROVAL, labelId: 'ManageListingsPage.tabPendingApproval' },
+  { id: LISTING_STATE_DRAFT, labelId: 'ManageListingsPage.tabDraft' },
+  { id: LISTING_STATE_CLOSED, labelId: 'ManageListingsPage.tabClosed' },
+];
+
+const HEADING_MESSAGE_IDS = {
+  [LISTING_STATE_PUBLISHED]: 'ManageListingsPage.youHavePublishedListings',
+  [LISTING_STATE_DRAFT]: 'ManageListingsPage.youHaveDraftListings',
+  [LISTING_STATE_CLOSED]: 'ManageListingsPage.youHaveClosedListings',
+  [LISTING_STATE_PENDING_APPROVAL]: 'ManageListingsPage.youHavePendingListings',
+};
+
 const Heading = props => {
-  const { listingsAreLoaded, pagination } = props;
+  const { listingsAreLoaded, pagination = {}, activeTab } = props;
   const hasResults = listingsAreLoaded && pagination.totalItems > 0;
   const hasNoResults = listingsAreLoaded && pagination.totalItems === 0;
 
-  return hasResults ? (
+  const headingMessageId = HEADING_MESSAGE_IDS[activeTab] || 'ManageListingsPage.youHaveListings';
+
+  return true ? (
     <H3 as="h1" className={css.heading}>
-      <FormattedMessage
-        id="ManageListingsPage.youHaveListings"
-        values={{ count: pagination.totalItems }}
-      />
+      <FormattedMessage id={headingMessageId} values={{ count: pagination?.totalItems ?? 0 }} />
     </H3>
   ) : hasNoResults ? (
     <div className={css.noResultsContainer}>
@@ -64,12 +83,13 @@ const Heading = props => {
 };
 
 const PaginationLinksMaybe = props => {
-  const { listingsAreLoaded, pagination, page } = props;
+  const { listingsAreLoaded, pagination, page, activeState } = props;
   return listingsAreLoaded && pagination && pagination.totalPages > 1 ? (
     <PaginationLinks
       className={css.pagination}
-      pageName="ManageListingsPage"
-      pageSearchParams={{ page }}
+      pageName="DashboardPage"
+      pagePathParams={{ tab: 'courses' }}
+      pageSearchParams={{ page, state: activeState }}
       pagination={pagination}
     />
   ) : null;
@@ -129,7 +149,10 @@ export const ManageListingsPageComponent = props => {
     queryParams,
     scrollingDisabled,
     onManageDisableScrolling,
+    embedded = false,
   } = props;
+
+  const activeTab = queryParams?.state || LISTING_STATE_PUBLISHED;
 
   useEffect(() => {
     if (isErrorNoPermissionToPostListings(openingListingError?.error)) {
@@ -201,6 +224,85 @@ export const ManageListingsPageComponent = props => {
 
   const showManageListingsLink = showCreateListingLinkForUser(config, currentUser);
 
+  const filterBar = (
+    <div className={css.filterBar}>
+      <div className={css.filterTabsWrapper}>
+        {LISTING_TABS.map(({ id, labelId }) => (
+          <NamedLink
+            key={id}
+            name="DashboardPage"
+            params={{ tab: 'courses' }}
+            to={{ search: `?state=${id}` }}
+            className={`${css.filterTab}${activeTab === id ? ` ${css.filterTabActive}` : ''}`}
+          >
+            <FormattedMessage id={labelId} />
+          </NamedLink>
+        ))}
+      </div>
+      <NamedLink className={css.newListingButton} name="NewListingPage">
+        + <FormattedMessage id="ManageListingsPage.newListing" />
+      </NamedLink>
+    </div>
+  );
+
+  const pageContent = (
+    <>
+      {filterBar}
+
+      {queryInProgress ? loadingResults : null}
+      {queryListingsError ? queryError : null}
+      <div className={css.listingPanel}>
+        {!queryInProgress && (
+          <Heading
+            listingsAreLoaded={listingsAreLoaded}
+            pagination={pagination}
+            activeTab={activeTab}
+          />
+        )}
+
+        <ul className={css.listingCards}>
+          {listings.map(l => (
+            <li key={l.id.uuid} className={css.listingCard}>
+              <ManageListingCard
+                listing={l}
+                isMenuOpen={!!listingMenuOpen && listingMenuOpen.id.uuid === l.id.uuid}
+                actionsInProgressListingId={openingListing || closingListing || discardingDraft}
+                onToggleMenu={onToggleMenu}
+                onCloseListing={onCloseListing}
+                onOpenListing={handleOpenListing}
+                onDiscardDraft={openDiscardDraftModal}
+                hasOpeningError={openingErrorListingId.uuid === l.id.uuid}
+                hasClosingError={closingErrorListingId.uuid === l.id.uuid}
+                hasDiscardingError={discardingErrorListingId.uuid === l.id.uuid}
+                renderSizes={renderSizes}
+              />
+            </li>
+          ))}
+        </ul>
+        {onManageDisableScrolling && discardDraftModalOpen ? (
+          <DiscardDraftModal
+            id="ManageListingsPage"
+            isOpen={discardDraftModalOpen}
+            onManageDisableScrolling={onManageDisableScrolling}
+            onCloseModal={() => setDiscardDraftModalOpen(false)}
+            onDiscardDraft={handleDiscardDraft}
+            focusElementId={
+              discardDraftModalId ? `discardButton_${discardDraftModalId.uuid}` : null
+            }
+          />
+        ) : null}
+
+        <PaginationLinksMaybe
+          listingsAreLoaded={listingsAreLoaded}
+          pagination={pagination}
+          page={queryParams ? queryParams.page : 1}
+        />
+      </div>
+    </>
+  );
+
+  if (embedded) return pageContent;
+
   return (
     <Page
       title={intl.formatMessage({ id: 'ManageListingsPage.title' })}
@@ -218,50 +320,7 @@ export const ManageListingsPageComponent = props => {
         }
         footer={<FooterContainer />}
       >
-        {queryInProgress ? loadingResults : null}
-        {queryListingsError ? queryError : null}
-
-        <div className={css.listingPanel}>
-          <Heading listingsAreLoaded={listingsAreLoaded} pagination={pagination} />
-
-          <ul className={css.listingCards}>
-            {listings.map(l => (
-              <li key={l.id.uuid} className={css.listingCard}>
-                <ManageListingCard
-                  listing={l}
-                  isMenuOpen={!!listingMenuOpen && listingMenuOpen.id.uuid === l.id.uuid}
-                  actionsInProgressListingId={openingListing || closingListing || discardingDraft}
-                  onToggleMenu={onToggleMenu}
-                  onCloseListing={onCloseListing}
-                  onOpenListing={handleOpenListing}
-                  onDiscardDraft={openDiscardDraftModal}
-                  hasOpeningError={openingErrorListingId.uuid === l.id.uuid}
-                  hasClosingError={closingErrorListingId.uuid === l.id.uuid}
-                  hasDiscardingError={discardingErrorListingId.uuid === l.id.uuid}
-                  renderSizes={renderSizes}
-                />
-              </li>
-            ))}
-          </ul>
-          {onManageDisableScrolling && discardDraftModalOpen ? (
-            <DiscardDraftModal
-              id="ManageListingsPage"
-              isOpen={discardDraftModalOpen}
-              onManageDisableScrolling={onManageDisableScrolling}
-              onCloseModal={() => setDiscardDraftModalOpen(false)}
-              onDiscardDraft={handleDiscardDraft}
-              focusElementId={
-                discardDraftModalId ? `discardButton_${discardDraftModalId.uuid}` : null
-              }
-            />
-          ) : null}
-
-          <PaginationLinksMaybe
-            listingsAreLoaded={listingsAreLoaded}
-            pagination={pagination}
-            page={queryParams ? queryParams.page : 1}
-          />
-        </div>
+        {pageContent}
       </LayoutSingleColumn>
     </Page>
   );
@@ -309,11 +368,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(manageDisableScrolling(componentId, disableScrolling)),
 });
 
-const ManageListingsPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(ManageListingsPageComponent);
+const ManageListingsPage = compose(connect(mapStateToProps, mapDispatchToProps))(
+  ManageListingsPageComponent
+);
 
 export default ManageListingsPage;
