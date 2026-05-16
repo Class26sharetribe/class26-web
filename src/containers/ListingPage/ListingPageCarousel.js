@@ -66,6 +66,10 @@ import ListingPageBenefits from './ListingPageBenefits';
 import ListingPageModulesAndLessons from './ListingPageModulesAndLessons';
 import ListingPageFaqs from './ListingPageFaqs';
 
+import ListingPageMobileOrderSummary from './ListingPageMobileOrderPanel/ListingPageMobileOrderSummary';
+import ListingPageMobileOrderForms from './ListingPageMobileOrderPanel/ListingPageMobileOrderForms';
+import { LISTING_PAGE_MOBILE_ORDER_FORM_ID } from './ListingPageMobileOrderPanel/listingPageMobileOrderHelpers';
+
 import css from './ListingPage.module.css';
 import { handleToggleFavorites } from '../../components/ListingCard/ListingCard.helpers.js';
 import { updateProfileThunk } from '../ProfileSettingsPage/ProfileSettingsPage.duck.js';
@@ -77,6 +81,7 @@ export const ListingPageComponent = props => {
     props.inquiryModalOpenForListingId === props.params.id
   );
   const [mounted, setMounted] = useState(false);
+  const [mobileSeatsOptions, setMobileSeatsOptions] = useState([]);
 
   useEffect(() => {
     setMounted(true);
@@ -281,6 +286,26 @@ export const ListingPageComponent = props => {
     })(isFavorite);
   };
 
+  const orderPanelProps = {
+    listing: currentListing,
+    isOwnListing,
+    onSubmit: handleOrderSubmit,
+    payoutDetailsWarning,
+    onManageDisableScrolling,
+    onContactUser,
+    validListingTypes: config.listing.listingTypes,
+    marketplaceCurrency: config.currency,
+    dayCountAvailableForBooking: config.stripe.dayCountAvailableForBooking,
+    marketplaceName: config.marketplaceName,
+    showListingImage,
+    onSaveClick,
+    currentUser,
+    author: ensuredAuthor,
+    ...restOfProps,
+    seatsOptions: mobileSeatsOptions,
+    onSeatsOptionsChange: setMobileSeatsOptions,
+  };
+
   return (
     <Page
       title={schemaTitle}
@@ -318,6 +343,26 @@ export const ListingPageComponent = props => {
 
           <h1 className={css.listingPageCarouselTitle}>{title}</h1>
         </div>
+        <div className={css.mobileOrderPanelnfo}>
+          <ListingPageMobileOrderSummary
+            listing={currentListing}
+            title={
+              <FormattedMessage id="ListingPage.orderTitle" values={{ title: description }} />
+            }
+            titleDesktop={
+              <H4 as="h2" className={css.orderPanelTitle}>
+                <FormattedMessage id="ListingPage.orderTitle" values={{ title: description }} />
+              </H4>
+            }
+            titleClassName={css.orderPanelTitle}
+            showListingImage={showListingImage}
+            forceShowOrderHeading
+            validListingTypes={validListingTypes}
+            marketplaceCurrency={config.currency}
+            seatsOptions={mobileSeatsOptions}
+          />
+        </div>
+
         <div className={css.contentWrapperForProductLayout}>
           <div className={css.mainColumnForProductLayout}>
             {/* <Notifications
@@ -341,7 +386,7 @@ export const ListingPageComponent = props => {
                 variantPrefix={config.layout.listingImage.variantPrefix}
               />
             )}
-            <div
+            {/* <div
               className={showListingImage ? css.mobileHeading : css.noListingImageHeadingProduct}
             >
               {showListingImage ? (
@@ -353,6 +398,15 @@ export const ListingPageComponent = props => {
                   <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
                 </H3>
               )}
+            </div> */}
+
+            <div className={css.mobileOrderPanelFormnfo}
+              id={LISTING_PAGE_MOBILE_ORDER_FORM_ID}
+            >
+              <ListingPageMobileOrderForms
+                {...orderPanelProps}
+                rootClassName={css.listingPageMobileOrderForms}
+              />
             </div>
           </div>
           <div className={css.orderColumnForProductLayout}>

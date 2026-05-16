@@ -1,17 +1,75 @@
 @import '../../../styles/customMediaQueries.css';
 
+.reviewsSliderWrap {
+  width: 100%;
+}
+
 .root {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
- flex-wrap: wrap;
+  flex-wrap: wrap;
   gap: 48px;
+}
+
+.reviewsScroller {
+  @media (max-width: 767px) {
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 16px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 0 0px 8px;
+    max-width: calc(100vw - 16px);
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
 }
 
 .reviewItem {
   margin: 0;
   width: 100%;
+
+  @media (max-width: 767px) {
+    flex: 0 0 calc(100vw - 60px);
+    max-width: calc(100vw - 60px);
+    min-width: 0;
+    scroll-snap-align: center;
+  }
+}
+
+.scrollProgressTrack {
+  display: none;
+
+  @media (max-width: 767px) {
+    display: block;
+    position: relative;
+    width: 200px;
+    height: 2px;
+    margin: 32px auto 2px;
+    background-color: #d5d7da;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+}
+
+.scrollProgressActive {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background-color: #0a1b3a;
+  border-radius: 2px;
+  transition:
+    left 120ms ease-out,
+    width 120ms ease-out;
 }
 
 /* Profile page: 3 columns from tablet up */
@@ -95,7 +153,7 @@ font-size: 16px;
 leading-trim: NONE;
 line-height: 24px;
 letter-spacing: 0%;
-text-align: right;
+text-align: center;
 
   margin: 24px 0 0 0;
   color: #414651;

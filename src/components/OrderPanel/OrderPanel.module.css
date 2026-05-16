@@ -223,8 +223,8 @@ align-items: center;
     padding: 18px 60px 18px 60px;
   }
 
+  display: none;
   @media (--viewportLarge) {
-    display: none;
   }
 }
 
@@ -345,6 +345,9 @@ align-items: center;
   color: #006647;
   margin: 0;
   margin-top: 4px;
+  @media (max-width: 768px) {
+    font-weight: 400;
+  }
 }
 
 .sessionSchedule {

@@ -68,11 +68,20 @@
   border-radius: 16px;
  
   overflow: hidden;
+  @media (max-width: 768px) {
+  border-radius: 8px;
+  }
 }
 
 /* Room for bottom-left prev/next controls above thumbnail strip */
 :global(.image-gallery:not(.fullscreen-modal)) :global(.image-gallery-slide-wrapper) {
   padding-bottom: 70px;
+  @media (max-width: 768px) {
+    padding-bottom: 20px;
+    &:has(> button) {
+      padding-bottom: 60px;
+    }
+  }
 }
 
 :global(.fullscreen) {

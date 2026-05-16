@@ -30,6 +30,9 @@
   /* Ensure that calendar dropdown gets some stacking context relative to other form items below */
   z-index: 1;
   margin-top: 32px;
+  @media (max-width: 768px) {
+    margin-top: 0px;
+  }
 }
 
 .priceBreakdownContainer {
@@ -78,7 +81,9 @@
 
   padding: 0 24px;
   margin-top: 24px;
-
+  @media (max-width: 768px) {
+    padding: 0 0px;
+  }
   @media (--viewportMedium) {
     padding: 0;
     margin-top: 32px;
@@ -106,7 +111,12 @@
 
   cursor: pointer;
   min-height: 44px;
-
+  @media (max-width: 768px) {
+    font-size: 14px;
+    line-height: 20px;
+    padding: 8px 16px;
+    min-height: 36px;
+  }
   &:hover {
     border-color: #9ca3af;
   }
@@ -126,7 +136,12 @@
   leading-trim: NONE;
   line-height: 24px;
   letter-spacing: 0px;
-  
+  @media (max-width: 768px) {
+    font-size: 14px;
+    line-height: 20px;
+    padding: 8px 16px;
+    min-height: 36px;
+  }
 }
 
 .courseBtnPrimary {
@@ -150,7 +165,12 @@
   cursor: pointer;
   min-height: 44px;
   width: max-content;
-
+  @media (max-width: 768px) {
+    font-size: 14px;
+    line-height: 20px;
+    padding: 8px 16px;
+    min-height: 36px;
+  }
   &:hover {
     text-decoration: none;
     background: #154a2f;
