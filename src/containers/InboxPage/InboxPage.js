@@ -357,7 +357,7 @@ export const InboxPageComponent = props => {
           <div className={css.pageHeader}>
             <div className={css.pageHeaderText}>
               <H2 as="h1" className={css.title}>
-                <FormattedMessage id="InboxPage.title" />
+              Your Messages
               </H2>
               <p className={css.subtitle}>
                 <FormattedMessage id="InboxPage.subtitle" />
