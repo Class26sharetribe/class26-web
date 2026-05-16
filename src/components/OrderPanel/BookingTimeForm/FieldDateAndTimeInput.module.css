@@ -131,7 +131,7 @@
   @media (--viewportMedium) {
     &::after {
       left: 11px;
-      bottom: 19px;
+      bottom: 15px;
     }
   }
 }
