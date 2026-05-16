@@ -1,6 +1,12 @@
 @import '../../styles/customMediaQueries.css';
 
 .root {
+  /* Anchor scroll (e.g. banner CTA → #order-panel) clears sticky topbar */
+  scroll-margin-top: calc(var(--topbarHeight) + 24px);
+
+  @media (--viewportMedium) {
+    scroll-margin-top: calc(var(--topbarHeightDesktop) + 24px);
+  }
 }
 
 /* Order form inside modalContainer needs special handling */

@@ -450,7 +450,7 @@ const OrderPanel = props => {
   const durationText = !!courseModules ? formatCourseDuration(courseModules) : null;
 
   return (
-    <div className={classes}>
+    <div className={classes} >
       <ModalInMobile
         containerClassName={css.modalContainer}
         id="OrderFormInModal"

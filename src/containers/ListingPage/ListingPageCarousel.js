@@ -213,11 +213,13 @@ export const ListingPageComponent = props => {
     }
   };
 
+  const scrollToOrderPanel = () => scrollToId('listingPageOrderPanel');
+
   const bannerActionByVariant = {
-    groupCoaching: () => onContactUser(),
-    individualCoaching: () => onContactUser(),
-    videoCourse: () => scrollToId('listingPageCourseContent'),
-    digitalDownload: () => scrollToId('listingPageOrderPanel'),
+    groupCoaching: scrollToOrderPanel,
+    individualCoaching: scrollToOrderPanel,
+    videoCourse: scrollToOrderPanel,
+    digitalDownload: scrollToOrderPanel,
   };
 
   const commonParams = { params, history, routes: routeConfiguration };
