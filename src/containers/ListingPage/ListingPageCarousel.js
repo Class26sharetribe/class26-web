@@ -7,6 +7,7 @@ import classNames from 'classnames';
 import { FormattedMessage } from '../../util/reactIntl';
 import { LISTING_STATE_CLOSED, propTypes } from '../../util/types';
 import { OFFER, REQUEST } from '../../transactions/transaction';
+import { trackListingView } from '../../util/api';
 
 // Assets
 import BannerPlaceholderImage from '../../assets/Image.png';
@@ -72,7 +73,7 @@ import { LISTING_PAGE_MOBILE_ORDER_FORM_ID } from './ListingPageMobileOrderPanel
 
 import css from './ListingPage.module.css';
 import { handleToggleFavorites } from '../../components/ListingCard/ListingCard.helpers.js';
-import { updateProfileThunk } from '../ProfileSettingsPage/ProfileSettingsPage.duck.js';
+import { updateFavoriteListing } from '../../ducks/user.duck.js';
 
 const MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE = 16;
 
@@ -159,6 +160,14 @@ export const ListingPageComponent = props => {
     noIndexMaybe,
     hasInvalidListingData,
   } = derivedData;
+
+  useEffect(() => {
+    const listingUuid = listingId?.uuid;
+
+    if (listingUuid && !isOwnListing) {
+      trackListingView({ listingId: listingUuid }).catch(() => null);
+    }
+  }, [listingId?.uuid, isOwnListing]);
 
   const topbar = <TopbarContainer />;
 
@@ -625,7 +634,7 @@ const ListingPage = props => {
       dispatch(fetchTimeSlots(listingId, start, end, timeZone, options)),
     [dispatch]
   );
-  const onUpdateFavorites = useCallback(payload => dispatch(updateProfileThunk(payload)), [
+  const onUpdateFavorites = useCallback(params => dispatch(updateFavoriteListing(params)), [
     dispatch,
   ]);
 

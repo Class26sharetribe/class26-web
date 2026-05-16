@@ -5,6 +5,7 @@ import * as log from '../util/log';
 import { LISTING_STATE_DRAFT } from '../util/types';
 import { storableError } from '../util/errors';
 import { isUserAuthorized } from '../util/userHelpers';
+import { favoriteListing, unfavoriteListing } from '../util/api';
 import {
   getStatesNeedingProviderAttention,
   getStatesNeedingCustomerAttention,
@@ -262,6 +263,28 @@ export const fetchCurrentUserThunk = createAsyncThunk(
  */
 export const fetchCurrentUser = options => (dispatch, getState, sdk) => {
   return dispatch(fetchCurrentUserThunk(options)).unwrap();
+};
+
+export const updateFavoriteListingThunk = createAsyncThunk(
+  'user/updateFavoriteListing',
+  async ({ listingId, shouldFavorite }, { dispatch, rejectWithValue }) => {
+    try {
+      if (shouldFavorite) {
+        await favoriteListing(listingId);
+      } else {
+        await unfavoriteListing(listingId);
+      }
+      return dispatch(fetchCurrentUser({ enforce: true, updateNotifications: false })).then(
+        currentUser => currentUser
+      );
+    } catch (e) {
+      return rejectWithValue(storableError(e));
+    }
+  }
+);
+
+export const updateFavoriteListing = params => dispatch => {
+  return dispatch(updateFavoriteListingThunk(params)).unwrap();
 };
 
 /////////////////////////////////////////////

@@ -1827,6 +1827,7 @@
   "DashboardPage.analyticsLabelViews": "uniques views",
   "DashboardPage.analyticsEarnings": "€12,000.00",
   "DashboardPage.analyticsLabelEarnings": "earnings",
+  "DashboardPage.analyticsUnavailable": "Stats are temporarily unavailable.",
   "ManageListingsPage.tabPublished": "Published",
   "ManageListingsPage.tabPendingApproval": "Pending Approval",
   "ManageListingsPage.tabDraft": "Draft",

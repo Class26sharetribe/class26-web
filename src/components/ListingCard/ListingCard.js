@@ -16,7 +16,7 @@ import { requireListingImage } from '../../util/configHelpers';
 import { lazyLoadWithDimensions } from '../../util/uiHelpers';
 import { createSlug } from '../../util/urlHelpers';
 
-import { updateProfileThunk } from '../../containers/ProfileSettingsPage/ProfileSettingsPage.duck';
+import { updateFavoriteListing } from '../../ducks/user.duck';
 
 import {
   AspectRatioWrapper,
@@ -232,7 +232,7 @@ const ListingCardCourse = props => {
       location,
       history,
       params: { id },
-      onUpdateFavorites: payload => dispatch(updateProfileThunk(payload)),
+      onUpdateFavorites: params => dispatch(updateFavoriteListing(params)),
     })(isFavorite);
   };
 

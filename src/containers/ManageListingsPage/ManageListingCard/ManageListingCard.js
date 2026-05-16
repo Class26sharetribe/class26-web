@@ -124,6 +124,8 @@ const EditIcon = () => (
  * @param {boolean} props.hasClosingError
  * @param {boolean} props.hasOpeningError
  * @param {boolean} props.hasDiscardingError
+ * @param {Object} [props.stats]
+ * @param {boolean} [props.statsUnavailable]
  * @returns {JSX.Element}
  */
 export const ManageListingCard = props => {
@@ -141,6 +143,8 @@ export const ManageListingCard = props => {
     hasClosingError,
     hasOpeningError,
     hasDiscardingError,
+    stats = {},
+    statsUnavailable = false,
   } = props;
 
   const classes = classNames(rootClassName || css.root, className);
@@ -220,6 +224,9 @@ export const ManageListingCard = props => {
   ) : null;
 
   const hasError = hasOpeningError || hasClosingError || hasDiscardingError;
+  const views = statsUnavailable ? '-' : intl.formatNumber(stats.views || 0);
+  const bookmarks = statsUnavailable ? '-' : intl.formatNumber(stats.bookmarks || 0);
+  const sales = statsUnavailable ? '-' : intl.formatNumber(stats.sales || 0);
 
   return (
     <div className={classes}>
@@ -268,7 +275,7 @@ export const ManageListingCard = props => {
               <span className={css.statIcon}>
                 <EyeIcon />
               </span>
-              <span className={css.statValue}>2,340</span>
+              <span className={css.statValue}>{views}</span>
               <span className={css.statLabel}>
                 <FormattedMessage id="ManageListingCard.statViews" />
               </span>
@@ -277,7 +284,7 @@ export const ManageListingCard = props => {
               <span className={css.statIcon}>
                 <BookmarkIcon />
               </span>
-              <span className={css.statValue}>452</span>
+              <span className={css.statValue}>{bookmarks}</span>
               <span className={css.statLabel}>
                 <FormattedMessage id="ManageListingCard.statBookmarks" />
               </span>
@@ -286,7 +293,7 @@ export const ManageListingCard = props => {
               <span className={css.statIcon}>
                 <CoinsIcon />
               </span>
-              <span className={css.statValue}>39</span>
+              <span className={css.statValue}>{sales}</span>
               <span className={css.statLabel}>
                 <FormattedMessage id="ManageListingCard.statSales" />
               </span>

@@ -19,7 +19,7 @@ import css from './ListingCard.module.css';
  * @param {Object} parameters.location - react-router location
  * @param {Object} parameters.history  - react-router history
  * @param {Object} parameters.params   - must include `id` (listing UUID string)
- * @param {Function} parameters.onUpdateFavorites - called with the privateData payload
+ * @param {Function} parameters.onUpdateFavorites - called with { listingId, shouldFavorite }
  * @returns {Function} - call with `isFavorite` boolean
  */
 export const handleToggleFavorites = parameters => isFavorite => {
@@ -32,33 +32,7 @@ export const handleToggleFavorites = parameters => isFavorite => {
     history.push(createResourceLocatorString('SignupPage', routes, {}, {}), state);
   } else {
     const { params, onUpdateFavorites } = parameters;
-    const {
-      attributes: { profile },
-    } = currentUser;
-    const { favorites = [] } = profile.privateData || {};
-
-    let payload;
-
-    if (!profile.privateData || !profile.privateData?.favorites) {
-      payload = {
-        privateData: {
-          favorites: [params.id],
-        },
-      };
-    } else if (isFavorite) {
-      payload = {
-        privateData: {
-          favorites: favorites.filter(f => f !== params.id),
-        },
-      };
-    } else {
-      payload = {
-        privateData: {
-          favorites: [...favorites, params.id],
-        },
-      };
-    }
-    onUpdateFavorites(payload);
+    onUpdateFavorites({ listingId: params.id, shouldFavorite: !isFavorite });
   }
 };
 

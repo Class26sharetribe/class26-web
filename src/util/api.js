@@ -180,6 +180,32 @@ export const checkUsername = username => {
   return get('/api/check-username?' + new URLSearchParams({ username }).toString());
 };
 
+export const fetchSellerDashboardStats = (queryParams = {}) => {
+  const queryString = new URLSearchParams(queryParams).toString();
+  return get(`/api/seller-dashboard/stats${queryString ? `?${queryString}` : ''}`, {
+    headers: { 'Content-Type': 'application/json' },
+  });
+};
+
+export const trackListingView = body => {
+  return post('/api/listing-view', body, {
+    headers: { 'Content-Type': 'application/transit+json' },
+  });
+};
+
+export const favoriteListing = listingId => {
+  return post(`/api/favorites/${listingId}`, null, {
+    headers: { 'Content-Type': 'application/json' },
+  });
+};
+
+export const unfavoriteListing = listingId => {
+  return request(`/api/favorites/${listingId}`, {
+    method: methods.DELETE,
+    headers: { 'Content-Type': 'application/json' },
+  });
+};
+
 export const generatePresignedUrl = body => {
   return post('/api/presigned-url', body);
 };

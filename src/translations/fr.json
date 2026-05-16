@@ -1531,5 +1531,6 @@
   "EditListingContentForm.previewVideo": "Preview video",
   "EditListingContentForm.edit": "Edit",
   "EditListingContentForm.video": "Video",
-  "EditListingContentForm.reorderLesson": "Reorder lesson"
+  "EditListingContentForm.reorderLesson": "Reorder lesson",
+  "DashboardPage.analyticsUnavailable": "Les statistiques sont temporairement indisponibles."
 }
