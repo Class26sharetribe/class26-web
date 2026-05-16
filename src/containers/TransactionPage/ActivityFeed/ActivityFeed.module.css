@@ -71,10 +71,22 @@
 }
 
 .ownMessageContent {
-  background-color: var(--marketplaceColor);
-  color: var(--colorWhite);
+  background-color: #CEFDE4;
+  color: #006647;
   float: right;
+  box-shadow: 0px 2px 6px 0px #00000033;
+  font-family: Nunito Sans;
+font-weight: 400;
+font-style: Regular;
+font-size: 16px;
+leading-trim: NONE;
+line-height: 24px;
+letter-spacing: 0%;
+text-align: right;
+
+
 }
+
 .ownMessageContentLink {
   color: var(--colorWhite);
   text-decoration: underline;
@@ -91,9 +103,18 @@
 .messageDate,
 .ownMessageDate {
   composes: marketplaceMessageDateFontStyles from global;
-
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 14px;
+  leading-trim: NONE;
+  line-height: 20px;
+  letter-spacing: 0%;
+  text-align: right;
+  vertical-align: middle;
+  
   margin: 11px 0 0 0;
-  color: var(--colorGrey600);
+  color: #414651;
 
   @media (--viewportMedium) {
     margin: 0 0 0 0;
@@ -104,7 +125,7 @@
   text-align: right;
 
   @media (--viewportMedium) {
-    margin: 0;
+    margin: 12px 0 0 0;
   }
 }
 
@@ -135,6 +156,14 @@
 
 .transitionContent {
   composes: marketplaceTxTransitionFontStyles from global;
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: spacing/3;
+  letter-spacing: 0%;
+  color: #101828;
   margin: 0;
 }
 
@@ -144,6 +173,15 @@
 
 .transitionDate {
   composes: marketplaceMessageDateFontStyles from global;
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 14px;
+  leading-trim: NONE;
+  line-height: spacing/2, 5;
+  letter-spacing: 0%;
+  vertical-align: middle;
+  color: #414651;
   color: var(--colorGrey600);
   margin: 7px 0 0 0;
 
@@ -161,7 +199,12 @@
   font-style: italic;
   white-space: pre-line;
   margin: 8px 0 0 0;
-
+  font-family: Nunito Sans;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px; /* 24px */
+  letter-spacing: 0%;
+  color: #101828;
   @media (--viewportMedium) {
     max-width: 500px;
     margin: 7px 0 0 0;
@@ -193,8 +236,7 @@
   }
 }
 
-.showOlderButton {
-}
+.showOlderButton {}
 
 .longWord {
   word-break: break-word;

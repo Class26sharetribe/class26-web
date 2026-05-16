@@ -57,10 +57,16 @@
 
 .dayInfo,
 .totalPrice {
-  composes: p from global;
-font-weight: 600;
-  letter-spacing: -0.2px;
-color: #101828;
+  font-family: Nunito Sans;
+  font-weight: 700;
+  font-style: Bold;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: spacing/3;
+  letter-spacing: 0%;
+  text-align: right;
+
+  color: #101828;
   margin: 0;
   padding: 0;
 }

@@ -51,6 +51,17 @@
 .submitButton {
   float: right;
   min-width: 150px;
+  width: max-content;
+  min-height: 36px;
+  font-family: Nohemi;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 14px;
+  background: #008057;
+  line-height: 20px;
+  letter-spacing: 0px;
+  margin-top: 24px;
+
 }
 
 .sendIcon {

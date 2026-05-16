@@ -6,6 +6,10 @@
   min-height: calc(100vh - var(--topbarHeight));
   padding-top: 80px;
   background: #fff;
+
+  @media (max-width: 768px) {
+    padding-top: 40px;
+  }
 }
 
 .headingSection {
@@ -14,6 +18,11 @@
   margin: 0 auto;
   width: 100%;
   margin-bottom: 64px;
+
+  @media (max-width: 768px) {
+    margin-bottom: 24px;
+    padding: 0 16px;
+  }
 }
 
 .heading {
@@ -27,6 +36,11 @@
   letter-spacing: 0px;
   color: #101828;
   padding: 0;
+
+  @media (max-width: 768px) {
+    font-size: 48px;
+    line-height: 60px;
+  }
 }
 
 /* ===== Analytics cards ===== */
@@ -37,8 +51,17 @@
   margin: 0 auto 64px;
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(1, 1fr);
   gap: 24px;
+
+  @media (--viewportMedium) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 768px) {
+    margin-bottom: 16px;
+    padding: 0 16px;
+  }
 }
 
 .analyticsCard {
@@ -49,6 +72,7 @@
   flex-direction: column;
   align-items: center;
   gap: 8px;
+
 }
 
 .analyticsValue {
@@ -60,7 +84,7 @@
   line-height: spacing/4;
   letter-spacing: 0%;
   text-align: center;
-  
+
   color: #006647;
   padding: 0;
   margin: 0;
@@ -68,13 +92,13 @@
 
 .analyticsLabel {
   font-family: Nunito Sans;
-font-weight: 400;
-font-style: Regular;
-font-size: 16px;
-leading-trim: NONE;
-line-height: spacing/3;
-letter-spacing: 0%;
-text-align: center;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: spacing/3;
+  letter-spacing: 0%;
+  text-align: center;
 
   color: #414651;
   margin: 0;
@@ -87,6 +111,9 @@ text-align: center;
   padding: 0 32px;
   margin: 0 auto;
   width: 100%;
+  @media (max-width: 768px) {
+    border-top: 1px solid var(--border-border-primary, #D5D7DA);
+  }
 }
 
 .tabs {
@@ -112,6 +139,12 @@ text-align: center;
   margin-left: 0;
   flex-shrink: 0;
   flex: 1;
+
+  @media (max-width: 768px) {
+    & [class*="TabNav_linkLabel"] {
+      display: none;
+    }
+  }
 
   & a {
     display: inline-flex;

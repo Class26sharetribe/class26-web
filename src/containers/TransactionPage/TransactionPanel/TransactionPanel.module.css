@@ -142,7 +142,7 @@
 
   @media (--viewportLarge) {
     display: block;
-    margin-top: 120px;
+    margin-top: 80px;
   }
 }
 
@@ -190,12 +190,12 @@
   display: block;
   margin-bottom: 0;
   font-family: Nohemi;
-font-weight: 600;
-font-style: Semi Bold;
-font-size: 48px;
-line-height: 60px;
-letter-spacing: 0px;
-color: #101828;
+  font-weight: 600;
+  font-style: Semi Bold;
+  font-size: 48px;
+  line-height: 60px;
+  letter-spacing: 0px;
+  color: #101828;
 }
 
 .listingTitleMobile {
@@ -257,7 +257,7 @@ color: #101828;
    */
 
   @media (--viewportLarge) {
-    margin: 56px 0 0 0;
+    margin: 80px 0 0 0;
   }
 }
 
@@ -307,9 +307,11 @@ color: #101828;
   line-height: spacing/4;
   letter-spacing: 0%;
   color: #101828;
-& a{
-  color: #101828;
-}
+
+  & a {
+    color: #101828;
+  }
+
   @media (--viewportLarge) {
     margin-top: 0;
     margin-bottom: 0;
@@ -568,6 +570,14 @@ color: #101828;
 
   & .sectionHeading {
     margin-bottom: 0;
+    font-family: Nohemi;
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 16px;
+    leading-trim: NONE;
+    line-height: 24px;
+    letter-spacing: 0px;
+    color: #101828;
   }
 }
 

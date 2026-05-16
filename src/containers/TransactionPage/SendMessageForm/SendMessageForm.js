@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 
-import { Form, FieldTextInput, SecondaryButtonInline } from '../../../components';
+import { Form, FieldTextInput, SecondaryButtonInline, Button } from '../../../components';
 
 import css from './SendMessageForm.module.css';
 
@@ -114,16 +114,16 @@ class SendMessageFormComponent extends Component {
                     </p>
                   ) : null}
                 </div>
-                <SecondaryButtonInline
+                <Button
                   className={css.submitButton}
                   inProgress={submitInProgress}
                   disabled={submitDisabled}
                   onFocus={this.handleFocus}
                   onBlur={this.handleBlur}
                 >
-                  <IconSendMessage />
+                  {/* <IconSendMessage /> */}
                   <FormattedMessage id="SendMessageForm.sendMessage" />
-                </SecondaryButtonInline>
+                </Button>
               </div>
             </Form>
           );

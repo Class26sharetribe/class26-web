@@ -15,7 +15,7 @@
 
   /* shadows */
   box-shadow: var(--boxShadow);
-
+  border-bottom: 1px solid var(--border-border-primary, #D5D7DA);
   @media (--viewportMedium) {
     height: var(--topbarHeightDesktop);
     justify-content: center;
