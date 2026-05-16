@@ -6,11 +6,6 @@ import css from './InboxSortBy.module.css';
 
 const SORT_DROPDOWN_OFFSET = -14;
 
-const optionLabel = (options, key) => {
-  const option = options.find(o => o.key === key);
-  return option ? option.label : key;
-};
-
 /**
  * A component that allows sorting of inbox messages based on a definied, limited selection of values
  *
@@ -51,7 +46,7 @@ const InboxSortBy = props => {
     },
   ];
 
-  const menuLabel = optionLabel(sortOptions, initialValue);
+  const refineLabel = intl.formatMessage({ id: 'InboxSearchForm.refineLabel' });
 
   return (
     <Menu
@@ -64,7 +59,7 @@ const InboxSortBy = props => {
       preferScreenWidthOnMobile
     >
       <MenuLabel id="inbox-sort-by-label" rootClassName={css.sortLabel}>
-        {menuLabel}
+        {refineLabel}
         <IconArrowHead className={iconArrowClassName} direction="down" size="tiny" />
       </MenuLabel>
       <MenuContent className={css.menuContent}>

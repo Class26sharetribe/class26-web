@@ -949,6 +949,9 @@ margin-bottom: 96px;
   width: 100%;
   margin: 0 auto;
   padding: 80px 32px 40px;
+  @media (max-width: 768px) {
+    padding: 40px 16px 16px;
+  }
 }
 
 .courseMuxPlayer {

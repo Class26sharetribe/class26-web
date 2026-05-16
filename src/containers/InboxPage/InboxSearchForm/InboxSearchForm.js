@@ -3,7 +3,6 @@ import { useLocation } from 'react-router-dom';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
-import { FormattedMessage } from '../../../util/reactIntl';
 import { parse, getValidInboxSort } from '../../../util/urlHelpers';
 import { Form } from '../../../components';
 
@@ -42,12 +41,7 @@ const InboxSearchForm = props => {
 
         return (
           <Form onSubmit={handleSubmit} className={classes}>
-            <div className={css.sortyByWrapper}>
-              <span className={css.sortyBy}>
-                <FormattedMessage id="InboxSearchForm.sortLabel" />
-              </span>
-              <InboxSortBy intl={intl} onSelect={onSelect} initialValue={initialValue} />
-            </div>
+            <InboxSortBy intl={intl} onSelect={onSelect} initialValue={initialValue} />
           </Form>
         );
       }}
