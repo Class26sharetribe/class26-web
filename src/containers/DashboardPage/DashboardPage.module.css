@@ -67,6 +67,16 @@
   margin: 0;
 }
 
+.analyticsUnavailable {
+  max-width: 1280px;
+  padding: 0 32px;
+  margin: -32px auto 48px;
+  width: 100%;
+  color: var(--colorGrey600);
+  font-size: 14px;
+  line-height: 20px;
+}
+
 /* ===== Tab nav ===== */
 
 .tabNavWrapper {

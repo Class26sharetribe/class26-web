@@ -39,6 +39,7 @@ import {
   openListing,
   getOwnListingsById,
   discardDraft,
+  fetchListingStats,
 } from './ManageListingsPage.duck';
 import css from './ManageListingsPage.module.css';
 import DiscardDraftModal from './DiscardDraftModal/DiscardDraftModal';
@@ -147,6 +148,9 @@ export const ManageListingsPageComponent = props => {
     queryInProgress,
     queryListingsError,
     queryParams,
+    currentPageResultIds,
+    statsByListingId,
+    statsError,
     scrollingDisabled,
     onManageDisableScrolling,
     embedded = false,
@@ -162,6 +166,12 @@ export const ManageListingsPageComponent = props => {
       history.push(noAccessPagePath);
     }
   }, [openingListingError]);
+
+  useEffect(() => {
+    if (!queryInProgress && currentPageResultIds?.length > 0) {
+      props.onFetchListingStats(currentPageResultIds).catch(() => null);
+    }
+  }, [queryInProgress, currentPageResultIds]);
 
   const onToggleMenu = listing => {
     setListingMenuOpen(listing);
@@ -275,6 +285,8 @@ export const ManageListingsPageComponent = props => {
                 hasClosingError={closingErrorListingId.uuid === l.id.uuid}
                 hasDiscardingError={discardingErrorListingId.uuid === l.id.uuid}
                 renderSizes={renderSizes}
+                stats={statsByListingId[l.id.uuid]}
+                statsUnavailable={!!statsError}
               />
             </li>
           ))}
@@ -340,6 +352,8 @@ const mapStateToProps = state => {
     closingListingError,
     discardingDraft,
     discardingDraftError,
+    statsByListingId,
+    statsError,
   } = state.ManageListingsPage;
   const listings = getOwnListingsById(state, currentPageResultIds);
   return {
@@ -350,6 +364,8 @@ const mapStateToProps = state => {
     queryInProgress,
     queryListingsError,
     queryParams,
+    statsByListingId,
+    statsError,
     scrollingDisabled: isScrollingDisabled(state),
     openingListing,
     openingListingError,
@@ -364,6 +380,7 @@ const mapDispatchToProps = dispatch => ({
   onCloseListing: listingId => dispatch(closeListing(listingId)),
   onOpenListing: listingId => dispatch(openListing(listingId)),
   onDiscardDraft: listingId => dispatch(discardDraft(listingId)),
+  onFetchListingStats: listingIds => dispatch(fetchListingStats(listingIds)),
   onManageDisableScrolling: (componentId, disableScrolling) =>
     dispatch(manageDisableScrolling(componentId, disableScrolling)),
 });

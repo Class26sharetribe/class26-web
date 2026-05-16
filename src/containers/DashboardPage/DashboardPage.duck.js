@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { denormalisedResponseEntities } from '../../util/data';
 import { storableError } from '../../util/errors';
+import { fetchSellerDashboardStats } from '../../util/api';
 
 import { REVIEWS_TAB, MY_LISTINGS_TAB, ACCOUNT_SETTINGS_TAB } from './DashboardPage.tabs';
 import { loadData as loadManageListings } from '../ManageListingsPage/ManageListingsPage.duck';
@@ -42,12 +43,26 @@ export const fetchExpertReviews = userId => dispatch => {
   return dispatch(fetchExpertReviewsThunk({ userId }));
 };
 
+export const fetchDashboardStatsThunk = createAsyncThunk(
+  'DashboardPage/fetchDashboardStats',
+  (_, { rejectWithValue }) => {
+    return fetchSellerDashboardStats().catch(e => rejectWithValue(storableError(e)));
+  }
+);
+
+export const fetchDashboardStats = () => dispatch => {
+  return dispatch(fetchDashboardStatsThunk()).unwrap();
+};
+
 // ================ Slice ================ //
 
 const initialState = {
   reviews: [],
   reviewsInProgress: false,
   reviewsError: null,
+  stats: null,
+  statsInProgress: false,
+  statsError: null,
 };
 
 const dashboardPageSlice = createSlice({
@@ -68,6 +83,18 @@ const dashboardPageSlice = createSlice({
         state.reviewsInProgress = false;
         state.reviews = [];
         state.reviewsError = action.payload;
+      })
+      .addCase(fetchDashboardStatsThunk.pending, state => {
+        state.statsInProgress = true;
+        state.statsError = null;
+      })
+      .addCase(fetchDashboardStatsThunk.fulfilled, (state, action) => {
+        state.statsInProgress = false;
+        state.stats = action.payload;
+      })
+      .addCase(fetchDashboardStatsThunk.rejected, (state, action) => {
+        state.statsInProgress = false;
+        state.statsError = action.payload;
       });
   },
 });

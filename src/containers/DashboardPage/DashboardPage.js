@@ -1,7 +1,9 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
+import { formatMoney } from '../../util/currency';
+import { types as sdkTypes } from '../../util/sdkLoader';
 
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 
@@ -21,14 +23,13 @@ import {
   EXPERT_PROFILE_TAB,
   ACCOUNT_SETTINGS_TAB,
 } from './DashboardPage.tabs';
+import { fetchDashboardStats } from './DashboardPage.duck';
 
 export { MY_LISTINGS_TAB, REVIEWS_TAB, EXPERT_PROFILE_TAB, ACCOUNT_SETTINGS_TAB };
 
-const STATIC_ANALYTICS = [
-  { valueId: 'DashboardPage.analyticsSold', labelId: 'DashboardPage.analyticsLabelSold' },
-  { valueId: 'DashboardPage.analyticsViews', labelId: 'DashboardPage.analyticsLabelViews' },
-  { valueId: 'DashboardPage.analyticsEarnings', labelId: 'DashboardPage.analyticsLabelEarnings' },
-];
+const { Money } = sdkTypes;
+
+const moneyFromStats = money => new Money(Number(money?.amount || 0), money?.currency || 'USD');
 
 /**
  * Dashboard page for experts with tab navigation and analytics overview.
@@ -41,11 +42,34 @@ const STATIC_ANALYTICS = [
  */
 const DashboardPage = props => {
   const { params } = props;
+  const dispatch = useDispatch();
   const scrollingDisabled = useSelector(isScrollingDisabled);
   const reviews = useSelector(state => state.DashboardPage?.reviews ?? []);
+  const stats = useSelector(state => state.DashboardPage?.stats);
+  const statsError = useSelector(state => state.DashboardPage?.statsError);
   const intl = useIntl();
 
   const currentTab = params?.tab || MY_LISTINGS_TAB;
+  const totals = stats?.totals || {};
+  const statsUnavailable = !!statsError;
+  const analytics = [
+    {
+      value: statsUnavailable ? '-' : intl.formatNumber(totals.listingsSold || 0),
+      labelId: 'DashboardPage.analyticsLabelSold',
+    },
+    {
+      value: statsUnavailable ? '-' : intl.formatNumber(totals.totalViews || 0),
+      labelId: 'DashboardPage.analyticsLabelViews',
+    },
+    {
+      value: statsUnavailable ? '-' : formatMoney(intl, moneyFromStats(totals.totalEarnings)),
+      labelId: 'DashboardPage.analyticsLabelEarnings',
+    },
+  ];
+
+  useEffect(() => {
+    dispatch(fetchDashboardStats()).catch(() => null);
+  }, [dispatch]);
 
   const title = intl.formatMessage({ id: 'DashboardPage.title' });
 
@@ -91,17 +115,20 @@ const DashboardPage = props => {
         </div>
 
         <div className={css.analyticsSection}>
-          {STATIC_ANALYTICS.map(({ valueId, labelId }) => (
-            <div key={valueId} className={css.analyticsCard}>
-              <p className={css.analyticsValue}>
-                <FormattedMessage id={valueId} />
-              </p>
+          {analytics.map(({ value, labelId }) => (
+            <div key={labelId} className={css.analyticsCard}>
+              <p className={css.analyticsValue}>{value}</p>
               <p className={css.analyticsLabel}>
                 <FormattedMessage id={labelId} />
               </p>
             </div>
           ))}
         </div>
+        {statsUnavailable ? (
+          <p className={css.analyticsUnavailable}>
+            <FormattedMessage id="DashboardPage.analyticsUnavailable" />
+          </p>
+        ) : null}
 
         <div className={css.tabNavWrapper}>
           <TabNav

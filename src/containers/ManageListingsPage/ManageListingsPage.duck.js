@@ -3,6 +3,7 @@ import { updatedEntities, denormalisedEntities } from '../../util/data';
 import { storableError } from '../../util/errors';
 import { createImageVariantConfig } from '../../util/sdkLoader';
 import { parse } from '../../util/urlHelpers';
+import { fetchSellerDashboardStats } from '../../util/api';
 
 import { fetchCurrentUser } from '../../ducks/user.duck';
 import { LISTING_STATE_PUBLISHED } from '../../util/types';
@@ -136,6 +137,20 @@ export const discardDraft = listingId => (dispatch, getState, sdk) => {
   return dispatch(discardDraftThunk(listingId)).unwrap();
 };
 
+export const fetchListingStatsThunk = createAsyncThunk(
+  'app/ManageListingsPage/fetchListingStats',
+  (listingIds, { rejectWithValue }) => {
+    const ids = (listingIds || []).map(id => id.uuid || id).filter(Boolean);
+    return fetchSellerDashboardStats({ listingIds: ids.join(',') }).catch(e =>
+      rejectWithValue(storableError(e))
+    );
+  }
+);
+
+export const fetchListingStats = listingIds => dispatch => {
+  return dispatch(fetchListingStatsThunk(listingIds)).unwrap();
+};
+
 // ================ Slice ================ //
 
 const resultIds = data => data.data.filter(elm => !elm.attributes.deleted).map(l => l.id);
@@ -168,6 +183,9 @@ const manageListingsPageSlice = createSlice({
     closingListingError: null,
     discardingDraft: null,
     discardingDraftError: null,
+    statsByListingId: {},
+    statsInProgress: false,
+    statsError: null,
   },
   reducers: {
     clearOpenListingError: state => {
@@ -262,6 +280,21 @@ const manageListingsPageSlice = createSlice({
           error: action.payload,
         };
         state.discardingDraft = null;
+      })
+      .addCase(fetchListingStatsThunk.pending, state => {
+        state.statsInProgress = true;
+        state.statsError = null;
+      })
+      .addCase(fetchListingStatsThunk.fulfilled, (state, action) => {
+        state.statsInProgress = false;
+        state.statsByListingId = {
+          ...state.statsByListingId,
+          ...(action.payload?.statsByListingId || {}),
+        };
+      })
+      .addCase(fetchListingStatsThunk.rejected, (state, action) => {
+        state.statsInProgress = false;
+        state.statsError = action.payload;
       });
   },
 });
