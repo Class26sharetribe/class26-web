@@ -12,6 +12,7 @@ import FooterContainer from '../FooterContainer/FooterContainer';
 import SavedCoursesPage from '../SavedCoursesPage/SavedCoursesPage';
 import AccountSettingsPage from '../AccountSettingsPage/AccountSettingsPage';
 import ProfileSettingsTab from './ProfileSettingsTab/ProfileSettingsTab';
+import MyClassesTab from './MyClassesTab/MyClassesTab';
 
 import css from './PersonalAreaPage.module.css';
 
@@ -21,7 +22,6 @@ export const PERSONAL_PROFILE_TAB = 'profile';
 export const ACCOUNT_SETTINGS_TAB = 'account-settings';
 
 const TAB_CONTENT = {
-  [MY_CLASSES_TAB]: <FormattedMessage id="PersonalAreaPage.myClassesContent" />,
   [PERSONAL_PROFILE_TAB]: <FormattedMessage id="PersonalAreaPage.personalProfileContent" />,
   [ACCOUNT_SETTINGS_TAB]: <FormattedMessage id="PersonalAreaPage.accountSettingsContent" />,
 };
@@ -100,6 +100,10 @@ export const PersonalAreaPageComponent = props => {
             <ProfileSettingsTab />
           ) : currentTab === ACCOUNT_SETTINGS_TAB ? (
             <AccountSettingsPage />
+          ) : currentTab === MY_CLASSES_TAB ? (
+            <div className={css.contentWrapper}>
+              <MyClassesTab />
+            </div>
           ) : (
             <div className={css.contentWrapper}>
               {TAB_CONTENT[currentTab]}

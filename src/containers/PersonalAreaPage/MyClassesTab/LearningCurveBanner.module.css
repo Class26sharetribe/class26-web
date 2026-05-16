@@ -1,0 +1,61 @@
+@import '../../../styles/customMediaQueries.css';
+
+.root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+  padding: 32px 24px;
+  border-radius: 12px;
+  background: #EBFEF5;
+
+  @media (--viewportMedium) {
+    padding: 40px 32px;
+    gap: 20px;
+  }
+}
+
+.heading {
+  font-family: Nohemi;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 32px;
+  color: #101828;
+  margin: 0;
+  padding: 0;
+
+  @media (--viewportMedium) {
+    font-size: 28px;
+    line-height: 36px;
+  }
+}
+
+.description {
+  font-family: Nohemi;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: #414651;
+  margin: 0;
+  padding: 0;
+  max-width: 480px;
+}
+
+.ctaButton {
+  font-family: Nohemi;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  background: #006647;
+  color: #fff;
+  cursor: pointer;
+  margin-top: 4px;
+
+  &:hover {
+    background: #005238;
+  }
+}
