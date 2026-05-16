@@ -28,6 +28,10 @@
   @media (--viewportMedium) {
     padding: 32px 32px 48px;
   }
+  @media (max-width: 767px) {
+    padding: 24px 16px 16px;
+    margin-top: 16px;
+  }
 }
 
 .profileHeroCustomer {
@@ -134,13 +138,29 @@
   }
 }
 
+.profileHeroProviderinfoDesktop {
+  display: none;
+  @media (--viewportMedium) {
+    display: block;
+  }
+}
+
+.profileHeroProviderinfoMobile {
+  display: block;
+  order: 3;
+  @media (--viewportMedium) {
+    display: none;
+  }
+}
+
 .profileHeroAvatarProvider {
   border-radius: 18px;
-  width: min(100%, 280px) !important;
-  height: min(120vw, 360px) !important;
-  max-width: 280px;
+  width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 3 / 4;
+    max-width: none;
   margin: 0;
-
+  aspect-ratio: 3 / 4;
   @media (--viewportMedium) {
     width: 100% !important;
     height: auto !important;
@@ -219,7 +239,7 @@
   line-height: spacing/3;
   letter-spacing: 0%;
 
-  margin: 18px 0 0 0;
+  margin: 8px 0 0 0;
   white-space: pre-line;
   color: #414651;
   font-size: 15px;
@@ -248,7 +268,7 @@
   composes: textSmall from global;
   margin: 0;
   padding: 6px 12px;
-  border-radius: 8px;
+  border-radius: 20px;
   font-weight: var(--fontWeightSemiBold);
 }
 
@@ -299,6 +319,7 @@
 .profileSocialIconWrap :global(svg) {
   width: 24px;
   height: 24px;
+  fill: transparent;
 }
 
 .editLinkMobile {
@@ -363,6 +384,9 @@
   @media (min-width: 1440px) {
     padding: 40px 0 0 calc((100vw - 1216px) / 2);
   }
+  @media (max-width: 767px) {
+    padding: 0 16px;
+  }
 }
 
 .listingsTitle {
@@ -381,6 +405,11 @@
   @media (--viewportLarge) {
     margin-top: 0px;
     margin-bottom: 40px;
+  }
+  @media (max-width: 767px) {
+    margin-bottom: 34px;
+    font-size: 32px;
+    line-height: 40px;
   }
 }
 
@@ -411,8 +440,12 @@
 }
 
 .mobileReviews {
-  border-top: 1px solid var(--colorGrey100);
+  /* border-top: 1px solid var(--colorGrey100); */
   margin-bottom: 36px;
+  @media (max-width: 767px) {
+    margin-top: 24px;
+    padding-left: 16px;
+  }
 }
 
 .desktopReviews {

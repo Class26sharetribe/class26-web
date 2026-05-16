@@ -85,7 +85,7 @@ const ProfileReviews = props => {
     listingPageLayout = false,
   } = props;
 
-  const displayReviews = [...getProfileReviewsForDisplay(reviews, { useDemoReviews }),...getProfileReviewsForDisplay(reviews, { useDemoReviews })];
+  const displayReviews = getProfileReviewsForDisplay(reviews, { useDemoReviews });
   const classes = classNames(
     rootClassName || css.root,
     className,

@@ -58,10 +58,20 @@
   @media (--viewportMedium) {
     height: var(--topbarHeightDesktop);
   }
+  padding-left: 16px;
+  padding-right: 16px;
 
   @media (--viewportLarge) {
     display: none;
   }
+}
+
+.mobileNavActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+  position: relative;
 }
 
 .logoutButton {
@@ -336,4 +346,33 @@
     color: #101828;
     text-decoration: none;
   }
+}
+
+.LoginLink {
+  border: 1px solid #D5D7DA;
+  box-shadow: 0px 1px 2px 0px #0A0D120D;
+  height: 36px;
+  width: 77px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0px;
+  border-radius: 4px;
+  /* margin-right: 16px; */
+}
+
+.topbarLinkLabel {
+  composes: textSmall from global;
+  font-family: Nohemi;
+  font-weight: 600;
+  font-style: Semi Bold;
+  font-size: 14px;
+  leading-trim: NONE;
+  line-height: 20px;
+  letter-spacing: 0%;
+  color: #252B37;
+  display: inline-block;
+  margin: 0px 0;
+  text-decoration: inherit;
+  position: relative;
 }

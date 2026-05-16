@@ -6,6 +6,9 @@
   min-height: calc(100vh - var(--topbarHeight));
   padding-top: 80px;
   background: #fff;
+  @media (max-width: 768px) {
+    padding-top: 40px;
+  }
 }
 
 .contentWrapper{
@@ -26,6 +29,10 @@
   margin: 0 auto;
   width: 100%;
   margin-bottom: 64px;
+  @media (max-width: 768px) {
+    margin-bottom: 24px;
+    padding: 0 16px;
+  }
 }
 
 .heading {
@@ -40,6 +47,10 @@
 
   color: #101828;
   padding: 0;
+  @media (max-width: 768px) {
+    font-size: 48px;
+    line-height: 60px;
+  }
 }
 
 .tabNavWrapper {
@@ -47,7 +58,15 @@
   padding: 0 32px;
   margin: 0 auto;
   width: 100%;
-
+  @media (max-width: 768px) {
+    border-top: 1px solid var(--border-border-primary, #D5D7DA);
+    position: fixed;
+    background: #fff;
+    bottom: 0;
+    z-index: 4;
+    padding: 0 16px;
+  }
+  
 }
 
 .tabs {
@@ -64,7 +83,9 @@
   &::-webkit-scrollbar {
     display: none;
   }
-
+  @media (max-width: 768px) {
+    border-bottom: 0;
+  }
   @media (--viewportMedium) {
     gap: 40px;
   }
@@ -75,6 +96,14 @@
   flex-shrink: 0;
   flex: 1;
 
+  @media (max-width: 768px) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    & [class*="TabNav_linkLabel"] {
+      display: none;
+    }
+  }
   & a {
     display: inline-flex;
     align-items: center;

@@ -252,7 +252,7 @@
 }
 
 .icons {
-  margin-top: 24px;
+  margin-top: 0px;
 
   @media (--viewportLarge) {
     margin-top: 0px !important;

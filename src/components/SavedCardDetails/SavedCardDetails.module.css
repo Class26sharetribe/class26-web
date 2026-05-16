@@ -1,6 +1,10 @@
 @import '../../styles/customMediaQueries.css';
 
 .root {
+  @media (max-width: 768px) {
+    position: relative;
+    z-index: 2;
+  }
 }
 
 .savedPaymentMethodTitle {

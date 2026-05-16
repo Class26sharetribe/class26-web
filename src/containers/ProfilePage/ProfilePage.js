@@ -185,11 +185,17 @@ export const AsideContent = props => {
               ))}
             </ul>
           ) : null}
+          <div className={css.profileHeroProviderinfoDesktop}>
           {bioMaybe}
           {socialRow}
+          </div>
         </div>
         <div className={css.profileHeroProviderPhoto}>
           <AvatarLarge className={css.profileHeroAvatarProvider} user={user} disableProfileLink />
+        </div>
+        <div className={css.profileHeroProviderinfoMobile}>
+        {bioMaybe}
+        {socialRow}
         </div>
       </div>
     );
@@ -250,20 +256,20 @@ export const MobileReviews = props => {
 
   return (
     <div className={css.mobileReviews}>
-      <H4 as="h2" className={css.mobileReviewsTitle}>
+      {/* <H4 as="h2" className={css.mobileReviewsTitle}>
         <FormattedMessage
           id="ProfilePage.reviewsFromMyCustomersTitle"
           values={{ count: providerReviewsForDisplay.length }}
         />
-      </H4>
+      </H4> */}
       <ReviewsErrorMaybe queryReviewsError={queryReviewsError} />
       <ProfileReviews reviews={reviewsOfProvider} useDemoReviews={useDemoReviews} />
-      <H4 as="h2" className={css.mobileReviewsTitle}>
+      {/* <H4 as="h2" className={css.mobileReviewsTitle}>
         <FormattedMessage
           id="ProfilePage.reviewsAsACustomerTitle"
           values={{ count: customerReviewsForDisplay.length }}
         />
-      </H4>
+      </H4> */}
       <ReviewsErrorMaybe queryReviewsError={queryReviewsError} />
       <ProfileReviews reviews={reviewsOfCustomer} useDemoReviews={useDemoReviews} />
     </div>

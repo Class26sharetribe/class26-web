@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 
 import appSettings from '../../../config/settings';
@@ -25,7 +25,7 @@ import MenuIcon from './MenuIcon';
 import SearchIcon from './SearchIcon';
 import TopbarSearchForm from './TopbarSearchForm/TopbarSearchForm';
 import TopbarMobileMenu from './TopbarMobileMenu/TopbarMobileMenu';
-import TopbarDesktop from './TopbarDesktop/TopbarDesktop';
+import TopbarDesktop, { InboxLink, ProfileMenu } from './TopbarDesktop/TopbarDesktop';
 
 import css from './Topbar.module.css';
 import { getCurrentUserTypeRoles, showCreateListingLinkForUser } from '../../../util/userHelpers';
@@ -239,7 +239,30 @@ const TopbarComponent = props => {
   const customLinks = getResolvedCustomLinks(sortedCustomLinks, routeConfiguration);
   const resolvedCurrentPage = currentPage || getResolvedCurrentPage(location, routeConfiguration);
 
-  const notificationDot = notificationCount > 0 ? <div className={css.notificationDot} /> : null;
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const authenticatedOnClientSide = mounted && isAuthenticated;
+
+  const inboxLinkMaybe = authenticatedOnClientSide ? (
+    <InboxLink notificationCount={notificationCount} inboxTab={topbarInboxTab} />
+  ) : null;
+
+  const profileMenuMaybe = authenticatedOnClientSide ? (
+    <ProfileMenu
+      currentPage={resolvedCurrentPage}
+      currentUser={currentUser}
+      onLogout={handleLogout}
+      showManageListingsLink={showCreateListingsLink}
+      intl={intl}
+      config={config}
+      preferScreenWidthOnMobile
+      mobileMaxWidth={MAX_MOBILE_SCREEN_WIDTH - 1}
+    />
+  ) : null;
 
   const hasMatchMedia = typeof window !== 'undefined' && window?.matchMedia;
   const isMobileLayout = hasMatchMedia
@@ -260,6 +283,16 @@ const TopbarComponent = props => {
       inboxTab={topbarInboxTab}
     />
   );
+
+  const LoginLink = () => {
+    return (
+      <NamedLink id="login-link" name="LoginPage" className={css.LoginLink}>
+        <span className={css.topbarLinkLabel}>
+          <FormattedMessage id="TopbarDesktop.login" />
+        </span>
+      </NamedLink>
+    );
+  };
 
   const topbarSearcInitialValues = () => {
     if (isMainSearchTypeKeywords(config)) {
@@ -336,7 +369,7 @@ const TopbarComponent = props => {
       );
     }
   };
-
+  const loginLinkMaybe = isAuthenticated ? null : <LoginLink />;
   return (
     <div className={classes}>
       <Button onClick={handleSkipToMainContent} className={css.skipToMainContent}>
@@ -352,7 +385,7 @@ const TopbarComponent = props => {
         currentPage={resolvedCurrentPage}
       />
       <nav className={classNames(mobileRootClassName || css.container, mobileClassName)}>
-        <Button
+        {/* <Button
           id={MOBILE_MENU_BUTTON_ID}
           rootClassName={css.menu}
           onClick={() => redirectToURLWithModalState(history, location, 'mobilemenu')}
@@ -362,15 +395,21 @@ const TopbarComponent = props => {
             className={css.menuIcon}
             ariaLabel={intl.formatMessage({ id: 'Topbar.menuIcon' })}
           />
-          {notificationDot}
-        </Button>
+        </Button> */}
         <LinkedLogo
           id="logo-topbar-mobile"
           layout={'mobile'}
           alt={intl.formatMessage({ id: 'Topbar.logoIcon' })}
           linkToExternalSite={config?.topbar?.logoLink}
         />
-        {mobileSearchButtonMaybe}
+      {authenticatedOnClientSide && (
+        <div className={css.mobileNavActions}>
+          {profileMenuMaybe}
+          {inboxLinkMaybe}
+        </div>
+      )}
+        {loginLinkMaybe}
+        {/* {mobileSearchButtonMaybe} */}
       </nav>
       <div className={css.topbarContent}> 
         <NamedLink name="SearchPageForCourses" className={css.topbarLink}>

@@ -51,7 +51,7 @@ const LoginLink = () => {
   );
 };
 
-const InboxLink = ({ notificationCount, inboxTab }) => {
+export const InboxLink = ({ notificationCount, inboxTab }) => {
   const notificationDot = notificationCount > 0 ? <div className={css.notificationDot} /> : null;
   return (
     <NamedLink
@@ -96,13 +96,15 @@ const InboxLink = ({ notificationCount, inboxTab }) => {
   );
 };
 
-const ProfileMenu = ({
+export const ProfileMenu = ({
   currentPage,
   currentUser,
   onLogout,
   showManageListingsLink,
   intl,
   config,
+  preferScreenWidthOnMobile = false,
+  mobileMaxWidth,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { provider: isProvider } = getCurrentUserTypeRoles(config, currentUser);
@@ -116,7 +118,14 @@ const ProfileMenu = ({
   const close = () => setIsOpen(false);
 
   return (
-    <Menu isOpen={isOpen} onToggleActive={setIsOpen} skipFocusOnNavigation={true}>
+    <Menu
+      isOpen={isOpen}
+      onToggleActive={setIsOpen}
+      skipFocusOnNavigation={true}
+      preferScreenWidthOnMobile={preferScreenWidthOnMobile}
+      mobileMaxWidth={mobileMaxWidth}
+      contentPosition="left"
+    >
       <MenuLabel
         id="profile-menu-label"
         className={css.profileMenuLabel}

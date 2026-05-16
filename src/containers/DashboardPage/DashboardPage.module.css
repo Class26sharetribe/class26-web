@@ -111,8 +111,14 @@
   padding: 0 32px;
   margin: 0 auto;
   width: 100%;
+
   @media (max-width: 768px) {
     border-top: 1px solid var(--border-border-primary, #D5D7DA);
+    position: fixed;
+    background: #fff;
+    bottom: 0;
+    z-index: 4;
+    padding: 0 16px;
   }
 }
 
@@ -125,6 +131,7 @@
   border-bottom: 1px solid var(--border-border-divider, #E9EAEB);
   -ms-overflow-style: none;
   scrollbar-width: none;
+  position: relative;
 
   &::-webkit-scrollbar {
     display: none;
@@ -132,6 +139,10 @@
 
   @media (--viewportMedium) {
     gap: 40px;
+  }
+
+  @media (max-width: 768px) {
+    border-bottom: 0;
   }
 }
 
@@ -141,6 +152,9 @@
   flex: 1;
 
   @media (max-width: 768px) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     & [class*="TabNav_linkLabel"] {
       display: none;
     }

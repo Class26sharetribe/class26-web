@@ -25,6 +25,10 @@
     gap: 32px;
     padding: 16px;
   }
+
+  @media (max-width: 768px) {
+    padding: 24px 16px 16px;
+  }
 }
 
 /* ================ Image section ================ */
@@ -83,6 +87,18 @@
   flex-direction: column;
   gap: 32px;
   min-width: 0;
+
+  @media (max-width: 768px) {
+    gap: 24px;
+  }
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
 }
 
 .title {
@@ -96,7 +112,8 @@
   /* white-space: nowrap; */
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 100%;
+  flex: 1;
+  min-width: 0;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
@@ -105,6 +122,30 @@
   margin: 0;
   color: #101828;
   padding: 0;
+}
+
+.titleMobileViewLink {
+  display: none;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: #101828;
+  text-decoration: none;
+
+  & svg {
+    fill: transparent;
+  }
+
+  @media (max-width: 768px) {
+    display: inline-flex;
+  }
+}
+
+.titleMobileViewLink:hover {
+  color: var(--colorBlack);
+  text-decoration: none;
 }
 
 /* ================ Stats row ================ */
@@ -125,6 +166,10 @@
   border-radius: 8px;
   min-width: 72px;
   flex: 1;
+
+  @media (max-width: 768px) {
+    background: #fff;
+  }
 }
 
 .statIcon {
@@ -177,6 +222,11 @@
   padding: 24px 16px;
   background: #FAFAFA;
   flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    padding: 0px 16px 24px;
+    background: #fff;
+  }
 }
 
 .footerLeft {
@@ -241,15 +291,24 @@
   font-weight: 500;
   font-style: Medium;
   font-size: 14px;
-  leading-trim: NONE;
   line-height: 20px;
   letter-spacing: 0px;
 
   text-decoration: none;
   background: transparent;
   white-space: nowrap;
-  & svg{
+
+  @media (max-width: 768px) {
+    background: #008057;
+    color: #fff;
+  }
+
+  & svg {
     fill: transparent;
+
+    @media (max-width: 768px) {
+      display: none;
+    }
   }
 }
 
@@ -274,9 +333,13 @@
   leading-trim: NONE;
   line-height: 20px;
   letter-spacing: 0px;
-  
+
   text-decoration: none;
   white-space: nowrap;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 }
 
 .viewButton:hover {
