@@ -9,9 +9,9 @@ import { getProfileReviewsForDisplay, getProfileReviewDisplayMeta } from './prof
 import css from './ProfileReviews.module.css';
 
 const ProfileReviewCard = props => {
-  const { review } = props;
+  const { review, contextListing } = props;
   const { content, rating } = review.attributes;
-  const { authorName, listing } = getProfileReviewDisplayMeta(review);
+  const { authorName, listing } = getProfileReviewDisplayMeta(review, contextListing);
 
   const listingLinkMaybe =
     listing?.id && listing?.title ? (
@@ -58,13 +58,26 @@ const ProfileReviewCard = props => {
  * @param {Object} props
  * @param {Array} [props.reviews] - Live reviews from ProfilePage (propTypes.review)
  * @param {boolean} [props.useDemoReviews=false] - When true, renders PROFILE_REVIEWS_DEMO
+ * @param {Object} [props.contextListing] - Current listing (ListingPage); used for “on [title]” attribution
+ * @param {boolean} [props.listingPageLayout=false] - Up to 3 cards per row on large viewports
  * @param {string} [props.rootClassName]
  * @param {string} [props.className]
  */
 const ProfileReviews = props => {
-  const { className, rootClassName, reviews = [], useDemoReviews = false } = props;
+  const {
+    className,
+    rootClassName,
+    reviews = [],
+    useDemoReviews = false,
+    contextListing,
+    listingPageLayout = false,
+  } = props;
   const displayReviews = getProfileReviewsForDisplay(reviews, { useDemoReviews });
-  const classes = classNames(rootClassName || css.root, className);
+  const classes = classNames(
+    rootClassName || css.root,
+    className,
+    listingPageLayout && css.rootListingPage
+  );
 
   if (!displayReviews.length) {
     return null;
@@ -74,7 +87,7 @@ const ProfileReviews = props => {
     <ul className={classes}>
       {displayReviews.map(review => (
         <li key={`ProfileReview_${review.id.uuid}`} className={css.reviewItem}>
-          <ProfileReviewCard review={review} />
+          <ProfileReviewCard review={review} contextListing={contextListing} />
         </li>
       ))}
     </ul>

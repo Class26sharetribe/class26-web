@@ -28,3 +28,31 @@
   margin: 0;
   padding: 0;
 }
+
+.cardDetailsContainer {
+  margin-top: 24px;
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border-border-divider, #E9EAEB);
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+  & h2{
+    font-family: Nohemi;
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0px;
+    color: #101828;
+    margin: 0;
+    padding: 0;
+  }
+  &>div {
+    width: 100%;
+    max-width: 512px;
+  }
+}

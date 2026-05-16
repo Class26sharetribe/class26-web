@@ -23,6 +23,7 @@ import FetchLineItemsError from '../FetchLineItemsError/FetchLineItemsError.js';
 
 import css from './ProductOrderForm.module.css';
 import { BookmarkIcon } from '../../ListingCard/ListingCard.js';
+import classNames from 'classnames';
 
 // Browsers can't render huge number of select options.
 // (stock is shown inside select element)
@@ -289,7 +290,7 @@ const renderForm = formRenderProps => {
         {!isOwnListing && (
           <button
             type="button"
-            // className={classNames(css.courseBtnSecondary, { [css.courseBtnSaved]: isFavorite })}
+            className={classNames(css.courseBtnSecondary, { [css.courseBtnSaved]: isFavorite })}
             onClick={() => onSaveClick(isFavorite)}
             aria-pressed={isFavorite}
           >
@@ -300,7 +301,10 @@ const renderForm = formRenderProps => {
           </button>
         )}
 
-        <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
+        <PrimaryButton 
+        
+        className={css.courseBtnPrimary}
+        type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
           {hasStock ? (
             <FormattedMessage
               id={

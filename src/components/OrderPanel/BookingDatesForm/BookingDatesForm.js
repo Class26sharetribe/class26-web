@@ -963,7 +963,7 @@ export const BookingDatesForm = props => {
               {!isOwnListing && (
                 <button
                   type="button"
-                  // className={classNames(css.courseBtnSecondary, { [css.courseBtnSaved]: isFavorite })}
+                  className={classNames(css.courseBtnSecondary, { [css.courseBtnSaved]: isFavorite })}
                   onClick={() => onSaveClick(isFavorite)}
                   aria-pressed={isFavorite}
                 >
@@ -978,6 +978,7 @@ export const BookingDatesForm = props => {
                 type="submit"
                 inProgress={fetchLineItemsInProgress}
                 disabled={submitDisabled}
+                className={css.courseBtnPrimary}
               >
                 <FormattedMessage id="BookingDatesForm.requestToBook" />
               </PrimaryButton>

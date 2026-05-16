@@ -85,10 +85,10 @@ const getFirstImageAspectRatio = (firstImage, scaledVariant) => {
   return hasDimensions && aspectRatio >= MAX_LANDSCAPE_ASPECT_RATIO
     ? { aspectWidth: 2, aspectHeight: 1 }
     : hasDimensions && aspectRatio <= MAX_PORTRAIT_ASPECT_RATIO
-    ? { aspectWidth: 4, aspectHeight: 3 }
-    : hasDimensions
-    ? { aspectWidth: w, aspectHeight: h }
-    : { aspectWidth: 1, aspectHeight: 1 };
+      ? { aspectWidth: 4, aspectHeight: 3 }
+      : hasDimensions
+        ? { aspectWidth: w, aspectHeight: h }
+        : { aspectWidth: 1, aspectHeight: 1 };
 };
 
 const PlayIcon = () => (
@@ -237,13 +237,13 @@ const ListingImageGallery = props => {
         thumbnail: muxPosterUrl(slide.playbackId),
         alt: listingTitle
           ? intl.formatMessage(
-              { id: 'ListingImageGallery.videoAltText' },
-              { title: listingTitle, index: i + 1, count }
-            )
+            { id: 'ListingImageGallery.videoAltText' },
+            { title: listingTitle, index: i + 1, count }
+          )
           : intl.formatMessage(
-              { id: 'ListingImageGallery.videoAltTextNoTitle' },
-              { index: i + 1, count }
-            ),
+            { id: 'ListingImageGallery.videoAltTextNoTitle' },
+            { index: i + 1, count }
+          ),
         thumbAlt: intl.formatMessage(
           { id: 'ListingImageGallery.videoThumbnailAltText' },
           { index: i + 1, count }
@@ -276,8 +276,8 @@ const ListingImageGallery = props => {
   const imageSizesMaybe = isFullscreen
     ? {}
     : {
-        sizes: `(max-width: 1024px) 100vw, (max-width: 1200px) calc(100vw - 192px), ${FIGMA_GALLERY_WIDTH}px`,
-      };
+      sizes: `(max-width: 1024px) 100vw, (max-width: 1200px) calc(100vw - 192px), ${FIGMA_GALLERY_WIDTH}px`,
+    };
 
   const renderItem = item => {
     const itemWrapperClass = isFullscreen ? css.itemWrapperFullscreen : css.itemWrapper;
@@ -356,7 +356,10 @@ const ListingImageGallery = props => {
         onClick={onClick}
         aria-label={intl.formatMessage({ id: 'ListingImageGallery.previousImage' })}
       >
-        <IconArrowHead direction="left" size="small" className={css.navBottomArrow} />
+        <svg style={{ fill: 'transparent' }} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 8H1M8 1L1 8L8 15" stroke="#717680" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+
       </button>
     );
   };
@@ -375,7 +378,10 @@ const ListingImageGallery = props => {
         onClick={onClick}
         aria-label={intl.formatMessage({ id: 'ListingImageGallery.nextImage' })}
       >
-        <IconArrowHead direction="right" size="small" className={css.navBottomArrow} />
+        <svg style={{ fill: 'transparent' }} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 8H15M8 15L15 8L8 1" stroke="#717680" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+
       </button>
     );
   };

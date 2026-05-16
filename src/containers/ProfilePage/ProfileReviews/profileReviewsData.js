@@ -80,6 +80,22 @@ const getListingFromReview = review => {
 };
 
 /**
+ * @param {Object} listing - current listing entity (e.g. from ListingPage) or minimal { id, attributes: { title } }
+ * @returns {{ id: string, title: string } | null}
+ */
+export const getContextListingForAttribution = listing => {
+  if (!listing) {
+    return null;
+  }
+  const id = listing.id?.uuid ?? listing.id;
+  const title = listing.attributes?.title ?? listing.title;
+  if (!id || !title) {
+    return null;
+  }
+  return { id, title };
+};
+
+/**
  * Returns reviews for ProfileReviews: demo set or live API reviews.
  *
  * @param {Array} reviews - Reviews from ProfilePage duck (propTypes.review)
@@ -96,10 +112,12 @@ export const getProfileReviewsForDisplay = (reviews = [], { useDemoReviews = fal
 
 /**
  * @param {Object} review
+ * @param {Object} [contextListing] - Page listing (ListingPage); overrides review.listing for attribution when set
  * @returns {{ authorName: string, listing: { id: string, title: string } | null }}
  */
-export const getProfileReviewDisplayMeta = review => {
+export const getProfileReviewDisplayMeta = (review, contextListing) => {
   const authorName = userDisplayNameAsString(review?.author, '');
-  const listing = getListingFromReview(review);
+  const fromContext = getContextListingForAttribution(contextListing);
+  const listing = fromContext || getListingFromReview(review);
   return { authorName, listing };
 };

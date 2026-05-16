@@ -63,22 +63,10 @@ export const LISTING_CARD_VARIANT_DEFAULT = 'default';
 export const LISTING_CARD_VARIANT_COURSE = 'course';
 
 export const BookmarkIcon = () => (
-  <svg
-    className={css.bookmarkIcon}
-    width="16"
-    height="16"
-    viewBox="0 0 16 16"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    aria-hidden
-  >
-    <path
-      d="M4.5 2.5h7a0.5 0.5 0 0 1 0.5 0.5v10.2a0.5 0.5 0 0 1-0.8 0.4L8 10.2l-3.2 3.4a0.5 0.5 0 0 1-0.8-0.4V3a0.5 0.5 0 0 1 0.5-0.5Z"
-      stroke="currentColor"
-      strokeWidth="1.2"
-      strokeLinejoin="round"
-    />
+  <svg className={css.bookmarkIcon} width="11" height="15" viewBox="0 0 14 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12.5026 15.835L6.66927 11.6684L0.835938 15.835V2.50169C0.835938 2.05966 1.01153 1.63574 1.32409 1.32318C1.63665 1.01062 2.06058 0.835022 2.5026 0.835022H10.8359C11.278 0.835022 11.7019 1.01062 12.0144 1.32318C12.327 1.63574 12.5026 2.05966 12.5026 2.50169V15.835Z" stroke="#101828" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" />
   </svg>
+
 );
 
 const PlayIcon = () => (
@@ -437,9 +425,9 @@ export const ListingCard = props => {
 
   const setActivePropsMaybe = setActiveListing
     ? {
-        onMouseEnter: () => setActiveListing(listing?.id),
-        onMouseLeave: () => setActiveListing(null),
-      }
+      onMouseEnter: () => setActiveListing(listing?.id),
+      onMouseLeave: () => setActiveListing(null),
+    }
     : null;
 
   const courseContent = resolveCourseCardContent(listing, config, intl, showPrice);

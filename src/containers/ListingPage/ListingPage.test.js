@@ -259,8 +259,8 @@ describe('ListingPage variants', () => {
       const sectionReviews = within(reviewsTitle.parentNode.parentNode);
       expect(sectionReviews.getByText('It was awesome!')).toBeInTheDocument();
       expect(sectionReviews.getByText('reviewerA display name')).toBeInTheDocument();
-      expect(sectionReviews.getByText('June 2023')).toBeInTheDocument();
-      expect(sectionReviews.getAllByTitle('4/5')).toHaveLength(2);
+      expect(sectionReviews.getByRole('link', { name: 'listing1 title' })).toBeInTheDocument();
+      expect(sectionReviews.getAllByTitle('4/5')).toHaveLength(1);
 
       // Has details provider/author title
       expect(getByRole('heading', { name: 'ListingPage.aboutProviderTitle' })).toBeInTheDocument();
@@ -314,8 +314,8 @@ describe('ListingPage variants', () => {
       const sectionReviews = within(reviewsTitle.parentNode.parentNode);
       expect(sectionReviews.getByText('It was awesome!')).toBeInTheDocument();
       expect(sectionReviews.getByText('reviewerA display name')).toBeInTheDocument();
-      expect(sectionReviews.getByText('June 2023')).toBeInTheDocument();
-      expect(sectionReviews.getAllByTitle('4/5')).toHaveLength(2);
+      expect(sectionReviews.getByRole('link', { name: 'listing1 title' })).toBeInTheDocument();
+      expect(sectionReviews.getAllByTitle('4/5')).toHaveLength(1);
 
       // Has details provider/author title
       expect(getByRole('heading', { name: 'ListingPage.aboutProviderTitle' })).toBeInTheDocument();

@@ -306,7 +306,7 @@
   &:hover .renderedDay,
   & .renderedDay {
     background-color: transparent;
-    color: var(--datepickerDisabledFgColor);
+    color: #abadb0;
     text-decoration: var(--datepickerDisabledTextDeco);
   }
 

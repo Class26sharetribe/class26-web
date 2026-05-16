@@ -327,11 +327,11 @@ export const DesktopReviews = props => {
   return (
     <div className={css.desktopReviews}>
       <div className={css.desktopReviewsWrapper}>
-        <ButtonTabNavHorizontal
+        {/* <ButtonTabNavHorizontal
           className={css.desktopReviewsTabNav}
           tabs={desktopReviewTabs}
           ariaLabel={intl.formatMessage({ id: 'ProfilePage.screenreader.reviewsNav' })}
-        />
+        /> */}
 
         <ReviewsErrorMaybe queryReviewsError={queryReviewsError} />
 

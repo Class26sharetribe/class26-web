@@ -191,12 +191,12 @@ export const ListingPageComponent = props => {
     normalizedListingTypeLabel === 'Group Coaching'
       ? 'groupCoaching'
       : normalizedListingTypeLabel === 'Individual Coaching'
-      ? 'individualCoaching'
-      : normalizedListingTypeLabel === 'Video Course'
-      ? 'videoCourse'
-      : normalizedListingTypeLabel === 'Digital Download'
-      ? 'digitalDownload'
-      : null;
+        ? 'individualCoaching'
+        : normalizedListingTypeLabel === 'Video Course'
+          ? 'videoCourse'
+          : normalizedListingTypeLabel === 'Digital Download'
+            ? 'digitalDownload'
+            : null;
 
   const bannerImageByVariant = {
     groupCoaching: bannerGroupCoachingImage,
@@ -418,22 +418,19 @@ export const ListingPageComponent = props => {
             listingId={currentListing.id}
             mapsConfig={config.maps}
           />
-          <SectionReviews reviews={reviews} fetchReviewsError={fetchReviewsError} />
+          <SectionReviews
+          reviews={reviews}
+          fetchReviewsError={fetchReviewsError}
+          listing={currentListing}
+        />
      */}
-          <SectionAuthorMaybe
-            title={title}
-            listing={currentListing}
-            authorDisplayName={authorDisplayName}
-            onContactUser={onContactUser}
-            isInquiryModalOpen={isAuthenticated && inquiryModalOpen}
-            onCloseInquiryModal={() => setInquiryModalOpen(false)}
-            sendInquiryError={sendInquiryError}
-            sendInquiryInProgress={sendInquiryInProgress}
-            onSubmitInquiry={onSubmitInquiry}
-            currentUser={currentUser}
-            onManageDisableScrolling={onManageDisableScrolling}
-          />
+
         </div>
+        <SectionReviews
+          reviews={reviews}
+          fetchReviewsError={fetchReviewsError}
+          listing={currentListing}
+        />
         {bannerVariant ? (
           <div className={classNames(css.banner, css[`banner_${bannerVariant}`])}>
             <div className={css.bannerInner}>
@@ -455,6 +452,19 @@ export const ListingPageComponent = props => {
             </div>
           </div>
         ) : null}
+        <SectionAuthorMaybe
+          title={title}
+          listing={currentListing}
+          authorDisplayName={authorDisplayName}
+          onContactUser={onContactUser}
+          isInquiryModalOpen={isAuthenticated && inquiryModalOpen}
+          onCloseInquiryModal={() => setInquiryModalOpen(false)}
+          sendInquiryError={sendInquiryError}
+          sendInquiryInProgress={sendInquiryInProgress}
+          onSubmitInquiry={onSubmitInquiry}
+          currentUser={currentUser}
+          onManageDisableScrolling={onManageDisableScrolling}
+        />
         <ListingPageFaqs publicData={publicData} />
       </LayoutSingleColumn>
     </Page>

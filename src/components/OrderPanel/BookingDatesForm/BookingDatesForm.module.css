@@ -63,14 +63,94 @@
 }
 
 .submitButton {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 30px;
+
   padding: 0 24px;
   margin-top: 24px;
 
   @media (--viewportMedium) {
     padding: 0;
-    margin-top: 72px;
+    margin-top: 32px;
   }
 }
+
+.courseBtnSecondary {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 4px;
+  border: 1px solid var(--border-border-primary, #D5D7DA);
+  background: var(--colorWhite);
+  color: #101828;
+  font-family: Nohemi;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 16px;
+
+  line-height: 24px;
+  letter-spacing: 0px;
+
+  cursor: pointer;
+  min-height: 44px;
+
+  &:hover {
+    border-color: #9ca3af;
+  }
+}
+
+.courseBtnSaved {
+  /* border-color: var(--colorSuccess, #00a069);
+  color: var(--colorSuccess, #00a069);
+
+  &:hover {
+    border-color: var(--colorSuccess, #00a069);
+  } */
+  font-family: Nohemi;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0px;
+  
+}
+
+.courseBtnPrimary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-family: Nohemi;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0px;
+
+  text-decoration: none;
+  background: #008057;
+  color: var(--colorWhite);
+  border: none;
+  cursor: pointer;
+  min-height: 44px;
+  width: max-content;
+
+  &:hover {
+    text-decoration: none;
+    background: #154a2f;
+    color: var(--colorWhite);
+  }
+}
+
 
 .arrowIcon {
   stroke: var(--colorWhite);
@@ -102,8 +182,8 @@
   margin-top: 16px;
 
   @media (--viewportMedium) {
-    gap: 10px;
-    margin-top: 20px;
+    gap: 8px;
+    margin-top: 32px;
   }
 }
 
@@ -115,15 +195,26 @@
 }
 
 .sessionTerm {
-  font-weight: var(--fontWeightBold);
-  font-size: 15px;
+  font-family: Nohemi;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 16px;
+  leading-trim: NONE;
   line-height: 24px;
-  color: var(--colorGrey900);
+  letter-spacing: 0px;
+  
+  color: #414651;
   white-space: nowrap;
 }
 
 .sessionDate {
-  font-size: 15px;
-  line-height: 24px;
-  color: var(--colorGrey700);
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: spacing/3;
+  letter-spacing: 0%;
+  
+  color: #414651;
 }

@@ -1,11 +1,11 @@
 @import '../../styles/customMediaQueries.css';
 
-.root {
-}
+.root {}
 
 .pageRoot {
   padding-bottom: 90px;
   background: var(--colorWhite);
+
   @media (--viewportLarge) {
     padding-bottom: 0;
   }
@@ -39,7 +39,8 @@
 
 .imageWrapperForSectionHero {
   composes: heroHeight;
-  background-color: var(--colorGrey100); /* Loading BG color */
+  background-color: var(--colorGrey100);
+  /* Loading BG color */
 
   /* Image carousel can be opened from the image, therefore we should show a pointer */
   cursor: pointer;
@@ -58,7 +59,8 @@
   width: 100%;
   color: var(--colorGrey100);
   background-color: var(--colorGrey700);
-  z-index: 1; /* bring on top of mobile image */
+  z-index: 1;
+  /* bring on top of mobile image */
   padding: 0 24px;
 
   /* Action bar prevents the image click events going to the parent and
@@ -125,6 +127,7 @@
 
   &.actionBarNoBorderRadiusOnMobile {
     border-radius: 0;
+
     @media (--viewportMedium) {
       border-radius: var(--borderRadiusMedium);
     }
@@ -291,24 +294,25 @@
 }
 
 .mainColumnForProductLayout {
-  @media (--viewportMedium) {
-  }
+  @media (--viewportMedium) {}
+
   @media (--viewportLarge) {
     /* contentContainer's full width - (orderColumn + paddings + margin) */
-    max-width: calc(100% - 360px);
-    flex-basis: calc(100% - 360px);
+    max-width: calc(100% - 501px);
+    flex-basis: calc(100% - 501px);
     flex-shrink: 0;
     flex-grow: 1;
+
   }
 }
 
 .orderColumnForProductLayout {
-  @media (--viewportMedium) {
-  }
+  @media (--viewportMedium) {}
+
   @media (--viewportLarge) {
     display: block;
-    margin-left: 48px;
-    flex-basis: 312px;
+    margin-left: 0px;
+    flex-basis: 469px;
     flex-shrink: 0;
   }
 }
@@ -330,6 +334,7 @@
     /* width: min(calc(var(--contentMaxWidth) + 72px), 100vw); */
     padding: 0px 32px 0 32px;
     margin: 0 auto 96px auto;
+    gap: 32px;
   }
 }
 
@@ -355,8 +360,8 @@
 }
 
 .orderColumnForHeroLayout {
-  @media (--viewportMedium) {
-  }
+  @media (--viewportMedium) {}
+
   @media (--viewportLarge) {
     display: block;
     margin-top: 80px;
@@ -369,6 +374,7 @@
 }
 
 .orderPanel {
+
   /* Note: panel height might be too much on small viewport - hence min-height */
   @media (--viewportLarge) and (min-height: 950px) {
     position: sticky;
@@ -380,28 +386,37 @@
   @media (--viewportLarge) {
     display: block;
   }
+
   /* Note: panel height might be too much on small viewport - hence min-height */
   @media (--viewportLarge) and (min-height: 950px) {
     position: sticky;
     top: 108px;
   }
+
   &.imagesEnabled {
     @media (--viewportLarge) {
-      margin-top: 24px;
+      margin-top: 0px;
     }
   }
 }
 
 .orderPanelTitle {
   /* Font */
-  font-weight: var(--fontWeightBold);
 
   /* Layout */
   width: 100%;
   margin-top: 0;
   margin-bottom: 0;
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0%;
+
   &.titleMarginForOwnListingNoImage {
     margin-top: 100px;
+
     @media (--viewportMedium) {
       margin-top: 0;
     }
@@ -431,12 +446,14 @@
   display: flex;
 
   @media (--viewportMedium) {
-    display: none; /* Hide the medium avatar from the bigger screens */
+    display: none;
+    /* Hide the medium avatar from the bigger screens */
   }
 }
 
 .avatarDesktop {
-  display: none; /* Hide the large avatar from the smaller screens */
+  display: none;
+  /* Hide the large avatar from the smaller screens */
 
   @media (--viewportMedium) {
     display: flex;
@@ -498,6 +515,7 @@
   width: 100%;
   margin-top: 0;
   margin-bottom: 0;
+
   @media (--viewportMedium) {
     margin-top: 0;
     margin-bottom: 2px;
@@ -645,7 +663,7 @@
   }
 }
 
-.sectionReviews,
+
 .sectionAuthor {
   padding: 0 24px;
   margin-top: 42px;
@@ -656,12 +674,20 @@
     margin-top: 40px;
     scroll-margin-top: calc(var(--topbarHeightDesktop) + 24px);
   }
+
   @media (--viewportLarge) {
     padding: 8px 0;
   }
 }
 
-.sectionAuthor{
+.sectionReviews {
+max-width: 1280px;
+margin: 0 auto;
+padding: 0 32px;
+width: 100%;
+}
+
+.sectionAuthor {
   margin-bottom: 128px;
 }
 
@@ -674,16 +700,16 @@
   line-height: 60px;
   letter-spacing: 0px;
   text-align: center;
-    
+
   padding: 0;
 
   margin: 0 0 28px 0;
   text-align: center;
- color: #101828;
+  color: #101828;
 
   @media (--viewportMedium) {
     margin-bottom: 80px;
-    
+
   }
 }
 
@@ -788,6 +814,7 @@
   @media (--viewportMedium) {
     margin: 24px 0 0 0;
   }
+
   @media (--viewportLarge) {
     margin: 0 0 0px 0;
     padding-bottom: 4px;
@@ -833,13 +860,13 @@
 
 .productDesktopHeading {
   display: none;
+
   @media (--viewportLarge) {
     display: block;
   }
 }
 
-.productSideContent {
-}
+.productSideContent {}
 
 .productBookingPanel {
   @media (--viewportLarge) {
@@ -857,6 +884,7 @@
   overflow: hidden;
   border-radius: 8px;
 }
+
 .iframe {
   position: absolute;
   top: 0;
@@ -904,7 +932,7 @@
   color: var(--course-gray-badge-text);
 }
 
-.listingPageCarouselContent{
+.listingPageCarouselContent {
   max-width: 1280px;
   width: 100%;
   margin: 0 auto;
@@ -912,7 +940,7 @@
 }
 
 
-.listingPageCarouselHeader{
+.listingPageCarouselHeader {
   max-width: 1280px;
   width: 100%;
   margin: 0 auto;
@@ -925,17 +953,17 @@
 }
 
 
-.listingPageCarouselTitle{
+.listingPageCarouselTitle {
   font-family: Nohemi;
-font-weight: 600;
-font-style: Semi Bold;
-font-size: 64px;
-leading-trim: NONE;
-line-height: 80px;
-letter-spacing: 0px;
-color: #101828;
-margin: 48px 0 0 0;
-padding: 0;
+  font-weight: 600;
+  font-style: Semi Bold;
+  font-size: 64px;
+  leading-trim: NONE;
+  line-height: 80px;
+  letter-spacing: 0px;
+  color: #101828;
+  margin: 48px 0 0 0;
+  padding: 0;
 }
 
 /* --- Video course sections (publicData: benefits, modules, faqs) --- */
@@ -955,14 +983,14 @@ padding: 0;
   line-height: 60px;
   letter-spacing: 0px;
   text-align: center;
-  
+
   color: #101828;
   margin: 0 0 48px 0;
   padding: 0;
   text-align: center;
 }
 
-.courseModulesSectionTitle{
+.courseModulesSectionTitle {
   text-align: left;
 }
 
@@ -974,7 +1002,7 @@ padding: 0;
   leading-trim: NONE;
   line-height: spacing/3;
   letter-spacing: 0%;
-  
+
   max-width: 712px;
   margin: 0 auto;
   padding: 0;
@@ -987,7 +1015,7 @@ padding: 0;
 
 .courseBenefitsSection {
   padding: 0px 0 96px;
- 
+
 }
 
 .courseModulesSection {
@@ -1004,6 +1032,7 @@ padding: 0;
 .courseModuleItem {
   border-bottom: 1px solid var(--colorGrey100);
   padding-bottom: 24px;
+
   &:last-child {
     border-bottom: none;
   }
@@ -1035,7 +1064,7 @@ padding: 0;
   leading-trim: NONE;
   line-height: spacing/4;
   letter-spacing: 0%;
-  
+
   color: #101828;
 }
 
@@ -1047,7 +1076,7 @@ padding: 0;
   leading-trim: NONE;
   line-height: spacing/4;
   letter-spacing: 0%;
-  
+
   color: #101828;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1055,7 +1084,7 @@ padding: 0;
 }
 
 .courseModuleChevron {
- 
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1063,7 +1092,8 @@ padding: 0;
   transform: rotate(0deg);
   transition: transform 160ms ease;
   flex-shrink: 0;
-  & svg{
+
+  & svg {
     fill: transparent;
   }
 }
@@ -1107,7 +1137,8 @@ padding: 0;
   /* background: linear-gradient(145deg, #6b9e3e 0%, #c5d84a 45%, #8fbc55 100%); */
   overflow: hidden;
   border-radius: 16px;
-  & img{
+
+  & img {
     width: 100%;
     filter: grayscale(1);
   }
@@ -1159,7 +1190,7 @@ padding: 0;
   leading-trim: NONE;
   line-height: 24px;
   letter-spacing: 0px;
-  
+
   color: #101828;
   margin: 0 0 20px 0;
   padding: 0;
@@ -1177,19 +1208,19 @@ padding: 0;
   line-height: 24px;
   letter-spacing: 0px;
   vertical-align: middle;
-  
+
   color: #006647;
   margin: 0 0 20px 0;
 }
 
 .courseLessonDescription {
   font-family: Nunito Sans;
-font-weight: 400;
-font-style: Regular;
-font-size: 16px;
-leading-trim: NONE;
-line-height: spacing/3;
-letter-spacing: 0%;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: spacing/3;
+  letter-spacing: 0%;
 
   margin: 0;
   color: #535862;
@@ -1218,7 +1249,7 @@ letter-spacing: 0%;
   }
 }
 
-.courseFaqSectionTitle{
+.courseFaqSectionTitle {
   text-align: left;
   max-width: 1280px;
   margin: 0 auto 64px;
@@ -1237,7 +1268,7 @@ letter-spacing: 0%;
   leading-trim: NONE;
   line-height: spacing/4;
   letter-spacing: 0%;
-  
+
   color: #101828;
   margin: 0 0 10px 0;
 }
@@ -1250,7 +1281,7 @@ letter-spacing: 0%;
   leading-trim: NONE;
   line-height: spacing/3;
   letter-spacing: 0%;
-  
+
   margin: 0;
   color: #414651;
   word-break: break-word;
@@ -1268,6 +1299,7 @@ letter-spacing: 0%;
 .bannerInner {
   position: relative;
   width: 100%;
+
   &:after {
     content: '';
     position: absolute;
@@ -1295,12 +1327,12 @@ letter-spacing: 0%;
   padding: 10px 14px;
   cursor: pointer;
   font-family: Nohemi;
-font-weight: 500;
-font-style: Medium;
-font-size: 20px;
-leading-trim: NONE;
-line-height: 28px;
-letter-spacing: 0px;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 20px;
+  leading-trim: NONE;
+  line-height: 28px;
+  letter-spacing: 0px;
 
   color: #101828;
   background: rgba(255, 255, 255, 0.92);
@@ -1346,22 +1378,26 @@ letter-spacing: 0px;
     line-height: 24px;
     padding: 12px 18px;
   }
-  .banner_groupCoaching  {
-    & .bannerImage {  
+
+  .banner_groupCoaching {
+    & .bannerImage {
       object-position: 0% 52%;
     }
   }
+
   .banner_individualCoaching {
     & .bannerImage {
       object-position: 0% 52%;
     }
-  } 
-    /* object-position: 0% 27%; */
-  
+  }
+
+  /* object-position: 0% 27%; */
+
   .banner_digitalDownload {
     & .bannerImage {
       object-position: 0% 52%;
     }
+
     /* object-position: 0% 27%; */
   }
 }

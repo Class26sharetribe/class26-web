@@ -191,7 +191,7 @@ const PriceMaybe = props => {
       <p className={css.price}>
         <FormattedMessage id="OrderPanel.price" values={{ priceValue, pricePerUnit }} />
       </p>
-      {seatsOptions?.length > 0 && <p>{seatsOptions.length} seats available for this class</p>}
+      {seatsOptions?.length > 0 && <p className={css.seatsAvailable}><span className={css.dividerLine}/> <b>{seatsOptions.length}</b>&nbsp;seats available for this class</p>}
     </div>
   );
 };

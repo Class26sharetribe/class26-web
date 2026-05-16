@@ -343,7 +343,6 @@
 
 .listingsContainer {
   composes: clearfix from global;
-  border-top: 1px solid var(--colorGrey100);
   padding-bottom: 23px;
 
   @media (--viewportMedium) {
@@ -421,7 +420,7 @@
   margin: 0 auto;
   padding: 0 32px;
   margin-top: 40px;
-  margin-bottom: 40px;
+  margin-bottom: 46px;
 
   @media (max-width: 767px) {
     padding: 0 16px;

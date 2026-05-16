@@ -72,15 +72,15 @@ const PaymentMethodsPageComponent = props => {
     const addressMaybe =
       addressLine1 && postal
         ? {
-            address: {
-              city: city,
-              country: country,
-              line1: addressLine1,
-              line2: addressLine2,
-              postal_code: postal,
-              state: state,
-            },
-          }
+          address: {
+            city: city,
+            country: country,
+            line1: addressLine1,
+            line2: addressLine2,
+            postal_code: postal,
+            state: state,
+          },
+        }
         : {};
     const billingDetails = {
       name,
@@ -178,13 +178,16 @@ const PaymentMethodsPageComponent = props => {
       {!stripeCustomerFetched ? null : (
         <>
           {showCardDetails ? (
-            <SavedCardDetails
-              card={card}
-              onManageDisableScrolling={onManageDisableScrolling}
-              onChange={setCardState}
-              onDeleteCard={handleRemovePaymentMethod}
-              deletePaymentMethodInProgress={deletePaymentMethodInProgress}
-            />
+            <div className={css.cardDetailsContainer}>
+              <h2>Current</h2>
+              <SavedCardDetails
+                card={card}
+                onManageDisableScrolling={onManageDisableScrolling}
+                onChange={setCardState}
+                onDeleteCard={handleRemovePaymentMethod}
+                deletePaymentMethodInProgress={deletePaymentMethodInProgress}
+              />
+            </div>
           ) : null}
           {showForm ? (
             <PaymentMethodsForm

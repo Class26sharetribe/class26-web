@@ -154,10 +154,10 @@ margin: 0 0 32px;
 }
 
 .links {
-  margin-top: 13px;
+  margin-top: 0px;
 
   @media (--viewportMedium) {
-    margin: 20px 0 0 0;
+    margin: 0px 0 0 0;
   }
 }
 
@@ -224,7 +224,7 @@ margin: 0 0 32px;
 
 .socialLinksRow {
   display: flex;
-  gap: 10px;
+  gap: 24px;
   align-items: center;
   justify-content: center;
   margin-top: 12px;
@@ -235,13 +235,12 @@ margin: 0 0 32px;
 }
 
 .socialLink {
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--colorGrey100);
-  border-radius: 8px;
+
   background: var(--colorWhite);
   color: var(--colorGrey700);
 
@@ -264,8 +263,11 @@ margin: 0 0 32px;
 }
 
 .socialIcon {
-  width: 16px;
-  height: 16px;
+  width: 24px;
+  height: 24px;
+  & svg{
+    fill: transparent;
+  }
 }
 
 .socialSrOnly {
