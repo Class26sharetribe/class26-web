@@ -373,10 +373,10 @@ const TopbarComponent = props => {
         {mobileSearchButtonMaybe}
       </nav>
       <div className={css.topbarContent}> 
-        <NamedLink name="SearchPage" className={css.topbarLink}>
+        <NamedLink name="SearchPageForCourses" className={css.topbarLink}>
           <span className={css.topbarLinkLabel}>Courses</span>
         </NamedLink>
-        <NamedLink name="SearchPage" className={css.topbarLink}>
+        <NamedLink name="SearchPageForSellers" className={css.topbarLink}>
           <span className={css.topbarLinkLabel}>Experts</span>
         </NamedLink>
       </div>

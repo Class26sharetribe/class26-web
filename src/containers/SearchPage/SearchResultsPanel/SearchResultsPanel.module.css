@@ -45,13 +45,14 @@
 .listingCards {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
-  gap: 32px;
+  gap: 64px;
   width: 100%;
   padding: 0 0 72px 0;
   margin: 0;
 
   @media (--viewportMedium) {
     padding: 0 0 96px 0;
+    gap: 80px;
   }
 }
 

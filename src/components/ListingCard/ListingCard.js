@@ -79,6 +79,63 @@ const PlayIcon = () => (
   </svg>
 );
 
+/**
+ * Course card media column (Mux preview or listing image).
+ *
+ * @param {Object} props
+ * @param {string} props.rootClassName - Wrapper classes (mobile vs desktop placement)
+ */
+const CourseCardMedia = props => {
+  const {
+    rootClassName,
+    playbackId,
+    id,
+    slug,
+    cardAriaLabel,
+    firstImage,
+    title,
+    ImageComponent,
+    variants,
+    renderSizes,
+  } = props;
+
+  return (
+    <div className={rootClassName}>
+      {playbackId ? (
+        <MuxPlayer
+          className={css.courseMuxPlayer}
+          playbackId={playbackId}
+          streamType="on-demand"
+          accentColor="#FFFFFF"
+          primaryColor="#ddd"
+          secondaryColor="transparent"
+          autoPlay
+          playsInline
+          skipJwt={true}
+        />
+      ) : (
+        <>
+          <NamedLink
+            name="ListingPage"
+            params={{ id, slug }}
+            className={css.courseMediaLinkLayer}
+            aria-label={cardAriaLabel}
+          />
+          {firstImage ? (
+            <ImageComponent
+              rootClassName={css.courseMediaImage}
+              alt={title}
+              image={firstImage}
+              variants={variants}
+              sizes={renderSizes}
+            />
+          ) : null}
+        </>
+      )}
+    </div>
+  );
+};
+
 export const GreenCheckIcon = () => (
   <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect width="28" height="28" rx="14" fill="#A2F8CE" />
@@ -179,6 +236,18 @@ const ListingCardCourse = props => {
     })(isFavorite);
   };
 
+  const courseMediaProps = {
+    playbackId,
+    id,
+    slug,
+    cardAriaLabel,
+    firstImage,
+    title,
+    ImageComponent,
+    variants,
+    renderSizes,
+  };
+
   return (
     <article className={css.rootCourse} aria-label={cardAriaLabel}>
       <div className={css.courseLayout}>
@@ -238,6 +307,9 @@ const ListingCardCourse = props => {
             </div>
           </div>
 
+          <p className={classNames(css.courseDescription, css.courseDescriptionMobile)}>
+            {description}
+          </p>
           <div className={css.courseHighlight}>
             <GreenCheckIcon />
             <span className={css.courseHighlightText}>
@@ -259,7 +331,12 @@ const ListingCardCourse = props => {
             </span>
           </div>
 
-          <p className={css.courseDescription}>{description}</p>
+          <p className={classNames(css.courseDescription, css.courseDescriptionDesktop)}>{description}</p>
+
+          <CourseCardMedia
+            rootClassName={classNames(css.courseMedia, css.courseMediaMobile)}
+            {...courseMediaProps}
+          />
 
           <div className={css.courseActions}>
             <button
@@ -279,39 +356,10 @@ const ListingCardCourse = props => {
           </div>
         </div>
 
-        <div className={css.courseMedia}>
-          {playbackId ? (
-            <MuxPlayer
-              className={css.courseMuxPlayer}
-              playbackId={playbackId}
-              streamType="on-demand"
-              accentColor="#FFFFFF"
-              primaryColor="#ddd"
-              secondaryColor="transparent"
-              autoPlay
-              playsInline
-              skipJwt={true}
-            />
-          ) : (
-            <>
-              <NamedLink
-                name="ListingPage"
-                params={{ id, slug }}
-                className={css.courseMediaLinkLayer}
-                aria-label={cardAriaLabel}
-              />
-              {firstImage ? (
-                <ImageComponent
-                  rootClassName={css.courseMediaImage}
-                  alt={title}
-                  image={firstImage}
-                  variants={variants}
-                  sizes={renderSizes}
-                />
-              ) : null}
-            </>
-          )}
-        </div>
+        <CourseCardMedia
+          rootClassName={classNames(css.courseMedia, css.courseMediaDesktop)}
+          {...courseMediaProps}
+        />
       </div>
     </article>
   );
