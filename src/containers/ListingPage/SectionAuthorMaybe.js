@@ -49,7 +49,7 @@ const SectionAuthorMaybe = props => {
           user={listing.author}
           currentUser={currentUser}
           onContactUser={onContactUser}
-          showContact={showContact}
+          showContact={false}
           contactLinkId={CONTACT_USER_LINK}
         />
       </div>

@@ -67,6 +67,8 @@ import ListingPageModulesAndLessons from './ListingPageModulesAndLessons';
 import ListingPageFaqs from './ListingPageFaqs';
 
 import css from './ListingPage.module.css';
+import { handleToggleFavorites } from '../../components/ListingCard/ListingCard.helpers.js';
+import { updateProfileThunk } from '../ProfileSettingsPage/ProfileSettingsPage.duck.js';
 
 const MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE = 16;
 
@@ -102,6 +104,7 @@ export const ListingPageComponent = props => {
     config,
     routeConfiguration,
     showOwnListingsOnly,
+    onUpdateFavorites,
     ...restOfProps
   } = props;
 
@@ -176,27 +179,24 @@ export const ListingPageComponent = props => {
 
   // Badge labels (mirrors ListingCard course badges: category + listing type)
   const categories = config.categoryConfiguration?.categories || [];
-  const categoryLevel1Value = publicData?.categoryLevel1;
-  const categoryLevel1Label = categoryLevel1Value
-    ? categories.find(c => c.id === categoryLevel1Value)?.name || categoryLevel1Value
-    : null;
+  const categoryLevel1Label = categories.find(c => c.id === publicData?.categoryLevel1)?.name;
   const validListingTypes = config.listing.listingTypes || [];
   const foundListingTypeConfig = validListingTypes.find(
     conf => conf.listingType === publicData?.listingType
   );
-  const listingTypeLabel = foundListingTypeConfig?.label || publicData?.listingType || null;
+  const listingTypeLabel = foundListingTypeConfig?.label;
 
   const normalizedListingTypeLabel = (listingTypeLabel || '').replace(/\s+/g, ' ').trim();
   const bannerVariant =
     normalizedListingTypeLabel === 'Group Coaching'
       ? 'groupCoaching'
       : normalizedListingTypeLabel === 'Individual Coaching'
-        ? 'individualCoaching'
-        : normalizedListingTypeLabel === 'Video Course'
-          ? 'videoCourse'
-          : normalizedListingTypeLabel === 'Digital Download'
-            ? 'digitalDownload'
-            : null;
+      ? 'individualCoaching'
+      : normalizedListingTypeLabel === 'Video Course'
+      ? 'videoCourse'
+      : normalizedListingTypeLabel === 'Digital Download'
+      ? 'digitalDownload'
+      : null;
 
   const bannerImageByVariant = {
     groupCoaching: bannerGroupCoachingImage,
@@ -268,7 +268,16 @@ export const ListingPageComponent = props => {
     }
   };
 
-  console.log('currentListing', currentListing);
+  const onSaveClick = isFavorite => {
+    handleToggleFavorites({
+      currentUser,
+      routes: routeConfiguration,
+      location,
+      history,
+      params: { id: listingId?.uuid },
+      onUpdateFavorites,
+    })(isFavorite);
+  };
 
   return (
     <Page
@@ -295,27 +304,21 @@ export const ListingPageComponent = props => {
     >
       <LayoutSingleColumn className={css.pageRoot} topbar={topbar} footer={<FooterContainer />}>
         <div className={css.listingPageCarouselHeader}>
-          {(categoryLevel1Label || listingTypeLabel) ? (
-            <div className={css.listingBadgeRow}>
-              {categoryLevel1Label ? (
-                <span className={classNames(css.listingBadge, css.listingBadgeGreen)}>
-                  {categoryLevel1Label}
-                </span>
-              ) : null}
-              {listingTypeLabel ? (
-                <span className={classNames(css.listingBadge, css.listingBadgeNeutral)}>
-                  {listingTypeLabel}
-                </span>
-              ) : null}
-            </div>
-          ) : null}
-          {currentListing.attributes.title ? <>
-            <h1 className={css.listingPageCarouselTitle}>{currentListing.attributes.title}</h1>
-          </> : null}
+          <div className={css.listingBadgeRow}>
+            <span className={classNames(css.listingBadge, css.listingBadgeGreen)}>
+              {categoryLevel1Label}
+            </span>
+
+            <span className={classNames(css.listingBadge, css.listingBadgeNeutral)}>
+              {listingTypeLabel}
+            </span>
+          </div>
+
+          <h1 className={css.listingPageCarouselTitle}>{title}</h1>
         </div>
         <div className={css.contentWrapperForProductLayout}>
           <div className={css.mainColumnForProductLayout}>
-            <Notifications
+            {/* <Notifications
               mounted={mounted}
               listing={currentListing}
               isOwnListing={isOwnListing}
@@ -328,9 +331,7 @@ export const ListingPageComponent = props => {
                 type: listingPathParamType,
                 tab: listingTab,
               }}
-            />
-
-
+            /> */}
 
             {showListingImage && (
               <SectionGallery
@@ -351,44 +352,47 @@ export const ListingPageComponent = props => {
                 </H3>
               )}
             </div>
-
           </div>
           <div className={css.orderColumnForProductLayout}>
             <div id="listingPageOrderPanel">
-            <OrderPanel
-              className={classNames(css.productOrderPanel, {
-                [css.imagesEnabled]: showListingImage,
-              })}
-              listing={currentListing}
-              isOwnListing={isOwnListing}
-              onSubmit={handleOrderSubmit}
-              authorLink={
-                <NamedLink
-                  className={css.authorNameLink}
-                  name={isVariant ? 'ListingPageVariant' : 'ListingPage'}
-                  params={params}
-                  to={{ hash: '#author' }}
-                >
-                  {authorDisplayName}
-                </NamedLink>
-              }
-              title={<FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />}
-              titleDesktop={
-                <H4 as="h1" className={css.orderPanelTitle}>
-                  <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
-                </H4>
-              }
-              payoutDetailsWarning={payoutDetailsWarning}
-              author={ensuredAuthor}
-              onManageDisableScrolling={onManageDisableScrolling}
-              onContactUser={onContactUser}
-              {...restOfProps}
-              validListingTypes={config.listing.listingTypes}
-              marketplaceCurrency={config.currency}
-              dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
-              marketplaceName={config.marketplaceName}
-              showListingImage={showListingImage}
-            />
+              <OrderPanel
+                className={classNames(css.productOrderPanel, {
+                  [css.imagesEnabled]: showListingImage,
+                })}
+                listing={currentListing}
+                isOwnListing={isOwnListing}
+                onSubmit={handleOrderSubmit}
+                authorLink={
+                  <NamedLink
+                    className={css.authorNameLink}
+                    name={isVariant ? 'ListingPageVariant' : 'ListingPage'}
+                    params={params}
+                    to={{ hash: '#author' }}
+                  >
+                    {authorDisplayName}
+                  </NamedLink>
+                }
+                title={
+                  <FormattedMessage id="ListingPage.orderTitle" values={{ title: description }} />
+                }
+                titleDesktop={
+                  <H4 as="h1" className={css.orderPanelTitle}>
+                    <FormattedMessage id="ListingPage.orderTitle" values={{ title: description }} />
+                  </H4>
+                }
+                payoutDetailsWarning={payoutDetailsWarning}
+                author={ensuredAuthor}
+                onManageDisableScrolling={onManageDisableScrolling}
+                onContactUser={onContactUser}
+                {...restOfProps}
+                validListingTypes={config.listing.listingTypes}
+                marketplaceCurrency={config.currency}
+                dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
+                marketplaceName={config.marketplaceName}
+                showListingImage={showListingImage}
+                onSaveClick={onSaveClick}
+                currentUser={currentUser}
+              />
             </div>
           </div>
         </div>
@@ -397,7 +401,7 @@ export const ListingPageComponent = props => {
             <ListingPageBenefits publicData={publicData} />
             <ListingPageModulesAndLessons publicData={publicData} />
           </div>
-         
+
           {/* {showDescription && <SectionText text={description} showAsIngress />}
 
           <CustomListingFields
@@ -416,7 +420,7 @@ export const ListingPageComponent = props => {
           />
           <SectionReviews reviews={reviews} fetchReviewsError={fetchReviewsError} />
      */}
-             <SectionAuthorMaybe
+          <SectionAuthorMaybe
             title={title}
             listing={currentListing}
             authorDisplayName={authorDisplayName}
@@ -428,7 +432,7 @@ export const ListingPageComponent = props => {
             onSubmitInquiry={onSubmitInquiry}
             currentUser={currentUser}
             onManageDisableScrolling={onManageDisableScrolling}
-          /> 
+          />
         </div>
         {bannerVariant ? (
           <div className={classNames(css.banner, css[`banner_${bannerVariant}`])}>
@@ -555,6 +559,9 @@ const ListingPage = props => {
       dispatch(fetchTimeSlots(listingId, start, end, timeZone, options)),
     [dispatch]
   );
+  const onUpdateFavorites = useCallback(payload => dispatch(updateProfileThunk(payload)), [
+    dispatch,
+  ]);
 
   return (
     <ListingPageAccessWrapper
@@ -582,6 +589,7 @@ const ListingPage = props => {
       onSendInquiry={onSendInquiry}
       onInitializeCardPaymentData={onInitializeCardPaymentData}
       onFetchTimeSlots={onFetchTimeSlots}
+      onUpdateFavorites={onUpdateFavorites}
     />
   );
 };

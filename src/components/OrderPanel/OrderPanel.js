@@ -21,6 +21,9 @@ import {
   STOCK_MULTIPLE_ITEMS,
   STOCK_INFINITE_MULTIPLE_ITEMS,
   LISTING_STATE_PUBLISHED,
+  LISTING_TYPE_INDIVIDUAL_COACHING,
+  LISTING_TYPE_GROUP_COACHING,
+  LISTING_TYPE_VIDEO_COURSE,
 } from '../../util/types';
 import { formatMoney } from '../../util/currency';
 import { createSlug, parse, stringify } from '../../util/urlHelpers';
@@ -41,6 +44,8 @@ import PriceVariantPicker from './PriceVariantPicker/PriceVariantPicker';
 import SubmitFinePrint from './SubmitFinePrint/SubmitFinePrint';
 
 import css from './OrderPanel.module.css';
+import { formatCourseDuration } from '../../util/courseHelpers';
+import { GreenCheckIcon } from '../ListingCard/ListingCard';
 
 const BookingTimeForm = loadable(() =>
   import(/* webpackChunkName: "BookingTimeForm" */ './BookingTimeForm/BookingTimeForm')
@@ -143,6 +148,7 @@ const PriceMaybe = props => {
     intl,
     marketplaceCurrency,
     showCurrencyMismatch = false,
+    seatsOptions,
   } = props;
   const { listingType, unitType } = publicData || {};
 
@@ -185,6 +191,7 @@ const PriceMaybe = props => {
       <p className={css.price}>
         <FormattedMessage id="OrderPanel.price" values={{ priceValue, pricePerUnit }} />
       </p>
+      {seatsOptions?.length > 0 && <p>{seatsOptions.length} seats available for this class</p>}
     </div>
   );
 };
@@ -271,6 +278,7 @@ const hasValidPriceVariants = priceVariants => {
  */
 const OrderPanel = props => {
   const [mounted, setMounted] = useState(false);
+  const [seatsOptions, setSeatsOptions] = useState([]);
   const intl = useIntl();
   const location = useLocation();
   const history = useHistory();
@@ -305,11 +313,21 @@ const OrderPanel = props => {
     fetchLineItemsError,
     payoutDetailsWarning,
     showListingImage,
+    currentUser,
+    onSaveClick,
   } = props;
 
   const publicData = listing?.attributes?.publicData || {};
-  const { listingType, unitType, transactionProcessAlias = '', priceVariants, startTimeInterval } =
-    publicData || {};
+  const {
+    listingType,
+    unitType,
+    transactionProcessAlias = '',
+    priceVariants,
+    startTimeInterval,
+    totalSessions,
+    courseModules,
+    sessionDates,
+  } = publicData || {};
 
   const processName = resolveLatestProcessName(transactionProcessAlias.split('/')[0]);
   const lineItemUnitType = lineItemUnitTypeMaybe || `line-item/${unitType}`;
@@ -413,6 +431,9 @@ const OrderPanel = props => {
     fetchLineItemsInProgress,
     fetchLineItemsError,
     payoutDetailsWarning,
+    listingType,
+    currentUser,
+    onSaveClick,
   };
 
   const showClosedListingHelpText = listing.id && isClosed;
@@ -425,6 +446,8 @@ const OrderPanel = props => {
 
   const classes = classNames(rootClassName || css.root, className);
   const titleClasses = classNames(titleClassName || css.orderTitle);
+
+  const durationText = !!courseModules ? formatCourseDuration(courseModules) : null;
 
   return (
     <div className={classes}>
@@ -457,9 +480,31 @@ const OrderPanel = props => {
           validListingTypes={validListingTypes}
           intl={intl}
           marketplaceCurrency={marketplaceCurrency}
+          seatsOptions={seatsOptions}
         />
 
-        <div className={css.author}>
+        <div className={css.courseHighlight}>
+          <GreenCheckIcon />
+          <span className={css.courseHighlightText}>
+            {listingType === LISTING_TYPE_INDIVIDUAL_COACHING ? (
+              <FormattedMessage
+                id="ListingCard.highlightIndividualCoaching"
+                values={{ totalSessions }}
+              />
+            ) : listingType === LISTING_TYPE_GROUP_COACHING ? (
+              <FormattedMessage
+                id="ListingCard.highlightGroupCoaching"
+                values={{ totalSessions }}
+              />
+            ) : listingType === LISTING_TYPE_VIDEO_COURSE ? (
+              <FormattedMessage id="ListingCard.highlightVideoCourse" values={{ durationText }} />
+            ) : (
+              <FormattedMessage id="ListingCard.highlightDefault" />
+            )}
+          </span>
+        </div>
+
+        {/* <div className={css.author}>
           <AvatarSmall user={author} className={css.providerAvatar} />
           <span className={css.providerNameLinked}>
             <FormattedMessage id="OrderPanel.author" values={{ name: authorLink }} />
@@ -467,7 +512,7 @@ const OrderPanel = props => {
           <span className={css.providerNamePlain}>
             <FormattedMessage id="OrderPanel.author" values={{ name: authorDisplayName }} />
           </span>
-        </div>
+        </div> */}
 
         {showPriceMissing ? (
           <PriceMissing />
@@ -516,6 +561,8 @@ const OrderPanel = props => {
             monthlyTimeSlots={monthlyTimeSlots}
             onFetchTimeSlots={onFetchTimeSlots}
             timeZone={timeZone}
+            sessionDates={sessionDates}
+            onSeatsOptionsChange={setSeatsOptions}
             finePrintComponent={SubmitFinePrint}
             {...priceVariantsMaybe}
             {...sharedProps}

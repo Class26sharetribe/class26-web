@@ -7,7 +7,7 @@ import { timestampToDate } from '../../../util/dates';
 import { propTypes } from '../../../util/types';
 import { BOOKING_PROCESS_NAME } from '../../../transactions/transaction';
 
-import { Form, H6, PrimaryButton, FieldSelect } from '../../../components';
+import { Form, H6, PrimaryButton, FieldSelect, IconClose } from '../../../components';
 
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
 import FieldDateAndTimeInput from './FieldDateAndTimeInput';
@@ -15,6 +15,7 @@ import FieldDateAndTimeInput from './FieldDateAndTimeInput';
 import FetchLineItemsError from '../FetchLineItemsError/FetchLineItemsError.js';
 
 import css from './BookingFixedDurationForm.module.css';
+import { BookmarkIcon } from '../../ListingCard/ListingCard.js';
 
 // When the values of the form are updated we need to fetch
 // lineItems from this template's backend for the EstimatedTransactionMaybe
@@ -107,6 +108,9 @@ export const BookingFixedDurationForm = props => {
     priceVariantFieldComponent: PriceVariantFieldComponent,
     preselectedPriceVariant,
     isPublishedListing,
+    currentUser,
+    onSaveClick,
+    listingId,
     ...rest
   } = props;
 
@@ -122,6 +126,9 @@ export const BookingFixedDurationForm = props => {
     return Math.min(min, priceVariant.bookingLengthInMinutes);
   }, Number.MAX_SAFE_INTEGER);
   const classes = classNames(rootClassName || css.root, className);
+
+  const savedFavorites = currentUser?.attributes?.profile?.privateData?.favorites || [];
+  const isFavorite = savedFavorites.includes(listingId?.uuid);
 
   return (
     <FinalForm
@@ -180,7 +187,6 @@ export const BookingFixedDurationForm = props => {
               onPriceVariantChange={onPriceVariantChange(formRenderProps)}
               disabled={!isPublishedListing}
             />
-
             {monthlyTimeSlots && timeZone ? (
               <FieldDateAndTimeInput
                 seatsEnabled={seatsEnabled}
@@ -207,13 +213,11 @@ export const BookingFixedDurationForm = props => {
                 handleFetchLineItems={onHandleFetchLineItems}
               />
             ) : null}
-
-            {startDate && endDate && (
+            {/* {startDate && endDate && (
               <div className={css.seatsDebug}>
                 <H6>Available Spots: {seatsOptions.length}</H6>
               </div>
-            )}
-
+            )} */}
             {/* {seatsEnabled ? (
               <FieldSelect
                 name="seats"
@@ -243,8 +247,7 @@ export const BookingFixedDurationForm = props => {
                 ))}
               </FieldSelect>
             ) : null} */}
-
-            {showEstimatedBreakdown ? (
+            {/* {showEstimatedBreakdown ? (
               <div className={css.priceBreakdownContainer}>
                 <H6 as="h3" className={css.bookingBreakdownTitle}>
                   <FormattedMessage id="BookingFixedDurationForm.priceBreakdownTitle" />
@@ -259,11 +262,23 @@ export const BookingFixedDurationForm = props => {
                   processName={BOOKING_PROCESS_NAME}
                 />
               </div>
-            ) : null}
-
+            ) : null} */}
             <FetchLineItemsError error={fetchLineItemsError} />
-
             <div className={css.submitButton}>
+              {!isOwnListing && (
+                <button
+                  type="button"
+                  // className={classNames(css.courseBtnSecondary, { [css.courseBtnSaved]: isFavorite })}
+                  onClick={() => onSaveClick(isFavorite)}
+                  aria-pressed={isFavorite}
+                >
+                  {!isFavorite ? <BookmarkIcon /> : <IconClose />}
+                  <FormattedMessage
+                    id={isFavorite ? 'ListingCard.savedForLater' : 'ListingCard.saveForLater'}
+                  />
+                </button>
+              )}
+
               <PrimaryButton
                 type="submit"
                 inProgress={fetchLineItemsInProgress}
@@ -272,7 +287,9 @@ export const BookingFixedDurationForm = props => {
                 <FormattedMessage id="BookingFixedDurationForm.requestToBook" />
               </PrimaryButton>
             </div>
-
+            <p className={css.sessionScheduleNote}>
+              <FormattedMessage id="BookingFixedDurationForm.sessionScheduleNote" />
+            </p>
             <FinePrint payoutDetailsWarning={payoutDetailsWarning} isOwnListing={isOwnListing} />
           </Form>
         );

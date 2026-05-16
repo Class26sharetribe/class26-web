@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
 
 import { FormattedMessage, useIntl } from '../../../util/reactIntl';
-import { propTypes } from '../../../util/types';
+import { LISTING_TYPE_DIGITAL_DOWNLOAD, propTypes } from '../../../util/types';
 import { numberAtLeast, required } from '../../../util/validators';
 import { PURCHASE_PROCESS_NAME } from '../../../transactions/transaction';
 
@@ -14,6 +14,7 @@ import {
   PrimaryButton,
   H3,
   H6,
+  IconClose,
 } from '../../../components';
 
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
@@ -21,6 +22,7 @@ import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe'
 import FetchLineItemsError from '../FetchLineItemsError/FetchLineItemsError.js';
 
 import css from './ProductOrderForm.module.css';
+import { BookmarkIcon } from '../../ListingCard/ListingCard.js';
 
 // Browsers can't render huge number of select options.
 // (stock is shown inside select element)
@@ -134,6 +136,9 @@ const renderForm = formRenderProps => {
     payoutDetailsWarning,
     marketplaceName,
     values,
+    listingType,
+    currentUser,
+    onSaveClick,
   } = formRenderProps;
 
   // Note: don't add custom logic before useEffect
@@ -219,6 +224,9 @@ const renderForm = formRenderProps => {
   const submitInProgress = fetchLineItemsInProgress;
   const submitDisabled = !hasStock;
 
+  const savedFavorites = currentUser?.attributes?.profile?.privateData?.favorites || [];
+  const isFavorite = savedFavorites.includes(listingId?.uuid);
+
   return (
     <Form onSubmit={handleFormSubmit}>
       <FormSpy subscription={{ values: true }} onChange={handleOnChange} />
@@ -259,7 +267,7 @@ const renderForm = formRenderProps => {
         intl={intl}
       /> */}
 
-      {showBreakdown ? (
+      {/* {showBreakdown ? (
         <div className={css.breakdownWrapper}>
           <H6 as="h3" className={css.bookingBreakdownTitle}>
             <FormattedMessage id="ProductOrderForm.breakdownTitle" />
@@ -273,14 +281,34 @@ const renderForm = formRenderProps => {
             processName={PURCHASE_PROCESS_NAME}
           />
         </div>
-      ) : null}
+      ) : null} */}
 
       <FetchLineItemsError error={fetchLineItemsError} />
 
       <div className={css.submitButton}>
+        {!isOwnListing && (
+          <button
+            type="button"
+            // className={classNames(css.courseBtnSecondary, { [css.courseBtnSaved]: isFavorite })}
+            onClick={() => onSaveClick(isFavorite)}
+            aria-pressed={isFavorite}
+          >
+            {!isFavorite ? <BookmarkIcon /> : <IconClose />}
+            <FormattedMessage
+              id={isFavorite ? 'ListingCard.savedForLater' : 'ListingCard.saveForLater'}
+            />
+          </button>
+        )}
+
         <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
           {hasStock ? (
-            <FormattedMessage id="ProductOrderForm.ctaButton" />
+            <FormattedMessage
+              id={
+                listingType === LISTING_TYPE_DIGITAL_DOWNLOAD
+                  ? 'ProductOrderForm.ctaButtonDigitalDownload'
+                  : 'ProductOrderForm.ctaButton'
+              }
+            />
           ) : (
             <FormattedMessage id="ProductOrderForm.ctaButtonNoStock" />
           )}
@@ -291,11 +319,16 @@ const renderForm = formRenderProps => {
           payoutDetailsWarning
         ) : hasStock && isOwnListing ? (
           <FormattedMessage id="ProductOrderForm.ownListing" />
+        ) : null}
+        {/* {payoutDetailsWarning ? (
+          payoutDetailsWarning
+        ) : hasStock && isOwnListing ? (
+          <FormattedMessage id="ProductOrderForm.ownListing" />
         ) : hasStock ? (
           <FormattedMessage id="ProductOrderForm.finePrint" />
         ) : showContactUser ? (
           <FormattedMessage id="ProductOrderForm.finePrintNoStock" values={{ contactSellerLink }} />
-        ) : null}
+        ) : null} */}
       </p>
     </Form>
   );

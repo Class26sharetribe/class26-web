@@ -85,10 +85,10 @@ const getFirstImageAspectRatio = (firstImage, scaledVariant) => {
   return hasDimensions && aspectRatio >= MAX_LANDSCAPE_ASPECT_RATIO
     ? { aspectWidth: 2, aspectHeight: 1 }
     : hasDimensions && aspectRatio <= MAX_PORTRAIT_ASPECT_RATIO
-      ? { aspectWidth: 4, aspectHeight: 3 }
-      : hasDimensions
-        ? { aspectWidth: w, aspectHeight: h }
-        : { aspectWidth: 1, aspectHeight: 1 };
+    ? { aspectWidth: 4, aspectHeight: 3 }
+    : hasDimensions
+    ? { aspectWidth: w, aspectHeight: h }
+    : { aspectWidth: 1, aspectHeight: 1 };
 };
 
 const PlayIcon = () => (
@@ -123,7 +123,6 @@ const GalleryMuxSlide = props => {
   } = props;
   const intl = useIntl();
   const [playing, setPlaying] = useState(false);
-
 
   useEffect(() => {
     if (!isActiveSlide) {
@@ -174,9 +173,7 @@ const GalleryMuxSlide = props => {
           accentColor="#FFFFFF"
           primaryColor="#ddd"
           secondaryColor="transparent"
-
         />
-
       </div>
     </AspectRatioWrapper>
   );
@@ -206,7 +203,7 @@ const ListingImageGallery = props => {
     images,
     imageVariants,
     thumbnailVariants,
-    mediaGallery,
+    mediaGallery = [],
     listingTitle = '',
   } = props;
   const thumbVariants = thumbnailVariants || imageVariants;
@@ -240,13 +237,13 @@ const ListingImageGallery = props => {
         thumbnail: muxPosterUrl(slide.playbackId),
         alt: listingTitle
           ? intl.formatMessage(
-            { id: 'ListingImageGallery.videoAltText' },
-            { title: listingTitle, index: i + 1, count }
-          )
+              { id: 'ListingImageGallery.videoAltText' },
+              { title: listingTitle, index: i + 1, count }
+            )
           : intl.formatMessage(
-            { id: 'ListingImageGallery.videoAltTextNoTitle' },
-            { index: i + 1, count }
-          ),
+              { id: 'ListingImageGallery.videoAltTextNoTitle' },
+              { index: i + 1, count }
+            ),
         thumbAlt: intl.formatMessage(
           { id: 'ListingImageGallery.videoThumbnailAltText' },
           { index: i + 1, count }
@@ -279,8 +276,8 @@ const ListingImageGallery = props => {
   const imageSizesMaybe = isFullscreen
     ? {}
     : {
-      sizes: `(max-width: 1024px) 100vw, (max-width: 1200px) calc(100vw - 192px), ${FIGMA_GALLERY_WIDTH}px`,
-    };
+        sizes: `(max-width: 1024px) 100vw, (max-width: 1200px) calc(100vw - 192px), ${FIGMA_GALLERY_WIDTH}px`,
+      };
 
   const renderItem = item => {
     const itemWrapperClass = isFullscreen ? css.itemWrapperFullscreen : css.itemWrapper;

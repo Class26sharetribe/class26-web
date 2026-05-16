@@ -9,6 +9,7 @@ const SectionGallery = props => {
   const { title, publicData } = listing?.attributes || {};
   const imageVariants = ['scaled-small', 'scaled-medium', 'scaled-large', 'scaled-xlarge'];
   const thumbnailVariants = [variantPrefix, `${variantPrefix}-2x`, `${variantPrefix}-4x`];
+
   return (
     <section className={css.productGallery} data-testid="carousel">
       <ListingImageGallery

@@ -104,3 +104,11 @@
     margin: 24px 0;
   }
 }
+
+.sessionScheduleNote {
+  composes: p from global;
+  margin: 16px 0 0 0;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--colorGrey500);
+}

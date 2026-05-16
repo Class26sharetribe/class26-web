@@ -51,16 +51,8 @@ const LazyImage = lazyLoadWithDimensions(ResponsiveImage, { loadAfterInitialRend
  * @returns {{ type: string, playbackId: string } | null}
  */
 const getMuxVideoFromMediaGallery = mediaGallery => {
-  if (!Array.isArray(mediaGallery)) {
-    return null;
-  }
-  const item = mediaGallery.find(
-    entry =>
-      entry?.type === 'video' &&
-      typeof entry?.playbackId === 'string' &&
-      entry.playbackId.length > 0
-  );
-  return item || null;
+  const item = mediaGallery.find(entry => entry.type === 'video');
+  return item?.playbackId;
 };
 
 // Default card: must match `landingPage-css` / design (portrait 3:4, text + pills on image)
@@ -70,7 +62,7 @@ const CARD_ASPECT_HEIGHT = 4;
 export const LISTING_CARD_VARIANT_DEFAULT = 'default';
 export const LISTING_CARD_VARIANT_COURSE = 'course';
 
-const BookmarkIcon = () => (
+export const BookmarkIcon = () => (
   <svg
     className={css.bookmarkIcon}
     width="16"
@@ -95,6 +87,18 @@ const PlayIcon = () => (
       d="M40 0C62.0914 0 80 17.9086 80 40C80 62.0914 62.0914 80 40 80C17.9086 80 0 62.0914 0 40C0 17.9086 17.9086 0 40 0ZM33.75 25.3281C32.0834 24.3966 30 25.5607 30 27.4238V52.5762C30 54.4393 32.0834 55.6034 33.75 54.6719L56.25 42.0957C57.9165 41.1641 57.9165 38.8359 56.25 37.9043L33.75 25.3281Z"
       fill="white"
       fillOpacity="0.3"
+    />
+  </svg>
+);
+
+export const GreenCheckIcon = () => (
+  <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="28" height="28" rx="14" fill="#A2F8CE" />
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M19.9457 8.62169L11.5923 16.6834L9.37568 14.315C8.96734 13.93 8.32568 13.9067 7.85901 14.2334C7.40401 14.5717 7.27568 15.1667 7.55568 15.645L10.1807 19.915C10.4373 20.3117 10.8807 20.5567 11.3823 20.5567C11.8607 20.5567 12.3157 20.3117 12.5723 19.915C12.9923 19.3667 21.0073 9.81169 21.0073 9.81169C22.0573 8.73836 20.7857 7.79336 19.9457 8.61002V8.62169Z"
+      fill="#00A069"
     />
   </svg>
 );
@@ -134,11 +138,6 @@ const ListingCardCourse = props => {
   const history = useHistory();
   const currentUser = useSelector(state => state.user.currentUser);
 
-  const [courseVideoPlaying, setCourseVideoPlaying] = useState(false);
-  const [muxToken, setMuxToken] = useState(null);
-  const [muxTokenLoading, setMuxTokenLoading] = useState(false);
-  const [muxTokenError, setMuxTokenError] = useState(null);
-
   const {
     priceLabel,
     badgePrimary,
@@ -163,57 +162,21 @@ const ListingCardCourse = props => {
     : [];
   const ImageComponent = lazyLoadImage ? LazyImage : ResponsiveImage;
 
-  const courseMuxVideo = getMuxVideoFromMediaGallery(publicData?.mediaGallery);
-
   const categories = config.categoryConfiguration?.categories || [];
   const {
     categoryLevel1: categoryLevel1Value,
     totalSessions,
     listingType,
     courseModules,
+    mediaGallery = [],
   } = publicData;
+
+  const playbackId = getMuxVideoFromMediaGallery(mediaGallery);
   const categoryLevel1Label = categoryLevel1Value
     ? categories.find(c => c.id === categoryLevel1Value)?.name || categoryLevel1Value
     : null;
   const authorId = author?.id?.uuid;
   const durationText = !!courseModules ? formatCourseDuration(courseModules) : null;
-
-  const playbackId = courseMuxVideo?.playbackId;
-
-  useEffect(() => {
-    if (!courseVideoPlaying || !playbackId) {
-      setMuxToken(null);
-      setMuxTokenError(null);
-      setMuxTokenLoading(false);
-      return;
-    }
-
-    let cancelled = false;
-    setMuxTokenLoading(true);
-    setMuxToken(null);
-    setMuxTokenError(null);
-
-    getMuxJwtToken({ playbackId })
-      .then(data => {
-        if (!cancelled) {
-          setMuxToken(data.token);
-        }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setMuxTokenError(intl.formatMessage({ id: 'MuxPlayerModal.tokenError' }));
-        }
-      })
-      .finally(() => {
-        if (!cancelled) {
-          setMuxTokenLoading(false);
-        }
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [courseVideoPlaying, playbackId, intl]);
 
   const onSaveClick = e => {
     e.preventDefault();
@@ -288,22 +251,7 @@ const ListingCardCourse = props => {
           </div>
 
           <div className={css.courseHighlight}>
-            <svg
-              width="28"
-              height="28"
-              viewBox="0 0 28 28"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <rect width="28" height="28" rx="14" fill="#A2F8CE" />
-              <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M19.9457 8.62169L11.5923 16.6834L9.37568 14.315C8.96734 13.93 8.32568 13.9067 7.85901 14.2334C7.40401 14.5717 7.27568 15.1667 7.55568 15.645L10.1807 19.915C10.4373 20.3117 10.8807 20.5567 11.3823 20.5567C11.8607 20.5567 12.3157 20.3117 12.5723 19.915C12.9923 19.3667 21.0073 9.81169 21.0073 9.81169C22.0573 8.73836 20.7857 7.79336 19.9457 8.61002V8.62169Z"
-                fill="#00A069"
-              />
-            </svg>
-
+            <GreenCheckIcon />
             <span className={css.courseHighlightText}>
               {listingType === LISTING_TYPE_INDIVIDUAL_COACHING ? (
                 <FormattedMessage
@@ -332,7 +280,7 @@ const ListingCardCourse = props => {
               onClick={onSaveClick}
               aria-pressed={isFavorite}
             >
-             {!isFavorite ? <BookmarkIcon /> : <IconClose />}
+              {!isFavorite ? <BookmarkIcon /> : <IconClose />}
               <FormattedMessage
                 id={isFavorite ? 'ListingCard.savedForLater' : 'ListingCard.saveForLater'}
               />
@@ -345,20 +293,17 @@ const ListingCardCourse = props => {
 
         <div className={css.courseMedia}>
           {playbackId ? (
-            <>
-              <MuxPlayer
-                className={css.courseMuxPlayer}
-                playbackId={playbackId}
-                // tokens={{ playback: muxToken }}
-                streamType="on-demand"
-                accentColor="#FFFFFF"
-                primaryColor="#ddd"
-                secondaryColor="transparent"
-                autoPlay
-                playsInline
-                // skipJwt={true}
-              />
-            </>
+            <MuxPlayer
+              className={css.courseMuxPlayer}
+              playbackId={playbackId}
+              streamType="on-demand"
+              accentColor="#FFFFFF"
+              primaryColor="#ddd"
+              secondaryColor="transparent"
+              autoPlay
+              playsInline
+              skipJwt={true}
+            />
           ) : (
             <>
               <NamedLink

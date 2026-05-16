@@ -23,9 +23,10 @@ const SubmitFinePrint = ({
         payoutDetailsWarning
       ) : isOwnListing ? (
         <FormattedMessage id="OrderPanel.ownListing" />
-      ) : !omitYouWontBeChargedMessage ? (
-        <FormattedMessage id="OrderPanel.youWontBeChargedInfo" />
       ) : null}
+      {/* // : !omitYouWontBeChargedMessage ? ( //{' '}
+      <FormattedMessage id="OrderPanel.youWontBeChargedInfo" />
+      // ) : null} */}
     </p>
   );
 };

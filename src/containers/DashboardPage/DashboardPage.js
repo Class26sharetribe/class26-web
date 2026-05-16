@@ -12,13 +12,17 @@ import FooterContainer from '../FooterContainer/FooterContainer';
 import ManageListingsPage from '../ManageListingsPage/ManageListingsPage';
 import AccountSettingsPage from '../AccountSettingsPage/AccountSettingsPage';
 import ProfileSettingsTab from '../PersonalAreaPage/ProfileSettingsTab/ProfileSettingsTab';
+import DashboardReviews from './DashboardReviews/DashboardReviews';
 
 import css from './DashboardPage.module.css';
+import {
+  MY_LISTINGS_TAB,
+  REVIEWS_TAB,
+  EXPERT_PROFILE_TAB,
+  ACCOUNT_SETTINGS_TAB,
+} from './DashboardPage.tabs';
 
-export const MY_LISTINGS_TAB = 'courses';
-export const REVIEWS_TAB = 'reviews';
-export const EXPERT_PROFILE_TAB = 'profile';
-export const ACCOUNT_SETTINGS_TAB = 'account-settings';
+export { MY_LISTINGS_TAB, REVIEWS_TAB, EXPERT_PROFILE_TAB, ACCOUNT_SETTINGS_TAB };
 
 const STATIC_ANALYTICS = [
   { valueId: 'DashboardPage.analyticsSold', labelId: 'DashboardPage.analyticsLabelSold' },
@@ -38,6 +42,7 @@ const STATIC_ANALYTICS = [
 const DashboardPage = props => {
   const { params } = props;
   const scrollingDisabled = useSelector(isScrollingDisabled);
+  const reviews = useSelector(state => state.DashboardPage?.reviews ?? []);
   const intl = useIntl();
 
   const currentTab = params?.tab || MY_LISTINGS_TAB;
@@ -110,16 +115,14 @@ const DashboardPage = props => {
         <main id="main-content" className={css.content}>
           {currentTab === MY_LISTINGS_TAB ? (
             <ManageListingsPage embedded />
+          ) : currentTab === REVIEWS_TAB ? (
+            <DashboardReviews reviews={reviews} />
           ) : currentTab === EXPERT_PROFILE_TAB ? (
             <ProfileSettingsTab />
           ) : currentTab === ACCOUNT_SETTINGS_TAB ? (
             <AccountSettingsPage />
           ) : null}
-          <div className={css.contentWrapper}>
-            {currentTab === REVIEWS_TAB ? (
-              <FormattedMessage id="DashboardPage.reviewsContent" />
-            ) : null}
-          </div>
+          <div className={css.contentWrapper}></div>
         </main>
       </div>
       <FooterContainer />
