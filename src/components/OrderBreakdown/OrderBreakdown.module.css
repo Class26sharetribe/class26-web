@@ -58,9 +58,9 @@
 .dayInfo,
 .totalPrice {
   composes: p from global;
-  font-weight: var(--fontWeightBold);
+font-weight: 600;
   letter-spacing: -0.2px;
-
+color: #101828;
   margin: 0;
   padding: 0;
 }

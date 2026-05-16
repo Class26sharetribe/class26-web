@@ -26,6 +26,7 @@
 
 .tabContentVisible {
   display: block;
+  background-color: var(--colorWhite);
 }
 
 .footer {
