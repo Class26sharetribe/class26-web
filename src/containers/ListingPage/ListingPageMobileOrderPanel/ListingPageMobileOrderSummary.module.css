@@ -1,0 +1,26 @@
+@import '../../../styles/customMediaQueries.css';
+
+.orderHeadingVisible {
+  display: block;
+  margin: 0 0 16px 0;
+
+  @media (--viewportLarge) {
+    display: none;
+  }
+}
+
+.orderHelpOnMobile {
+  composes: h5 from global;
+  display: block;
+  margin-top: 6px;
+  color: var(--colorGrey700);
+}
+
+.mobilePriceContainer {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.mobilePrice {
+  margin: 0;
+}

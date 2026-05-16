@@ -338,6 +338,9 @@
 
   padding: 4px 10px;
   border-radius: 999px;
+  @media (max-width: 768px) {
+   text-align: left;
+  }
 }
 
 .courseBadgeGreen {
@@ -472,7 +475,13 @@
 
   cursor: pointer;
   min-height: 44px;
-
+  @media (max-width: 768px) {
+    min-height: 36px;
+    padding: 8px 11px;
+    font-size: 14px;
+    line-height: 20px;
+    min-width: 36px;
+   }
   &:hover {
     border-color: #9ca3af;
   }
@@ -526,7 +535,12 @@
   border: none;
   cursor: pointer;
   min-height: 44px;
-
+  @media (max-width: 768px) {
+    min-height: 36px;
+    padding: 8px 16px;
+    font-size: 14px;
+    line-height: 20px;
+   }
   &:hover {
     text-decoration: none;
     background: #154a2f;
