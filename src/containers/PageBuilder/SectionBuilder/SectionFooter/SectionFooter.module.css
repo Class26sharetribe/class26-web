@@ -252,7 +252,7 @@
 }
 
 .icons {
-  margin-top: 0px;
+  margin-top: 0px !important;
 
   @media (--viewportLarge) {
     margin-top: 0px !important;
@@ -265,6 +265,11 @@
   align-items: center;
   border-top: 1px solid #D5D7DA;
   padding-top: 24px;
+  @media (max-width: 768px) {
+   flex-direction: column-reverse;
+   align-items: flex-start;
+   gap: 0px;
+  }
 }
 
 .icon {

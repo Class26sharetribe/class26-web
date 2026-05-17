@@ -57,6 +57,12 @@
   color: #101828;
   margin-bottom: 0;
   padding-bottom: 0;
+  @media (max-width: 768px) {
+    font-size: 48px;
+    line-height: 60px;
+    margin-top: 0;
+    padding-top: 0;
+  }
 }
 
 .createAccountDescription {
@@ -70,6 +76,9 @@
   color: #414651;
   margin-bottom: 24px;
   padding-bottom: 0;
+  @media (max-width: 768px) {
+    margin-top: 24px;
+  }
 }
 
 .name {

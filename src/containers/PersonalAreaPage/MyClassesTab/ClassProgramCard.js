@@ -60,53 +60,46 @@ const ClockIcon = ({ className }) => (
 );
 
 const EllipsisIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-    <path
-      d="M10.0003 10.8333C10.4606 10.8333 10.8337 10.4602 10.8337 9.99999C10.8337 9.53975 10.4606 9.16666 10.0003 9.16666C9.54009 9.16666 9.16699 9.53975 9.16699 9.99999C9.16699 10.4602 9.54009 10.8333 10.0003 10.8333Z"
-      stroke="#717680"
-      strokeWidth="1.67"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M10.0003 4.99999C10.4606 4.99999 10.8337 4.6269 10.8337 4.16666C10.8337 3.70642 10.4606 3.33333 10.0003 3.33333C9.54009 3.33333 9.16699 3.70642 9.16699 4.16666C9.16699 4.6269 9.54009 4.99999 10.0003 4.99999Z"
-      stroke="#717680"
-      strokeWidth="1.67"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M10.0003 16.6667C10.4606 16.6667 10.8337 16.2936 10.8337 15.8333C10.8337 15.3731 10.4606 15 10.0003 15C9.54009 15 9.16699 15.3731 9.16699 15.8333C9.16699 16.2936 9.54009 16.6667 10.0003 16.6667Z"
-      stroke="#717680"
-      strokeWidth="1.67"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_d_4256_10854)">
+<path d="M11.9999 11.8333C12.4602 11.8333 12.8333 11.4602 12.8333 11C12.8333 10.5397 12.4602 10.1666 11.9999 10.1666C11.5397 10.1666 11.1666 10.5397 11.1666 11C11.1666 11.4602 11.5397 11.8333 11.9999 11.8333Z" stroke="#101828" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M17.8333 11.8333C18.2935 11.8333 18.6666 11.4602 18.6666 11C18.6666 10.5397 18.2935 10.1666 17.8333 10.1666C17.373 10.1666 16.9999 10.5397 16.9999 11C16.9999 11.4602 17.373 11.8333 17.8333 11.8333Z" stroke="#101828" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M6.16659 11.8333C6.62682 11.8333 6.99992 11.4602 6.99992 11C6.99992 10.5397 6.62682 10.1666 6.16659 10.1666C5.70635 10.1666 5.33325 10.5397 5.33325 11C5.33325 11.4602 5.70635 11.8333 6.16659 11.8333Z" stroke="#101828" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<filter id="filter0_d_4256_10854" x="0" y="0" width="24" height="24" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="1"/>
+<feGaussianBlur stdDeviation="1"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.0392157 0 0 0 0 0.0496732 0 0 0 0 0.0705882 0 0 0 0.05 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_4256_10854"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_4256_10854" result="shape"/>
+</filter>
+</defs>
+</svg>
+
 );
 
 const CertificateIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-    <path
-      d="M6.66699 11.6667L8.33366 13.3333L13.3337 8.33334M18.3337 10C18.3337 14.6024 14.6027 18.3333 10.0003 18.3333C5.39795 18.3333 1.66699 14.6024 1.66699 10C1.66699 5.39763 5.39795 1.66667 10.0003 1.66667C14.6027 1.66667 18.3337 5.39763 18.3337 10Z"
-      stroke="currentColor"
-      strokeWidth="1.67"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g clip-path="url(#clip0_4256_10865)">
+  <path d="M6.84175 11.575L5.83341 19.1667L10.0001 16.6667L14.1667 19.1667L13.1584 11.5667M15.8334 6.66671C15.8334 9.88837 13.2217 12.5 10.0001 12.5C6.77842 12.5 4.16675 9.88837 4.16675 6.66671C4.16675 3.44505 6.77842 0.833374 10.0001 0.833374C13.2217 0.833374 15.8334 3.44505 15.8334 6.66671Z" stroke="#D5D7DA" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <defs>
+  <clipPath id="clip0_4256_10865">
+  <rect width="20" height="20" fill="white"/>
+  </clipPath>
+  </defs>
   </svg>
+  
 );
 
 const StarIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-    <path
-      d="M10.0003 1.66667L12.5753 6.88334L18.3337 7.72501L14.167 11.7833L15.1503 17.5167L10.0003 14.8083L4.85033 17.5167L5.83366 11.7833L1.66699 7.72501L7.42533 6.88334L10.0003 1.66667Z"
-      stroke="currentColor"
-      strokeWidth="1.67"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
+<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M10.0001 1.66663L12.5751 6.88329L18.3334 7.72496L14.1667 11.7833L15.1501 17.5166L10.0001 14.8083L4.85008 17.5166L5.83341 11.7833L1.66675 7.72496L7.42508 6.88329L10.0001 1.66663Z" stroke="#D5D7DA" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
 );
 
 const SESSION_STATUS = {

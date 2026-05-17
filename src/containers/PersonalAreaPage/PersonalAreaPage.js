@@ -26,6 +26,33 @@ const TAB_CONTENT = {
   [ACCOUNT_SETTINGS_TAB]: <FormattedMessage id="PersonalAreaPage.accountSettingsContent" />,
 };
 
+const TAB_DEFINITIONS = [
+  {
+    tab: MY_CLASSES_TAB,
+    labelId: 'PersonalAreaPage.myClassesTab',
+    iconName: 'my-classes',
+    id: 'MyClassesTab',
+  },
+  {
+    tab: SAVED_FOR_LATER_TAB,
+    labelId: 'PersonalAreaPage.savedForLaterTab',
+    iconName: 'saved-for-later',
+    id: 'SavedForLaterTab',
+  },
+  {
+    tab: PERSONAL_PROFILE_TAB,
+    labelId: 'PersonalAreaPage.personalProfileTab',
+    iconName: 'public-profile',
+    id: 'ProfileTab',
+  },
+  {
+    tab: ACCOUNT_SETTINGS_TAB,
+    labelId: 'PersonalAreaPage.accountSettingsTab',
+    iconName: 'account-settings',
+    id: 'AccountSettingsTab',
+  },
+];
+
 /**
  * Personal Area page with horizontal tab navigation.
  *
@@ -45,36 +72,16 @@ export const PersonalAreaPageComponent = props => {
 
   const title = intl.formatMessage({ id: 'PersonalAreaPage.title' });
 
-  const tabs = [
-    {
-      text: <FormattedMessage id="PersonalAreaPage.myClassesTab" />,
-      icon: <IconsCollection iconName="my-classes" />,
-      selected: currentTab === MY_CLASSES_TAB,
-      id: 'MyClassesTab',
-      linkProps: { name: 'PersonalAreaPage', params: { tab: MY_CLASSES_TAB } },
-    },
-    {
-      text: <FormattedMessage id="PersonalAreaPage.savedForLaterTab" />,
-      icon: <IconsCollection iconName="saved-for-later" />,
-      selected: currentTab === SAVED_FOR_LATER_TAB,
-      id: 'SavedForLaterTab',
-      linkProps: { name: 'PersonalAreaPage', params: { tab: SAVED_FOR_LATER_TAB } },
-    },
-    {
-      text: <FormattedMessage id="PersonalAreaPage.personalProfileTab" />,
-      icon: <IconsCollection iconName="public-profile" />,
-      selected: currentTab === PERSONAL_PROFILE_TAB,
-      id: 'ProfileTab',
-      linkProps: { name: 'PersonalAreaPage', params: { tab: PERSONAL_PROFILE_TAB } },
-    },
-    {
-      text: <FormattedMessage id="PersonalAreaPage.accountSettingsTab" />,
-      icon: <IconsCollection iconName="account-settings" />,
-      selected: currentTab === ACCOUNT_SETTINGS_TAB,
-      id: 'AccountSettingsTab',
-      linkProps: { name: 'PersonalAreaPage', params: { tab: ACCOUNT_SETTINGS_TAB } },
-    },
-  ];
+  const tabs = TAB_DEFINITIONS.map(({ tab, labelId, iconName, id }) => ({
+    text: <FormattedMessage id={labelId} />,
+    icon: <IconsCollection iconName={iconName} />,
+    selected: currentTab === tab,
+    id,
+    linkProps: { name: 'PersonalAreaPage', params: { tab } },
+  }));
+
+  const activeTabDefinition =
+    TAB_DEFINITIONS.find(({ tab }) => tab === currentTab) || TAB_DEFINITIONS[0];
 
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
@@ -85,6 +92,15 @@ export const PersonalAreaPageComponent = props => {
             <FormattedMessage id="PersonalAreaPage.heading" />
           </H1>
         </div>
+        <div className={css.pageheadingSectionMobile}>
+          <H1 className={css.mobileHeading}>
+            <IconsCollection
+              iconName={activeTabDefinition.iconName}
+              className={css.mobileHeadingIcon}
+            />
+            <FormattedMessage id={activeTabDefinition.labelId} />
+          </H1>
+        </div>
         <div className={css.tabNavWrapper}>
           <TabNav
             rootClassName={css.tabs}
@@ -93,6 +109,7 @@ export const PersonalAreaPageComponent = props => {
             ariaLabel={intl.formatMessage({ id: 'PersonalAreaPage.screenreader.nav' })}
           />
         </div>
+
         <main id="main-content" className={css.content}>
           {currentTab === SAVED_FOR_LATER_TAB ? (
             <SavedCoursesPage />

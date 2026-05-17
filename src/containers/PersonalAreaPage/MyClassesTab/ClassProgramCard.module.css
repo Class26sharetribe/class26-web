@@ -21,7 +21,7 @@
     flex-direction: row;
     align-items: flex-start;
     gap: 24px;
-    padding: 24px;
+    padding: 16px 16px 0px 16px;
   }
 }
 
@@ -38,8 +38,8 @@
   }
 
   @media (--viewportLarge) {
-    width: 220px;
-    height: 136px;
+    width: 265px;
+    height: 150px;
   }
 }
 
@@ -72,7 +72,15 @@
 }
 
 .programAuthorName {
-  color: #717680;
+  font-family: Nunito Sans;
+font-weight: 400;
+font-style: Regular;
+font-size: 16px;
+leading-trim: NONE;
+line-height: spacing/3;
+letter-spacing: 0%;
+
+  color: #414651;
 }
 
 .tags {
@@ -108,12 +116,12 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  border-top: 1px solid #E9EAEB;
+  /* border-top: 1px solid #E9EAEB; */
 }
 
 .sessionRow {
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
   align-items: flex-start;
   gap: 12px;
   padding: 16px 16px;
@@ -124,7 +132,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 24px;
-    padding: 20px 24px;
+    padding: 12px 16px;
   }
 }
 
@@ -146,9 +154,13 @@
 
 .sessionTitle {
   font-family: Nohemi;
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 24px;
+font-weight: 500;
+font-style: Medium;
+font-size: 16px;
+leading-trim: NONE;
+line-height: 24px;
+letter-spacing: 0px;
+
   color: #101828;
   margin: 0;
   padding: 0;
@@ -158,11 +170,15 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-family: Nohemi;
+  font-family: Nunito Sans;
   font-weight: 400;
+  font-style: Regular;
   font-size: 14px;
-  line-height: 20px;
-  color: #717680;
+  leading-trim: NONE;
+  line-height: spacing/2,5;
+  letter-spacing: 0%;
+  
+  color: #A4A7AE;
   & svg{
     fill: transparent;
   }
@@ -213,7 +229,7 @@
 
 .sessionAction {
   flex-shrink: 0;
-  align-self: flex-end;
+  /* align-self: flex-end; */
 
   @media (--viewportMedium) {
     align-self: center;
@@ -222,10 +238,14 @@
 
 .sessionStatusCompleted {
   font-family: Nohemi;
-  font-weight: 400;
+  font-weight: 500;
+  font-style: Medium;
   font-size: 14px;
+  leading-trim: NONE;
   line-height: 20px;
-  color: #A4A7AE;
+  letter-spacing: 0px;
+  
+  color: #D5D7DA;
 }
 
 .enterButton {
@@ -319,6 +339,11 @@
   gap: 10px;
   flex-wrap: wrap;
   margin-left: auto;
+  & > button:first-child{
+    @media (max-width: 768px) {
+     display: none;
+    }
+  }
 }
 
 .footerButton {
@@ -327,14 +352,18 @@
   align-items: center;
   gap: 6px;
   padding: 8px 14px;
-  border: 1px solid #D5D7DA;
+  border: 1px solid #E9EAEB;
+  background: #FFFFFF;
   border-radius: 6px;
-  background: transparent;
-  color: #A4A7AE;
+  color: #D5D7DA;
   font-family: Nohemi;
   font-weight: 500;
+  font-style: Medium;
   font-size: 14px;
+  leading-trim: NONE;
   line-height: 20px;
+  letter-spacing: 0px;
+  
   cursor: not-allowed;
   white-space: nowrap;
   & svg{

@@ -7,6 +7,7 @@
   border: 1px solid #E9EAEB;
   border-radius: 12px;
   overflow: hidden;
+  margin-bottom: 34px;
 }
 
 .cardHeader {
@@ -19,7 +20,7 @@
     flex-direction: row;
     align-items: flex-start;
     gap: 24px;
-    padding: 24px;
+    padding: 16px 16px 16px 16px;
   }
 }
 
@@ -36,8 +37,8 @@
   }
 
   @media (--viewportLarge) {
-    width: 220px;
-    height: 136px;
+    width: 265px;
+    height: 150px;
   }
 }
 
@@ -62,15 +63,19 @@
 .programAuthor {
   font-family: Nohemi;
   font-weight: 400;
+  font-style: Regular;
   font-size: 16px;
-  line-height: 24px;
-  color: #717680;
+  leading-trim: NONE;
+  line-height: spacing/3;
+  letter-spacing: 0%;
+  
+  color: #414651;
   margin: 0;
   padding: 0;
 }
 
 .programAuthorName {
-  color: #717680;
+  /* color: #717680; */
 }
 
 .tags {
@@ -124,7 +129,7 @@
   border-top: 1px solid #E9EAEB;
 
   @media (--viewportMedium) {
-    padding: 16px 24px;
+    padding: 16px 16px;
   }
 }
 
@@ -133,6 +138,10 @@
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
+  @media (max-width: 768px) {
+   display: none;
+  }
+
 }
 
 .menuButton {
@@ -176,6 +185,16 @@
   gap: 10px;
   flex-wrap: wrap;
   margin-left: auto;
+  @media (max-width: 768px) {
+   margin-left: 0;
+   width: 100%;
+   justify-content: space-between;
+   }
+  & > button:first-child{
+    @media (max-width: 768px) {
+     display: none;
+    }
+  }
 }
 
 .footerOutlineButton {

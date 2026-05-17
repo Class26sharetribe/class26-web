@@ -20,6 +20,7 @@ import {
   REVIEWS_TAB,
   EXPERT_PROFILE_TAB,
   ACCOUNT_SETTINGS_TAB,
+  TAB_DEFINITIONS,
 } from './DashboardPage.tabs';
 
 export { MY_LISTINGS_TAB, REVIEWS_TAB, EXPERT_PROFILE_TAB, ACCOUNT_SETTINGS_TAB };
@@ -49,36 +50,16 @@ const DashboardPage = props => {
 
   const title = intl.formatMessage({ id: 'DashboardPage.title' });
 
-  const tabs = [
-    {
-      text: <FormattedMessage id="DashboardPage.myListingsTab" />,
-      icon: <IconsCollection iconName="my-listings" />,
-      selected: currentTab === MY_LISTINGS_TAB,
-      id: 'MyListingsTab',
-      linkProps: { name: 'DashboardPage', params: { tab: MY_LISTINGS_TAB } },
-    },
-    {
-      text: <FormattedMessage id="DashboardPage.reviewsTab" />,
-      icon: <IconsCollection iconName="reviews" />,
-      selected: currentTab === REVIEWS_TAB,
-      id: 'ReviewsTab',
-      linkProps: { name: 'DashboardPage', params: { tab: REVIEWS_TAB } },
-    },
-    {
-      text: <FormattedMessage id="DashboardPage.expertProfileTab" />,
-      icon: <IconsCollection iconName="expert-profile" />,
-      selected: currentTab === EXPERT_PROFILE_TAB,
-      id: 'ExpertProfileTab',
-      linkProps: { name: 'DashboardPage', params: { tab: EXPERT_PROFILE_TAB } },
-    },
-    {
-      text: <FormattedMessage id="DashboardPage.accountSettingsTab" />,
-      icon: <IconsCollection iconName="account-settings" />,
-      selected: currentTab === ACCOUNT_SETTINGS_TAB,
-      id: 'AccountSettingsTab',
-      linkProps: { name: 'DashboardPage', params: { tab: ACCOUNT_SETTINGS_TAB } },
-    },
-  ];
+  const tabs = TAB_DEFINITIONS.map(({ tab, labelId, iconName, id }) => ({
+    text: <FormattedMessage id={labelId} />,
+    icon: <IconsCollection iconName={iconName} />,
+    selected: currentTab === tab,
+    id,
+    linkProps: { name: 'DashboardPage', params: { tab } },
+  }));
+
+  const activeTabDefinition =
+    TAB_DEFINITIONS.find(({ tab }) => tab === currentTab) || TAB_DEFINITIONS[0];
 
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
@@ -87,6 +68,15 @@ const DashboardPage = props => {
         <div className={css.headingSection}>
           <H1 className={css.heading}>
             <FormattedMessage id="DashboardPage.heading" />
+          </H1>
+        </div>
+        <div className={css.pageheadingSectionMobile}>
+          <H1 className={css.mobileHeading}>
+            <IconsCollection
+              iconName={activeTabDefinition.iconName}
+              className={css.mobileHeadingIcon}
+            />
+            <FormattedMessage id={activeTabDefinition.labelId} />
           </H1>
         </div>
 

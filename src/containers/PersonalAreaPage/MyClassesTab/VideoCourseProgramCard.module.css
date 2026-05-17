@@ -21,7 +21,7 @@
     flex-direction: row;
     align-items: flex-start;
     gap: 24px;
-    padding: 24px;
+    padding: 16px 16px 0px 16px;
   }
 }
 
@@ -38,8 +38,8 @@
   }
 
   @media (--viewportLarge) {
-    width: 220px;
-    height: 136px;
+    width: 265px;
+    height: 150px;
   }
 }
 
@@ -62,17 +62,21 @@
 }
 
 .programAuthor {
-  font-family: Nohemi;
+  font-family: Nunito Sans;
   font-weight: 400;
+  font-style: Regular;
   font-size: 16px;
-  line-height: 24px;
-  color: #717680;
+  leading-trim: NONE;
+  line-height: spacing/3;
+  letter-spacing: 0%;
+  
+  color: #414651;
   margin: 0;
   padding: 0;
 }
 
 .programAuthorName {
-  color: #717680;
+  /* color: #717680; */
 }
 
 .tags {
@@ -133,7 +137,7 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  border-top: 1px solid #E9EAEB;
+  /* border-top: 1px solid #E9EAEB; */
 }
 
 .accordionItem {
@@ -153,15 +157,19 @@
   text-align: left;
 
   @media (--viewportMedium) {
-    padding: 20px 24px;
+    padding: 12px 16px;
   }
 }
 
 .accordionTitle {
   font-family: Nohemi;
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 24px;
+font-weight: 500;
+font-style: Medium;
+font-size: 16px;
+leading-trim: NONE;
+line-height: 24px;
+letter-spacing: 0px;
+
   color: #101828;
 }
 
@@ -181,7 +189,7 @@
   padding: 0 16px 24px;
 
   @media (--viewportMedium) {
-    padding: 0 24px 24px;
+    padding: 0 16px 16px 16px;
   }
 }
 
@@ -288,7 +296,7 @@
   border-top: 1px solid #E9EAEB;
 
   @media (--viewportMedium) {
-    padding: 16px 24px;
+    padding: 16px 16px;
   }
 }
 
@@ -340,6 +348,11 @@
   gap: 10px;
   flex-wrap: wrap;
   margin-left: auto;
+  & > button:first-child{
+    @media (max-width: 768px) {
+     display: none;
+    }
+  }
 }
 
 .footerButton {

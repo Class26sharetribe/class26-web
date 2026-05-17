@@ -256,6 +256,11 @@
   @media (max-width: 1023px) {
     min-width: unset;
     top: 43px !important;
+    left: unset !important;
+    right: -57px !important;
+    /* right: 0 !important; */
+    width: 100vw !important;
+    /* position: fixed !important; */
   }
 }
 

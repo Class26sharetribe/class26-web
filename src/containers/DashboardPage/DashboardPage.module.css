@@ -43,6 +43,36 @@
   }
 }
 
+.pageheadingSectionMobile {
+  display: none;
+
+  @media (max-width: 768px) {
+    display: block;
+    max-width: 1280px;
+    padding: 0 16px;
+    margin: 0 auto 32px;
+    width: 100%;
+  }
+}
+
+.mobileHeading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  font-family: Nohemi;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 32px;
+  color: #101828;
+}
+
+.mobileHeadingIcon {
+  flex-shrink: 0;
+  color: #101828;
+}
+
 /* ===== Analytics cards ===== */
 
 .analyticsSection {
