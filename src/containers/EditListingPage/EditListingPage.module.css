@@ -16,6 +16,7 @@
 
   /* shadows */
   box-shadow: none;
+  padding: 0 16px;
 
   @media (--viewportLarge) {
     display: none;
