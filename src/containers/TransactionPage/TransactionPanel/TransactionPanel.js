@@ -2,7 +2,12 @@ import React, { Component } from 'react';
 import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
-import { propTypes } from '../../../util/types';
+import {
+  LISTING_TYPE_GROUP_COACHING,
+  LISTING_TYPE_INDIVIDUAL_COACHING,
+  LISTING_TYPE_VIDEO_COURSE,
+  propTypes,
+} from '../../../util/types';
 import { userDisplayNameAsString } from '../../../util/data';
 import { isMobileSafari } from '../../../util/userAgent';
 import { createSlug } from '../../../util/urlHelpers';
@@ -25,6 +30,8 @@ import PanelHeading from './PanelHeading';
 
 import css from './TransactionPanel.module.css';
 import SecuredAssets from './SecuredAssets';
+import { GreenCheckIcon } from '../../../components/ListingCard/ListingCard';
+import { formatCourseDuration } from '../../../util/courseHelpers';
 
 // Helper function to get display names for different roles
 const displayNames = (currentUser, provider, customer, intl) => {
@@ -33,6 +40,8 @@ const displayNames = (currentUser, provider, customer, intl) => {
 
   let otherUserDisplayName = '';
   let otherUserDisplayNameString = '';
+  let authorDisplayNameString = '';
+
   const currentUserIsCustomer =
     currentUser.id && customer?.id && currentUser.id.uuid === customer?.id?.uuid;
   const currentUserIsProvider =
@@ -45,12 +54,14 @@ const displayNames = (currentUser, provider, customer, intl) => {
     otherUserDisplayName = customerDisplayName;
     otherUserDisplayNameString = userDisplayNameAsString(customer, '');
   }
+  authorDisplayNameString = userDisplayNameAsString(provider, '');
 
   return {
     authorDisplayName,
     customerDisplayName,
     otherUserDisplayName,
     otherUserDisplayNameString,
+    authorDisplayNameString,
   };
 };
 
@@ -214,21 +225,30 @@ export class TransactionPanelComponent extends Component {
       isProviderDeleted,
     };
 
-    const { authorDisplayName, customerDisplayName, otherUserDisplayNameString } = displayNames(
-      currentUser,
-      provider,
-      customer,
-      intl
-    );
+    const {
+      authorDisplayName,
+      customerDisplayName,
+      otherUserDisplayNameString,
+      authorDisplayNameString,
+    } = displayNames(currentUser, provider, customer, intl);
 
     const deletedListingTitle = intl.formatMessage({
       id: 'TransactionPanel.deletedListingTitle',
     });
 
-    const listingTitle = listingDeleted ? deletedListingTitle : listing?.attributes?.title;
+    const listingTitle = listingDeleted
+      ? deletedListingTitle
+      : listing?.attributes?.title + ' with ' + authorDisplayNameString;
+
     const firstImage = listing?.images?.length > 0 ? listing?.images[0] : null;
 
-    const listingType = listing?.attributes?.publicData?.listingType;
+    const {
+      categoryLevel1,
+      listingType,
+      digitalAssets,
+      courseModules,
+      totalSessions,
+    } = listing?.attributes?.publicData;
     const listingTypeConfigs = config.listing.listingTypes;
     const listingTypeConfig = listingTypeConfigs.find(conf => conf.listingType === listingType);
     const showPrice = isInquiryProcess && displayPrice(listingTypeConfig);
@@ -246,6 +266,41 @@ export class TransactionPanelComponent extends Component {
     const priceVariantName = protectedData?.priceVariantName;
 
     const classes = classNames(rootClassName || css.root, className);
+
+    const categories = config.categoryConfiguration?.categories || [];
+    const categoryLevel1Label = categoryLevel1
+      ? categories.find(c => c.id === categoryLevel1)?.name || categoryLevel1
+      : null;
+
+    const listingTypeLabel = listingTypeConfig?.label || null;
+    const durationText = !!courseModules ? formatCourseDuration(courseModules) : null;
+
+    const tags = (
+      <div className={css.tags}>
+        <span className={classNames(css.tag, css.tagGreen)}>{categoryLevel1Label}</span>
+        <span className={classNames(css.tag, css.tagNeutral)}>{listingTypeLabel}</span>
+      </div>
+    );
+
+    const courseHighlight = (
+      <div className={css.courseHighlight}>
+        <GreenCheckIcon />
+        <span className={css.courseHighlightText}>
+          {listingType === LISTING_TYPE_INDIVIDUAL_COACHING ? (
+            <FormattedMessage
+              id="ListingCard.highlightIndividualCoaching"
+              values={{ totalSessions }}
+            />
+          ) : listingType === LISTING_TYPE_GROUP_COACHING ? (
+            <FormattedMessage id="ListingCard.highlightGroupCoaching" values={{ totalSessions }} />
+          ) : listingType === LISTING_TYPE_VIDEO_COURSE ? (
+            <FormattedMessage id="ListingCard.highlightVideoCourse" values={{ durationText }} />
+          ) : (
+            <FormattedMessage id="ListingCard.highlightDefault" />
+          )}
+        </span>
+      </div>
+    );
 
     return (
       <div className={classes}>
@@ -282,6 +337,8 @@ export class TransactionPanelComponent extends Component {
               listingId={listing?.id?.uuid}
               listingTitle={listingTitle}
               listingDeleted={listingDeleted}
+              tags={tags}
+              courseHighlight={courseHighlight}
             />
 
             {requestQuote}
@@ -410,6 +467,8 @@ export class TransactionPanelComponent extends Component {
                   showPrice={showPrice}
                   price={listing?.attributes?.price}
                   intl={intl}
+                  tags={tags}
+                  courseHighlight={courseHighlight}
                 />
                 {showOrderPanel ? orderPanel : null}
                 {showBreakDown ? (

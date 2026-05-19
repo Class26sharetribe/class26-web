@@ -16,6 +16,8 @@ const DetailCardHeadingsMaybe = props => {
     price,
     showListingImage,
     intl,
+    tags,
+    courseHighlight,
   } = props;
 
   return showDetailCardHeadings ? (
@@ -33,6 +35,8 @@ const DetailCardHeadingsMaybe = props => {
         ) : null}
       </H4>
       {subTitle ? <p className={css.detailCardSubtitle}>{subTitle}</p> : null}
+      {tags}
+      {courseHighlight}
     </div>
   ) : null;
 };

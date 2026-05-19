@@ -215,6 +215,7 @@ export const isRelevantPastTransition = transition => {
     transitions.CONFIRM_PAYMENT,
     transitions.AUTO_CANCEL,
     transitions.CANCEL,
+    transitions.MARK_RECEIVED_FROM_PURCHASED,
     transitions.MARK_DELIVERED,
     transitions.OPERATOR_MARK_DELIVERED,
     transitions.DISPUTE,
@@ -230,6 +231,12 @@ export const isRelevantPastTransition = transition => {
 };
 export const isCustomerReview = transition => {
   return [transitions.REVIEW_1_BY_CUSTOMER, transitions.REVIEW_2_BY_CUSTOMER].includes(transition);
+};
+
+export const isCustomerReviewPending = customerTransitions => {
+  return !customerTransitions.some(t =>
+    [transitions.REVIEW_1_BY_CUSTOMER, transitions.REVIEW_2_BY_CUSTOMER].includes(t.transition)
+  );
 };
 
 export const isProviderReview = transition => {

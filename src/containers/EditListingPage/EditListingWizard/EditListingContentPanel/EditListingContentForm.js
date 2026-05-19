@@ -346,7 +346,11 @@ const ModuleEditor = props => {
         />
       </div>
       <div className={css.inlineEditorActions}>
-        <InlineTextButton type="button" onClick={onCancel} className={css.inlineEditorActionsButton}>
+        <InlineTextButton
+          type="button"
+          onClick={onCancel}
+          className={css.inlineEditorActionsButton}
+        >
           <FormattedMessage id="EditListingContentForm.cancel" />
         </InlineTextButton>
         <Button type="button" className={css.smallPrimaryButton} onClick={submit}>
@@ -998,15 +1002,16 @@ const DigitalAssetUploader = props => {
     onChange((assets || []).filter(a => a.key !== key));
   };
 
-  const viewAsset = async key => {
+  const viewAsset = async (key, listingId) => {
     setLoadingKey(key);
     try {
-      const result = await getSecuredUrl(key);
+      const result = await getSecuredUrl({ key, listingId });
       if (result?.data?.url) {
         window.open(result.data.url, '_blank', 'noopener,noreferrer');
       }
     } catch (err) {
       console.error('Failed to fetch secured URL:', err);
+      window.alert(err?.message || 'Failed to get download URL. Please try again.');
     } finally {
       setLoadingKey(null);
     }
@@ -1110,7 +1115,7 @@ const DigitalAssetUploader = props => {
                   <button
                     type="button"
                     className={css.assetItemView}
-                    onClick={() => viewAsset(asset.key)}
+                    onClick={() => viewAsset(asset.key, listingId)}
                     disabled={disabled || loadingKey === asset.key}
                     aria-label={intl.formatMessage({ id: 'EditListingContentForm.viewAsset' })}
                   >

@@ -6,6 +6,8 @@ import { denormalisedResponseEntities } from '../../util/data';
 import { storableError } from '../../util/errors';
 import * as log from '../../util/log';
 import { setCurrentUserHasOrders, fetchCurrentUser } from '../../ducks/user.duck';
+import { PURCHASE_PROCESS_NAME } from '../../transactions/transaction';
+import { transitions } from '../../transactions/transactionProcessPurchase';
 
 // ================ Async thunks ================ //
 
@@ -136,8 +138,17 @@ const confirmPaymentPayloadCreator = (
 
   return sdk.transactions
     .transition(bodyParams, queryParams)
-    .then(response => {
-      const order = response.data.data;
+    .then(async response => {
+      const order = denormalisedResponseEntities(response)[0];
+
+      if (order?.attributes.processName === PURCHASE_PROCESS_NAME) {
+        await sdk.transactions.transition({
+          id: transactionId,
+          transition: transitions.MARK_RECEIVED_FROM_PURCHASED,
+          params: {},
+        });
+      }
+
       return order;
     })
     .catch(e => {

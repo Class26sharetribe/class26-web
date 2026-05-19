@@ -165,8 +165,8 @@ const EnhancedCheckoutPage = props => {
   // of those processes
   const showTransactionFields = !isNegotiationProcess(processName);
 
-  const listingTitle = listing?.attributes?.title;
   const authorDisplayName = userDisplayNameAsString(listing?.author, '');
+  const listingTitle = listing?.attributes?.title + ' with ' + authorDisplayName;
   const title = processName
     ? intl.formatMessage(
         { id: `CheckoutPage.${processName}.title` },
@@ -269,12 +269,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(savePaymentMethod(stripeCustomer, stripePaymentMethodId)),
 });
 
-const CheckoutPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(EnhancedCheckoutPage);
+const CheckoutPage = compose(connect(mapStateToProps, mapDispatchToProps))(EnhancedCheckoutPage);
 
 CheckoutPage.setInitialValues = (initialValues, saveToSessionStorage = false) => {
   if (saveToSessionStorage) {

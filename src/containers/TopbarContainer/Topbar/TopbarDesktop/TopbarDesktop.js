@@ -18,7 +18,7 @@ import {
   SAVED_FOR_LATER_TAB,
   PERSONAL_PROFILE_TAB,
   ACCOUNT_SETTINGS_TAB as PERSONAL_AREA_ACCOUNT_SETTINGS_TAB,
-} from '../../../PersonalAreaPage/PersonalAreaPage';
+} from '../../../PersonalAreaPage/PersonalAreaPage.duck';
 import {
   MY_LISTINGS_TAB,
   REVIEWS_TAB,
@@ -234,9 +234,10 @@ export const ProfileMenu = ({
             <NamedLink
               className={css.menuLink}
               name={isProvider ? 'DashboardPage' : 'PersonalAreaPage'}
-              params={isProvider
-                ? { tab: DASHBOARD_ACCOUNT_SETTINGS_TAB }
-                : { tab: PERSONAL_AREA_ACCOUNT_SETTINGS_TAB }
+              params={
+                isProvider
+                  ? { tab: DASHBOARD_ACCOUNT_SETTINGS_TAB }
+                  : { tab: PERSONAL_AREA_ACCOUNT_SETTINGS_TAB }
               }
             >
               <span className={css.menuItemBorder} />
@@ -277,16 +278,11 @@ export const ProfileMenu = ({
             <NamedLink
               className={css.menuLink}
               name={isProvider ? 'DashboardPage' : 'PersonalAreaPage'}
-              params={isProvider
-                ? { tab: EXPERT_PROFILE_TAB }
-                : { tab: PERSONAL_PROFILE_TAB }
-              }
+              params={isProvider ? { tab: EXPERT_PROFILE_TAB } : { tab: PERSONAL_PROFILE_TAB }}
             >
               <span className={css.menuItemBorder} />
               <span className={css.menuLinkRow}>
-                <IconsCollection
-                  iconName={isProvider ? 'expert-profile' : 'public-profile'}
-                />
+                <IconsCollection iconName={isProvider ? 'expert-profile' : 'public-profile'} />
                 <span className={css.menuLinkLabel}>
                   <FormattedMessage
                     id={

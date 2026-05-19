@@ -13,6 +13,18 @@
   }
 }
 
+.spinnerWrapper {
+  display: flex;
+  justify-content: center;
+  padding: 48px 0;
+}
+
+.noResults {
+  padding: 48px 0;
+  text-align: center;
+  color: var(--colorGrey400);
+}
+
 .filterTabsWrapper {
   display: flex;
   align-items: center;
@@ -34,9 +46,9 @@
   text-transform: uppercase;
   padding: 6px 14px;
   border-radius: 4px;
-  border: 1px solid var(--border-border-primary, #D5D7DA);
+  border: 1px solid var(--border-border-primary, #d5d7da);
   background: transparent;
-  color: #A4A7AE;
+  color: #a4a7ae;
   cursor: pointer;
   white-space: nowrap;
   transition: border-color 0.15s, color 0.15s;
@@ -61,3 +73,29 @@
   }
 }
 
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.tag {
+  display: inline-block;
+  font-family: Nohemi;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.tagGreen {
+  background: #cefde4;
+  color: #1a5d3a;
+}
+
+.tagNeutral {
+  background: #f3f4f6;
+  color: #4b5563;
+}

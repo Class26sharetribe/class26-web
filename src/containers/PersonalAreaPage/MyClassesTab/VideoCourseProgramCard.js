@@ -1,12 +1,37 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 import { FormattedMessage, useIntl } from '../../../util/reactIntl';
+import { getMuxJwtToken } from '../../../util/api';
+import { createResourceLocatorString } from '../../../util/routes';
+import { manageDisableScrolling } from '../../../ducks/ui.duck';
+import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
+
+import { MuxPlayerModal } from '../../../components';
 
 import css from './VideoCourseProgramCard.module.css';
+import { isCustomerReviewPending } from '../../../transactions/transactionProcessPurchase';
+
+const buildMuxThumbnailUrl = (playbackId, token) => {
+  if (!playbackId) return null;
+  const tokenParam = token ? `&token=${token}` : '';
+  return `https://image.mux.com/${playbackId}/thumbnail.jpg?time=1&width=960&height=540&fit_mode=crop${tokenParam}`;
+};
+
+const fetchMuxThumbnailToken = playbackId =>
+  getMuxJwtToken({ playbackId, type: 'thumbnail' }).then(data => data.token);
 
 const CheckCircleIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 20 20"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
     <circle cx="10" cy="10" r="8.33333" fill="#067647" />
     <path
       d="M6.66699 10L8.75033 12.0833L13.3337 7.5"
@@ -39,20 +64,41 @@ const ChevronIcon = ({ expanded }) => (
 );
 
 const PlayIcon = () => (
-  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+  <svg
+    width="32"
+    height="32"
+    viewBox="0 0 32 32"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
     <circle cx="16" cy="16" r="16" fill="white" fillOpacity="0.85" />
     <path d="M13 10.5L22 16L13 21.5V10.5Z" fill="#101828" />
   </svg>
 );
 
 const SmallPlayIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 12 12"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
     <path d="M2.5 1.5L10 6L2.5 10.5V1.5Z" fill="white" />
   </svg>
 );
 
 const EllipsisIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 20 20"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
     <path
       d="M10.0003 10.8333C10.4606 10.8333 10.8337 10.4602 10.8337 9.99999C10.8337 9.53975 10.4606 9.16666 10.0003 9.16666C9.54009 9.16666 9.16699 9.53975 9.16699 9.99999C9.16699 10.4602 9.54009 10.8333 10.0003 10.8333Z"
       stroke="#717680"
@@ -78,7 +124,14 @@ const EllipsisIcon = () => (
 );
 
 const CertificateIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 20 20"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
     <path
       d="M10 12.5V17.5L7.5 16.25L5 17.5V12.5M10 12.5C11.3807 12.5 12.5 11.3807 12.5 10C12.5 8.61929 11.3807 7.5 10 7.5C8.61929 7.5 7.5 8.61929 7.5 10C7.5 11.3807 8.61929 12.5 10 12.5Z"
       stroke="currentColor"
@@ -97,7 +150,14 @@ const CertificateIcon = () => (
 );
 
 const StarIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 20 20"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
     <path
       d="M10.0003 1.66667L12.5753 6.88334L18.3337 7.72501L14.167 11.7833L15.1503 17.5167L10.0003 14.8083L4.85033 17.5167L5.83366 11.7833L1.66699 7.72501L7.42533 6.88334L10.0003 1.66667Z"
       stroke="currentColor"
@@ -108,36 +168,63 @@ const StarIcon = () => (
   </svg>
 );
 
-const MOCK_SECTIONS = [
-  {
-    id: 'section-1',
-    titleId: 'MyClassesTab.videoSectionIntro',
-    videos: [
-      { id: 'video-1', titleId: 'MyClassesTab.videoFirstTitle', variant: 'green' },
-      { id: 'video-2', titleId: 'MyClassesTab.videoSecondTitle', variant: 'grey' },
-      { id: 'video-3', titleId: 'MyClassesTab.videoThirdTitle', variant: 'grey' },
-    ],
-  },
-  { id: 'section-2', titleId: 'MyClassesTab.videoSectionFirstTopic' },
-  { id: 'section-3', titleId: 'MyClassesTab.videoSectionAnotherTopic' },
-  { id: 'section-4', titleId: 'MyClassesTab.videoSectionLastTopic' },
-  { id: 'section-5', titleId: 'MyClassesTab.videoSectionConclusions' },
-];
+const VideoItem = ({ video, onPlay }) => {
+  const { title, description, variant } = video;
+  const playbackId = video.video?.playback_id;
 
-const VideoItem = ({ video }) => {
-  const { titleId, variant } = video;
+  const [thumbnailToken, setThumbnailToken] = useState(null);
+  const [thumbnailError, setThumbnailError] = useState(false);
+  const [thumbnailUnavailable, setThumbnailUnavailable] = useState(false);
+  const [thumbnailLoaded, setThumbnailLoaded] = useState(false);
+  const [thumbnailRetry, setThumbnailRetry] = useState(0);
+  const fetchedRef = useRef(false);
+
+  useEffect(() => {
+    if (!playbackId || fetchedRef.current) return;
+    fetchedRef.current = true;
+    fetchMuxThumbnailToken(playbackId)
+      .then(token => setThumbnailToken(token))
+      .catch(() => setThumbnailError(true));
+  }, [playbackId]);
+
+  const thumbnailUrl =
+    thumbnailError || !thumbnailToken ? null : buildMuxThumbnailUrl(playbackId, thumbnailToken);
+  const thumbnailSrc =
+    thumbnailUrl && !thumbnailUnavailable ? `${thumbnailUrl}&retry=${thumbnailRetry}` : null;
+
+  const handleThumbnailError = () => {
+    if (thumbnailRetry < 3) {
+      setThumbnailRetry(prev => prev + 1);
+    } else {
+      setThumbnailUnavailable(true);
+    }
+  };
 
   return (
     <li className={css.videoItem}>
-      <p className={css.videoItemTitle}>
-        <FormattedMessage id={titleId} />
-      </p>
-      <div
+      <p className={css.videoItemTitle}>{title}</p>
+      <button
+        type="button"
         className={classNames(css.videoThumbnail, {
           [css.videoThumbnailGreen]: variant === 'green',
-          [css.videoThumbnailGrey]: variant === 'grey',
+          [css.videoThumbnailGrey]: variant === 'grey' || !thumbnailSrc,
         })}
+        onClick={() => playbackId && onPlay(playbackId)}
+        disabled={!playbackId}
+        aria-label={title}
       >
+        {thumbnailSrc ? (
+          <img
+            src={thumbnailSrc}
+            alt=""
+            aria-hidden
+            className={classNames(css.videoThumbnailImg, {
+              [css.videoThumbnailImgLoaded]: thumbnailLoaded,
+            })}
+            onLoad={() => setThumbnailLoaded(true)}
+            onError={handleThumbnailError}
+          />
+        ) : null}
         <div className={css.videoPlayOverlay}>
           <PlayIcon />
         </div>
@@ -147,16 +234,14 @@ const VideoItem = ({ video }) => {
             <div className={css.videoProgressFill} />
           </div>
         </div>
-      </div>
-      <p className={css.videoDescription}>
-        <FormattedMessage id="MyClassesTab.videoDescription" />
-      </p>
+      </button>
+      {description ? <p className={css.videoDescription}>{description}</p> : null}
     </li>
   );
 };
 
-const AccordionSection = ({ section, isExpanded, onToggle }) => {
-  const { id, titleId, videos } = section;
+const AccordionSection = ({ section, isExpanded, onToggle, onPlay }) => {
+  const { id, title, description, lessons } = section;
   const sectionId = `accordion-${id}`;
 
   return (
@@ -168,16 +253,14 @@ const AccordionSection = ({ section, isExpanded, onToggle }) => {
         aria-controls={sectionId}
         onClick={onToggle}
       >
-        <span className={css.accordionTitle}>
-          <FormattedMessage id={titleId} />
-        </span>
+        <span className={css.accordionTitle}>{title}</span>
         <ChevronIcon expanded={isExpanded} />
       </button>
-      {isExpanded && videos?.length ? (
+      {isExpanded && lessons?.length ? (
         <div id={sectionId} className={css.accordionPanel}>
           <ul className={css.videoList}>
-            {videos.map(video => (
-              <VideoItem key={video.id} video={video} />
+            {lessons.map(video => (
+              <VideoItem key={video.id} video={video} onPlay={onPlay} />
             ))}
           </ul>
         </div>
@@ -192,48 +275,77 @@ const AccordionSection = ({ section, isExpanded, onToggle }) => {
  * @component
  * @returns {JSX.Element}
  */
-const VideoCourseProgramCard = () => {
+const VideoCourseProgramCard = ({ tx, tags, imageUrl }) => {
   const intl = useIntl();
+  const dispatch = useDispatch();
   const [expandedSectionId, setExpandedSectionId] = useState('section-1');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [muxPlayerOpen, setMuxPlayerOpen] = useState(false);
+  const [activePlaybackId, setActivePlaybackId] = useState(null);
+  const history = useHistory();
+  const routes = useRouteConfiguration();
+
+  const onManageDisableScrolling = (id, shouldDisable) =>
+    dispatch(manageDisableScrolling(id, shouldDisable));
+
+  const {
+    attributes: { transitions },
+    listing,
+    provider,
+  } = tx;
+  const { displayName: providerName } = provider.attributes.profile;
+  const { title, publicData } = listing.attributes;
+  const { courseModules } = publicData;
+
+  const showReview = isCustomerReviewPending(transitions);
 
   const handleToggle = sectionId => {
     setExpandedSectionId(prev => (prev === sectionId ? null : sectionId));
   };
 
+  const handlePlay = playbackId => {
+    setActivePlaybackId(playbackId);
+    setMuxPlayerOpen(true);
+  };
+
   return (
     <article className={css.root}>
-      <header className={css.cardHeader}>
-        <div
-          className={css.thumbnail}
-          role="img"
-          aria-label={intl.formatMessage({ id: 'MyClassesTab.videoCourseThumbnailAlt' })}
+      {muxPlayerOpen ? (
+        <MuxPlayerModal
+          id={`video-course-player-${tx.id.uuid}`}
+          playbackId={activePlaybackId}
+          isOpen={muxPlayerOpen}
+          onClose={() => {
+            setMuxPlayerOpen(false);
+            setActivePlaybackId(null);
+          }}
+          onManageDisableScrolling={onManageDisableScrolling}
         />
+      ) : null}
+      <header className={css.cardHeader}>
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt={intl.formatMessage({ id: 'MyClassesTab.digitalDownloadThumbnailAlt' })}
+            className={css.thumbnailImage}
+          />
+        ) : (
+          <div className={css.thumbnailPlaceholder} aria-hidden />
+        )}
         <div className={css.programInfo}>
-          <h2 className={css.programTitle}>
-            <FormattedMessage id="MyClassesTab.videoCourseTitle" />
-          </h2>
+          <h2 className={css.programTitle}>{title}</h2>
           <p className={css.programAuthor}>
             <FormattedMessage
               id="MyClassesTab.programAuthor"
               values={{
-                author: (
-                  <span className={css.programAuthorName}>
-                    <FormattedMessage id="MyClassesTab.videoCourseAuthorName" />
-                  </span>
-                ),
+                author: <span className={css.programAuthorName}>{providerName}</span>,
               }}
             />
           </p>
-          <div className={css.tags}>
-            <span className={classNames(css.tag, css.tagGreen)}>
-              <FormattedMessage id="MyClassesTab.tagPersonalGrowth" />
-            </span>
-            <span className={classNames(css.tag, css.tagNeutral)}>
-              <FormattedMessage id="MyClassesTab.tagVideoCourse" />
-            </span>
-          </div>
-          <p className={css.availability}>
+
+          {tags}
+
+          {/* <p className={css.availability}>
             <CheckCircleIcon />
             <span className={css.availabilityLabel}>
               <FormattedMessage id="MyClassesTab.availableUntilLabel" />
@@ -241,49 +353,43 @@ const VideoCourseProgramCard = () => {
             <span className={css.availabilityDate}>
               <FormattedMessage id="MyClassesTab.videoCourseAvailableUntil" />
             </span>
-          </p>
+          </p> */}
         </div>
       </header>
 
       <ul className={css.accordionList}>
-        {MOCK_SECTIONS.map(section => (
+        {courseModules.map(section => (
           <AccordionSection
             key={section.id}
             section={section}
             isExpanded={expandedSectionId === section.id}
             onToggle={() => handleToggle(section.id)}
+            onPlay={handlePlay}
           />
         ))}
       </ul>
 
-      <footer className={css.cardFooter}>
-        <div className={css.footerLeft}>
-          <button
-            type="button"
-            className={css.menuButton}
-            aria-label={intl.formatMessage({ id: 'MyClassesTab.moreActions' })}
-            aria-expanded={isMenuOpen}
-            onClick={() => setIsMenuOpen(prev => !prev)}
-          >
-            <EllipsisIcon />
-          </button>
-          {isMenuOpen ? (
-            <button type="button" className={css.cancelClassButton}>
-              <FormattedMessage id="MyClassesTab.cancelClass" />
+      {showReview && (
+        <footer className={css.cardFooter}>
+          <div className={css.footerActions}>
+            <button
+              className={css.footerOutlineButton}
+              onClick={() => {
+                const path = createResourceLocatorString(
+                  'OrderDetailsPage',
+                  routes,
+                  { id: tx.id.uuid },
+                  {}
+                );
+                history.push(path);
+              }}
+            >
+              <StarIcon />
+              <FormattedMessage id="MyClassesTab.leaveReview" />
             </button>
-          ) : null}
-        </div>
-        <div className={css.footerActions}>
-          <button type="button" className={css.footerButton} disabled>
-            <CertificateIcon />
-            <FormattedMessage id="MyClassesTab.downloadCertificate" />
-          </button>
-          <button type="button" className={css.footerButton} disabled>
-            <StarIcon />
-            <FormattedMessage id="MyClassesTab.leaveReview" />
-          </button>
-        </div>
-      </footer>
+          </div>
+        </footer>
+      )}
     </article>
   );
 };

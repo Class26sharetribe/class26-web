@@ -630,6 +630,10 @@ export const TransactionPageComponent = props => {
             {...txBookingMaybe}
             currency={config.currency}
             marketplaceName={config.marketplaceName}
+            hideLineItems={{
+              basePrice: isCustomerRole,
+              subTotal: true,
+            }}
           />
         ),
       }

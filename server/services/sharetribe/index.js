@@ -33,8 +33,14 @@ const queryTransactions = async (params = {}) => {
   return iSdk.transactions.query(params);
 };
 
+const getListings = async (params = {}) => {
+  const iSdk = getIntegrationSdk();
+  return iSdk.listings.query(params);
+};
+
 module.exports = {
   getTransaction,
   updateTransactionMetadata,
   queryTransactions,
+  getListings,
 };

@@ -73,12 +73,7 @@ module.exports = (req, res) => {
   ])
     .then(([showListingResponse, fetchAssetsResponse, showListingPrivateResponse]) => {
       const listing = showListingResponse.data.data;
-      const { digitalAssets } = showListingPrivateResponse.data.data.attributes.privateData || {};
       const commissionAsset = fetchAssetsResponse.data.data[0];
-
-      if (!!digitalAssets) {
-        assetsMaybe = digitalAssets;
-      }
 
       const currency = listing.attributes.price?.currency || orderData.currency;
       const { providerCommission, customerCommission } =
@@ -106,21 +101,6 @@ module.exports = (req, res) => {
           ...metadataMaybe,
         },
       };
-
-      if (!isSpeculative && !!assetsMaybe) {
-        const securedAssets = [];
-        for (const asset of assetsMaybe) {
-          const { url, playback_id } = asset.file;
-          securedAssets.push({
-            ...(url && { url }),
-            ...(playback_id && { playback_id }),
-            name: asset.name,
-            type: asset.type,
-          });
-        }
-
-        params.protectedData.digitalAssets = securedAssets;
-      }
 
       if (isSpeculative) {
         return trustedSdk.transactions.initiateSpeculative(body, queryParams);

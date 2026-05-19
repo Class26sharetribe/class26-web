@@ -7,7 +7,12 @@ import {
   isValidCurrencyForTransactionProcess,
   pickTransactionFieldsData,
 } from '../../util/fieldHelpers.js';
-import { propTypes } from '../../util/types';
+import {
+  LISTING_TYPE_GROUP_COACHING,
+  LISTING_TYPE_INDIVIDUAL_COACHING,
+  LISTING_TYPE_VIDEO_COURSE,
+  propTypes,
+} from '../../util/types';
 import { ensureTransaction } from '../../util/data';
 import { createSlug } from '../../util/urlHelpers';
 import { isTransactionInitiateListingNotFoundError } from '../../util/errors';
@@ -43,6 +48,9 @@ import MobileListingImage from './MobileListingImage';
 import MobileOrderBreakdown from './MobileOrderBreakdown';
 
 import css from './CheckoutPage.module.css';
+import { GreenCheckIcon } from '../../components/ListingCard/ListingCard.js';
+import { formatCourseDuration } from '../../util/courseHelpers.js';
+import classNames from 'classnames';
 
 // Stripe PaymentIntent statuses, where user actions are already completed
 // https://stripe.com/docs/payments/payment-intents/status
@@ -479,6 +487,10 @@ export const CheckoutPageWithPayment = props => {
         {...txBookingMaybe}
         currency={config.currency}
         marketplaceName={config.marketplaceName}
+        hideLineItems={{
+          basePrice: true,
+          // subTotal: true,
+        }}
       />
     ) : null;
 
@@ -566,6 +578,47 @@ export const CheckoutPageWithPayment = props => {
     'stripe'
   );
 
+  const { categoryLevel1, listingType, totalSessions, courseModules } =
+    listing.attributes.publicData || {};
+
+  const categories = config.categoryConfiguration?.categories || [];
+  const categoryLevel1Label = categoryLevel1
+    ? categories.find(c => c.id === categoryLevel1)?.name || categoryLevel1
+    : null;
+
+  const validListingTypes = config.listing.listingTypes || [];
+  const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
+  const listingTypeLabel = foundListingTypeConfig?.label || null;
+
+  const durationText = !!courseModules ? formatCourseDuration(courseModules) : null;
+
+  const tags = (
+    <div className={css.tags}>
+      <span className={classNames(css.tag, css.tagGreen)}>{categoryLevel1Label}</span>
+      <span className={classNames(css.tag, css.tagNeutral)}>{listingTypeLabel}</span>
+    </div>
+  );
+
+  const courseHighlight = (
+    <div className={css.courseHighlight}>
+      <GreenCheckIcon />
+      <span className={css.courseHighlightText}>
+        {listingType === LISTING_TYPE_INDIVIDUAL_COACHING ? (
+          <FormattedMessage
+            id="ListingCard.highlightIndividualCoaching"
+            values={{ totalSessions }}
+          />
+        ) : listingType === LISTING_TYPE_GROUP_COACHING ? (
+          <FormattedMessage id="ListingCard.highlightGroupCoaching" values={{ totalSessions }} />
+        ) : listingType === LISTING_TYPE_VIDEO_COURSE ? (
+          <FormattedMessage id="ListingCard.highlightVideoCourse" values={{ durationText }} />
+        ) : (
+          <FormattedMessage id="ListingCard.highlightDefault" />
+        )}
+      </span>
+    </div>
+  );
+
   // Render an error message if the listing is using a non Stripe supported currency
   // and is using a transaction process with Stripe actions (default-booking or default-purchase)
   if (!isStripeCompatibleCurrency) {
@@ -607,6 +660,8 @@ export const CheckoutPageWithPayment = props => {
             speculateTransactionErrorMessage={errorMessages.speculateTransactionErrorMessage}
             breakdown={breakdown}
             priceVariantName={priceVariantName}
+            tags={tags}
+            courseHighlight={courseHighlight}
           />
           <section className={css.paymentContainer}>
             {errorMessages.initiateOrderErrorMessage}
@@ -671,6 +726,8 @@ export const CheckoutPageWithPayment = props => {
           breakdown={breakdown}
           showListingImage={showListingImage}
           intl={intl}
+          tags={tags}
+          courseHighlight={courseHighlight}
         />
       </div>
     </Page>

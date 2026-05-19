@@ -210,8 +210,8 @@ export const generatePresignedUrl = body => {
   return post('/api/presigned-url', body);
 };
 
-export const getSecuredUrl = key => {
-  return get('/api/secured-url?' + new URLSearchParams({ key }).toString());
+export const getSecuredUrl = body => {
+  return get('/api/secured-url?' + new URLSearchParams(body).toString());
 };
 
 export const getMuxUploadUrl = (body = {}) => {

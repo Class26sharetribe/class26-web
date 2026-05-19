@@ -44,6 +44,8 @@ const PanelHeading = props => {
     listingTitle,
     listingDeleted,
     isCustomerBanned,
+    tags,
+    courseHighlight,
   } = props;
 
   const isProvider = transactionRole === 'provider';
@@ -74,6 +76,10 @@ const PanelHeading = props => {
           </>
         ) : null}
       </H2>
+
+      {tags}
+      {courseHighlight}
+
       {isCustomer && listingDeleted ? (
         <p className={css.transactionInfoMessage}>
           <FormattedMessage id="TransactionPanel.messageDeletedListing" />

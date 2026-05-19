@@ -44,7 +44,9 @@ export const OrderBreakdownComponent = props => {
     currency,
     marketplaceName,
     intl,
+    hideLineItems,
   } = props;
+  const { basePrice, subTotal } = hideLineItems || {};
 
   const isCustomer = userRole === 'customer';
   const isProvider = userRole === 'provider';
@@ -113,18 +115,22 @@ export const OrderBreakdownComponent = props => {
         timeZone={timeZone}
       />
 
-      <LineItemBasePriceMaybe lineItems={lineItems} code={lineItemUnitType} intl={intl} />
+      {!basePrice && (
+        <LineItemBasePriceMaybe lineItems={lineItems} code={lineItemUnitType} intl={intl} />
+      )}
       <LineItemShippingFeeMaybe lineItems={lineItems} intl={intl} />
       <LineItemPickupFeeMaybe lineItems={lineItems} intl={intl} />
       <LineItemUnknownItemsMaybe lineItems={lineItems} isProvider={isProvider} intl={intl} />
 
-      <LineItemSubTotalMaybe
-        lineItems={lineItems}
-        code={lineItemUnitType}
-        userRole={userRole}
-        intl={intl}
-        marketplaceCurrency={currency}
-      />
+      {!subTotal && (
+        <LineItemSubTotalMaybe
+          lineItems={lineItems}
+          code={lineItemUnitType}
+          userRole={userRole}
+          intl={intl}
+          marketplaceCurrency={currency}
+        />
+      )}
       <LineItemRefundMaybe lineItems={lineItems} intl={intl} marketplaceCurrency={currency} />
 
       <LineItemCustomerCommissionMaybe

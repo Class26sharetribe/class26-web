@@ -589,3 +589,61 @@
   line-height: 20px;
   flex-shrink: 0;
 }
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.tag {
+  display: inline-block;
+  font-family: Nohemi;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.tagGreen {
+  background: #cefde4;
+  color: #1a5d3a;
+}
+
+.tagNeutral {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+.courseHighlight {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.courseCheckIcon {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--course-green-strong);
+}
+
+.courseCheckSvg {
+  stroke: currentColor;
+}
+
+.courseHighlightText {
+  font-family: Nohemi;
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 24px;
+  letter-spacing: 0px;
+
+  color: #006647;
+  margin: 0;
+  margin-top: 4px;
+}

@@ -2,7 +2,12 @@ import React from 'react';
 import classNames from 'classnames';
 
 import { FormattedMessage } from '../../util/reactIntl';
-import { propTypes } from '../../util/types';
+import {
+  LISTING_TYPE_GROUP_COACHING,
+  LISTING_TYPE_INDIVIDUAL_COACHING,
+  LISTING_TYPE_VIDEO_COURSE,
+  propTypes,
+} from '../../util/types';
 import { createSlug } from '../../util/urlHelpers';
 import { formatMoney } from '../../util/currency';
 
@@ -16,6 +21,7 @@ import {
 } from '../../components';
 
 import css from './CheckoutPage.module.css';
+import { GreenCheckIcon } from '../../components/ListingCard/ListingCard';
 
 /**
  * A card that displays the listing and booking details on the checkout page.
@@ -47,6 +53,8 @@ const DetailsSideCard = props => {
     breakdown,
     showListingImage,
     intl,
+    courseHighlight,
+    tags,
   } = props;
 
   const { price, publicData } = listing?.attributes || {};
@@ -89,6 +97,10 @@ const DetailsSideCard = props => {
               {listingTitle}
             </NamedLink>
           </H4>
+
+          {tags}
+          {courseHighlight}
+
           {showPrice ? (
             <div className={css.priceContainer}>
               <p className={css.price}>{formatMoney(intl, price)}</p>
@@ -112,10 +124,10 @@ const DetailsSideCard = props => {
             </div>
           ) : null}
 
-          <H6 as="h3" className={css.orderBreakdownTitle}>
+          {/* <H6 as="h3" className={css.orderBreakdownTitle}>
             <FormattedMessage id={`CheckoutPage.${processName}.orderBreakdown`} />
           </H6>
-          <hr className={css.totalDivider} />
+          <hr className={css.totalDivider} /> */}
         </div>
       ) : null}
       {breakdown}

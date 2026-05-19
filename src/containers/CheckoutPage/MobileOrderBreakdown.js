@@ -4,7 +4,13 @@ import { Heading } from '../../components';
 import css from './CheckoutPage.module.css';
 
 const MobileOrderBreakdown = props => {
-  const { breakdown, speculateTransactionErrorMessage, priceVariantName } = props;
+  const {
+    breakdown,
+    speculateTransactionErrorMessage,
+    priceVariantName,
+    tags,
+    courseHighlight,
+  } = props;
 
   return (
     <div className={css.priceBreakdownContainer}>
@@ -16,6 +22,9 @@ const MobileOrderBreakdown = props => {
         </div>
       ) : null}
       {speculateTransactionErrorMessage}
+
+      {tags}
+      {courseHighlight}
       {breakdown}
     </div>
   );

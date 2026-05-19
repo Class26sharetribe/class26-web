@@ -15,11 +15,12 @@ import ProfileSettingsTab from './ProfileSettingsTab/ProfileSettingsTab';
 import MyClassesTab from './MyClassesTab/MyClassesTab';
 
 import css from './PersonalAreaPage.module.css';
-
-export const MY_CLASSES_TAB = 'my-classes';
-export const SAVED_FOR_LATER_TAB = 'saved-courses';
-export const PERSONAL_PROFILE_TAB = 'profile';
-export const ACCOUNT_SETTINGS_TAB = 'account-settings';
+import {
+  ACCOUNT_SETTINGS_TAB,
+  MY_CLASSES_TAB,
+  PERSONAL_PROFILE_TAB,
+  SAVED_FOR_LATER_TAB,
+} from './PersonalAreaPage.duck';
 
 const TAB_CONTENT = {
   [PERSONAL_PROFILE_TAB]: <FormattedMessage id="PersonalAreaPage.personalProfileContent" />,
@@ -105,9 +106,7 @@ export const PersonalAreaPageComponent = props => {
               <MyClassesTab />
             </div>
           ) : (
-            <div className={css.contentWrapper}>
-              {TAB_CONTENT[currentTab]}
-            </div>
+            <div className={css.contentWrapper}>{TAB_CONTENT[currentTab]}</div>
           )}
         </main>
       </div>
