@@ -105,7 +105,7 @@
    :from :state/accepted,
    :to :state/delivered}
   {:name :transition/cancel,
-   :actor :actor.role/operator,
+   :actor :actor.role/customer,
    :actions
    [{:name :action/calculate-full-refund}
     {:name :action/stripe-refund-payment}

@@ -46,7 +46,7 @@ export const OrderBreakdownComponent = props => {
     intl,
     hideLineItems,
   } = props;
-  const { basePrice, subTotal } = hideLineItems || {};
+  const { basePrice, subTotal, bookingPeriod } = hideLineItems || {};
 
   const isCustomer = userRole === 'customer';
   const isProvider = userRole === 'provider';
@@ -108,12 +108,14 @@ export const OrderBreakdownComponent = props => {
 
   return (
     <div className={classes}>
-      <LineItemBookingPeriod
-        booking={booking}
-        code={lineItemUnitType}
-        dateType={dateType}
-        timeZone={timeZone}
-      />
+      {!bookingPeriod && (
+        <LineItemBookingPeriod
+          booking={booking}
+          code={lineItemUnitType}
+          dateType={dateType}
+          timeZone={timeZone}
+        />
+      )}
 
       {!basePrice && (
         <LineItemBasePriceMaybe lineItems={lineItems} code={lineItemUnitType} intl={intl} />

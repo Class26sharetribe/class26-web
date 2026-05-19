@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   background: var(--colorWhite);
-  border: 1px solid #E9EAEB;
+  border: 1px solid #e9eaeb;
   border-radius: 12px;
   overflow: hidden;
 }
@@ -25,12 +25,31 @@
   }
 }
 
-.thumbnail {
+.thumbnailPlaceholder {
   flex-shrink: 0;
   width: 100%;
   height: 160px;
   border-radius: 8px;
-  background: linear-gradient(135deg, #2d6a4f 0%, #95d5b2 35%, #d8f3dc 55%, #1b4332 100%);
+  background: linear-gradient(135deg, #f4d03f 0%, #a8e063 40%, #1a2a4a 100%);
+
+  @media (--viewportMedium) {
+    width: 200px;
+    height: 124px;
+  }
+
+  @media (--viewportLarge) {
+    width: 220px;
+    height: 136px;
+  }
+}
+
+.thumbnailImage {
+  flex-shrink: 0;
+  width: 100%;
+  height: 160px;
+  border-radius: 8px;
+  object-fit: cover;
+  display: block;
 
   @media (--viewportMedium) {
     width: 200px;
@@ -93,7 +112,7 @@
 }
 
 .tagGreen {
-  background: #CEFDE4;
+  background: #cefde4;
   color: #1a5d3a;
 }
 
@@ -108,7 +127,7 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  border-top: 1px solid #E9EAEB;
+  border-top: 1px solid #e9eaeb;
 }
 
 .sessionRow {
@@ -117,7 +136,7 @@
   align-items: flex-start;
   gap: 12px;
   padding: 16px 16px;
-  border-bottom: 1px solid #E9EAEB;
+  border-bottom: 1px solid #e9eaeb;
 
   @media (--viewportMedium) {
     flex-direction: row;
@@ -163,7 +182,7 @@
   font-size: 14px;
   line-height: 20px;
   color: #717680;
-  & svg{
+  & svg {
     fill: transparent;
   }
 }
@@ -192,7 +211,7 @@
 
 .sessionMetaItemActive {
   color: #067647;
-  & svg{
+  & svg {
     fill: transparent;
   }
 }
@@ -200,9 +219,9 @@
 .sessionIcon {
   flex-shrink: 0;
   color: currentColor;
-  
+
   fill: transparent;
-  & svg{
+  & svg {
   }
 }
 
@@ -225,7 +244,7 @@
   font-weight: 400;
   font-size: 14px;
   line-height: 20px;
-  color: #A4A7AE;
+  color: #a4a7ae;
 }
 
 .enterButton {
@@ -250,7 +269,7 @@
 }
 
 .enterButtonDisabled {
-  background: #E9EAEB;
+  background: #e9eaeb;
   color: #fff;
   cursor: not-allowed;
 }
@@ -263,7 +282,7 @@
   justify-content: space-between;
   gap: 12px;
   padding: 16px;
-  background: #FAFAFA;
+  background: #fafafa;
   flex-wrap: wrap;
 
   @media (--viewportMedium) {
@@ -291,7 +310,7 @@
   border-radius: 6px;
 
   &:hover {
-    background: #F3F4F6;
+    background: #f3f4f6;
   }
 }
 
@@ -301,7 +320,7 @@
   font-size: 14px;
   line-height: 20px;
   padding: 8px 14px;
-  border: 1px solid #D5D7DA;
+  border: 1px solid #d5d7da;
   border-radius: 6px;
   background: transparent;
   color: #101828;
@@ -309,7 +328,7 @@
   white-space: nowrap;
 
   &:hover {
-    background: #F9FAFB;
+    background: #f9fafb;
   }
 }
 
@@ -321,27 +340,29 @@
   margin-left: auto;
 }
 
-.footerButton {
-  composes: marketplaceSmallFontStyles from global;
+.footerOutlineButton {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   padding: 8px 14px;
-  border: 1px solid #D5D7DA;
+  border: 1px solid #d5d7da;
   border-radius: 6px;
-  background: transparent;
-  color: #A4A7AE;
+  background: var(--colorWhite);
+  color: #101828;
   font-family: Nohemi;
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
-  cursor: not-allowed;
+  cursor: pointer;
   white-space: nowrap;
-  & svg{
-    fill: transparent;
-  }
+
   & svg {
     flex-shrink: 0;
     stroke: currentColor;
+    fill: transparent;
+  }
+
+  &:hover {
+    background: #f9fafb;
   }
 }

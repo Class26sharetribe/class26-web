@@ -248,6 +248,7 @@ export class TransactionPanelComponent extends Component {
       digitalAssets,
       courseModules,
       totalSessions,
+      sessionDates,
     } = listing?.attributes?.publicData;
     const listingTypeConfigs = config.listing.listingTypes;
     const listingTypeConfig = listingTypeConfigs.find(conf => conf.listingType === listingType);
@@ -274,6 +275,7 @@ export class TransactionPanelComponent extends Component {
 
     const listingTypeLabel = listingTypeConfig?.label || null;
     const durationText = !!courseModules ? formatCourseDuration(courseModules) : null;
+    const timeZone = listing?.attributes?.availabilityPlan?.timezone;
 
     const tags = (
       <div className={css.tags}>
@@ -281,6 +283,52 @@ export class TransactionPanelComponent extends Component {
         <span className={classNames(css.tag, css.tagNeutral)}>{listingTypeLabel}</span>
       </div>
     );
+
+    const sessionInfo =
+      sessionDates?.length && listingType === LISTING_TYPE_GROUP_COACHING
+        ? (() => {
+            const sorted = [...sessionDates].sort((a, b) => a.date.localeCompare(b.date));
+            return (
+              <div className={css.firstSessionInfo}>
+                {sorted.map((session, index) => {
+                  const { date, startTime } = session;
+                  const [year, month, day] = date.split('-').map(Number);
+                  const dateObj = new Date(year, month - 1, day, 12, 0, 0);
+                  const formattedDate = intl.formatDate(dateObj, {
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric',
+                    timeZone: timeZone || undefined,
+                  });
+                  let formattedTime = null;
+                  if (startTime) {
+                    const [hours, minutes] = startTime.split(':').map(Number);
+                    const timeObj = new Date(year, month - 1, day, hours, minutes || 0);
+                    formattedTime = intl.formatTime(timeObj, {
+                      hour: 'numeric',
+                      hour12: true,
+                      timeZone: timeZone || undefined,
+                      timeZoneName: 'short',
+                    });
+                  }
+                  const label = intl.formatMessage(
+                    { id: 'OrderPanel.sessionLabel' },
+                    { index: index + 1 }
+                  );
+                  return (
+                    <div key={index} className={css.sessionRow}>
+                      <p className={css.firstSessionLabel}>{label}</p>
+                      <p className={css.firstSessionDate}>
+                        {formattedDate}
+                        {formattedTime ? ` – ${formattedTime}` : ''}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })()
+        : null;
 
     const courseHighlight = (
       <div className={css.courseHighlight}>
@@ -339,6 +387,7 @@ export class TransactionPanelComponent extends Component {
               listingDeleted={listingDeleted}
               tags={tags}
               courseHighlight={courseHighlight}
+              sessionInfo={sessionInfo}
             />
 
             {requestQuote}
@@ -469,6 +518,7 @@ export class TransactionPanelComponent extends Component {
                   intl={intl}
                   tags={tags}
                   courseHighlight={courseHighlight}
+                  sessionInfo={sessionInfo}
                 />
                 {showOrderPanel ? orderPanel : null}
                 {showBreakDown ? (

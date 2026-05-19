@@ -1729,17 +1729,6 @@
   "MyClassesTab.programAuthor": "by {author}",
   "MyClassesTab.programAuthorName": "Eleanore Withmore",
   "MyClassesTab.tagIndividualCoaching": "Individual coaching",
-  "MyClassesTab.sessionFirst": "First Session",
-  "MyClassesTab.sessionFirstDate": "February 29th",
-  "MyClassesTab.sessionSecond": "Second Session",
-  "MyClassesTab.sessionSecondDate": "February 29th",
-  "MyClassesTab.sessionThird": "Third Session",
-  "MyClassesTab.sessionFourth": "Fourth Session",
-  "MyClassesTab.sessionFifth": "Fifth Session",
-  "MyClassesTab.sessionDuration": "60\"",
-  "MyClassesTab.sessionThirdSchedule": "Tomorrow, April 29th, 2 pm CET",
-  "MyClassesTab.sessionFourthSchedule": "May 29th, 2 pm CET",
-  "MyClassesTab.sessionFifthSchedule": "May 29th, 2 pm CET",
   "MyClassesTab.sessionCompleted": "Completed",
   "MyClassesTab.enterSession": "Enter",
   "MyClassesTab.downloadCertificate": "Download certificate",
@@ -1831,5 +1820,8 @@
   "ManageListingsPage.youHavePendingListings": "You have {count} {count, plural, one {listing} other {listings}} waiting for admin approval",
   "ProductOrderForm.ctaButtonDigitalDownload": "Buy now",
   "BookingFixedDurationForm.sessionScheduleNote": "You will be able to arrange the following sessions schedule directly with the teacher.",
-  "OrderPanel.sessionLabel": "{index, select, 1 {First} 2 {Second} 3 {Third} 4 {Fourth} 5 {Fifth} 6 {Sixth} 7 {Seventh} 8 {Eighth} 9 {Ninth} 10 {Tenth} other {{index}th}} session"
+  "OrderPanel.sessionLabel": "{index, select, 1 {First} 2 {Second} 3 {Third} 4 {Fourth} 5 {Fifth} 6 {Sixth} 7 {Seventh} 8 {Eighth} 9 {Ninth} 10 {Tenth} other {{index}th}} session",
+  "CheckoutPageWithPayment.firstSessionLabel": "First session",
+  "TransactionPage.default-booking.customer.transition-cancel.actionButton": "Cancel sessions",
+  "TransactionPage.default-booking.customer.transition-cancel.actionError": "Oops, failed to cancel the sessions. Please refresh the page and try again."
 }

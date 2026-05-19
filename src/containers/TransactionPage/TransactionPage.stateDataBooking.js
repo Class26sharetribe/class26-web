@@ -56,6 +56,19 @@ export const getStateDataForBookingProcess = (txInfo, processInfo) => {
         secondaryButtonProps: secondary,
       };
     })
+    .cond([states.ACCEPTED, CUSTOMER], () => {
+      const bookingStart = transaction?.booking?.attributes?.start;
+      const canCancel = bookingStart ? new Date() < new Date(bookingStart) : false;
+      const primary =
+        canCancel && !isCustomerBanned ? actionButtonProps(transitions.CANCEL, CUSTOMER) : null;
+      return {
+        processName,
+        processState,
+        showDetailCardHeadings: true,
+        showActionButtons: canCancel,
+        primaryButtonProps: primary,
+      };
+    })
     .cond([states.DELIVERED, _], () => {
       return {
         processName,

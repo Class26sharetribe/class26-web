@@ -55,6 +55,7 @@ const DetailsSideCard = props => {
     intl,
     courseHighlight,
     tags,
+    sessionInfo,
   } = props;
 
   const { price, publicData } = listing?.attributes || {};
@@ -100,6 +101,7 @@ const DetailsSideCard = props => {
 
           {tags}
           {courseHighlight}
+          {sessionInfo}
 
           {showPrice ? (
             <div className={css.priceContainer}>

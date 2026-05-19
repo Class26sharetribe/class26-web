@@ -10,6 +10,7 @@ const MobileOrderBreakdown = props => {
     priceVariantName,
     tags,
     courseHighlight,
+    sessionInfo,
   } = props;
 
   return (
@@ -25,6 +26,7 @@ const MobileOrderBreakdown = props => {
 
       {tags}
       {courseHighlight}
+      {sessionInfo}
       {breakdown}
     </div>
   );

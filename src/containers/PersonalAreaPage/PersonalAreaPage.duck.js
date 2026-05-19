@@ -5,6 +5,7 @@ import { loadData as loadSavedCourses } from '../SavedCoursesPage/SavedCoursesPa
 import { loadData as loadAccountSettings } from '../AccountSettingsPage/AccountSettingsPage.duck';
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { PURCHASE_PROCESS_NAME } from '../../transactions/transaction';
+import { transitions } from '../../transactions/transactionProcessBooking';
 
 // Tab constants duplicated here to avoid circular dependency with PersonalAreaPage.js
 export const MY_CLASSES_TAB = 'my-classes';
@@ -76,7 +77,9 @@ const fetchOrdersPayloadCreator = ({ search } = {}, { dispatch, rejectWithValue,
   } else if (filter === PAST_FILTER) {
     // TODO: filter past transactions
   } else if (filter === CANCELED_FILTER) {
-    // TODO: filter canceled transactions
+    params = {
+      lastTransitions: transitions.CANCEL,
+    };
   }
 
   const apiQueryParams = {
@@ -99,6 +102,7 @@ const fetchOrdersPayloadCreator = ({ search } = {}, { dispatch, rejectWithValue,
       'payinTotal',
       'payoutTotal',
       'lineItems',
+      'metadata',
     ],
     'fields.listing': ['title', 'availabilityPlan', 'publicData'],
     'fields.user': ['profile.displayName', 'profile.abbreviatedName', 'deleted', 'banned'],

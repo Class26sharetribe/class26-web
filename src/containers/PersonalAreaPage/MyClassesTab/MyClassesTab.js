@@ -17,11 +17,18 @@ import { IconSpinner } from '../../../components';
 import DigitalDownloadProgramCard from './DigitalDownloadProgramCard';
 import FindYourNextClass from './FindYourNextClass';
 import LearningCurveBanner from './LearningCurveBanner';
+import ClassProgramCard from './ClassProgramCard';
 
-import { LISTING_TYPE_DIGITAL_DOWNLOAD, LISTING_TYPE_VIDEO_COURSE } from '../../../util/types';
+import {
+  LISTING_TYPE_DIGITAL_DOWNLOAD,
+  LISTING_TYPE_GROUP_COACHING,
+  LISTING_TYPE_INDIVIDUAL_COACHING,
+  LISTING_TYPE_VIDEO_COURSE,
+} from '../../../util/types';
 import css from './MyClassesTab.module.css';
 import VideoCourseProgramCard from './VideoCourseProgramCard';
 import { useConfiguration } from '../../../context/configurationContext';
+import { transitions } from '../../../transactions/transactionProcessBooking';
 
 const FILTER_TABS = [
   { id: ACTIVE_FILTER, labelId: 'MyClassesTab.filterActive' },
@@ -56,6 +63,25 @@ const MyClassesTab = () => {
 
   const filterTabsLabel = intl.formatMessage({ id: 'MyClassesTab.filterTabsAriaLabel' });
 
+  let filteredTransactions = transactions;
+
+  if (activeFilter === ACTIVE_FILTER) {
+    filteredTransactions = transactions.filter(tx => {
+      const { listingType } = tx.listing.attributes.publicData;
+      const isAccepted = tx.attributes.transitions.some(t => t.transition === transitions.ACCEPT);
+
+      if (
+        (listingType === LISTING_TYPE_INDIVIDUAL_COACHING ||
+          listingType === LISTING_TYPE_GROUP_COACHING) &&
+        (!isAccepted || tx.attributes.lastTransition === transitions.CANCEL)
+      ) {
+        return false; // Exclude unaccepted coaching sessions from active filter) {
+      }
+
+      return true; // Include all other transactions in active filter
+    });
+  }
+
   return (
     <div className={css.root}>
       <div className={css.filterTabsWrapper} role="tablist" aria-label={filterTabsLabel}>
@@ -80,13 +106,13 @@ const MyClassesTab = () => {
           <div className={css.spinnerWrapper}>
             <IconSpinner />
           </div>
-        ) : transactions.length === 0 ? (
+        ) : filteredTransactions.length === 0 ? (
           <p className={css.noResults}>
             <FormattedMessage id="MyClassesTab.noResults" />
           </p>
         ) : (
           <>
-            {transactions.map(tx => {
+            {filteredTransactions.map(tx => {
               const { title, publicData } = tx.listing.attributes;
               const { categoryLevel1, listingType, digitalAssets } = publicData;
 
@@ -129,8 +155,11 @@ const MyClassesTab = () => {
                     imageUrl={imageUrl}
                   />
                 );
+              } else {
+                return (
+                  <ClassProgramCard key={tx.id.uuid} tx={tx} tags={tags} imageUrl={imageUrl} />
+                );
               }
-              return null;
             })}
           </>
         )}

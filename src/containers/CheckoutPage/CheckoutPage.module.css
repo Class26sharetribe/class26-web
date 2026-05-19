@@ -531,6 +531,42 @@
   color: #4b5563;
 }
 
+.firstSessionInfo {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+}
+
+.firstSessionLabel {
+  font-family: Nohemi;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #0369a1;
+  margin: 0 0 2px;
+}
+
+.firstSessionDate {
+  font-family: Nohemi;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 22px;
+  color: #0c4a6e;
+  margin: 0;
+}
+
+.sessionRow {
+  padding: 6px 0;
+}
+
+.sessionRow + .sessionRow {
+  border-top: 1px solid #bae6fd;
+}
+
 .courseHighlight {
   display: flex;
   flex-direction: row;

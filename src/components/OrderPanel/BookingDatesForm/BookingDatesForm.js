@@ -105,7 +105,8 @@ const getSessionInitialDates = sessionDates => {
   const startDate = earliest < todayMidnight ? tomorrow : earliest;
 
   const [ly, lm, ld] = sorted[sorted.length - 1].date.split('-').map(Number);
-  const endDate = new Date(ly, lm - 1, ld + 1); // midnight of day after last session
+  const endDate = new Date(startDate);
+  endDate.setDate(endDate.getDate() + 1); // midnight of day after startDate
 
   return { startDate, endDate };
 };
@@ -963,7 +964,9 @@ export const BookingDatesForm = props => {
               {!isOwnListing && (
                 <button
                   type="button"
-                  className={classNames(css.courseBtnSecondary, { [css.courseBtnSaved]: isFavorite })}
+                  className={classNames(css.courseBtnSecondary, {
+                    [css.courseBtnSaved]: isFavorite,
+                  })}
                   onClick={() => onSaveClick(isFavorite)}
                   aria-pressed={isFavorite}
                 >

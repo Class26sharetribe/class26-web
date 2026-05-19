@@ -633,6 +633,7 @@ export const TransactionPageComponent = props => {
             hideLineItems={{
               basePrice: isCustomerRole,
               subTotal: true,
+              bookingPeriod: true,
             }}
           />
         ),

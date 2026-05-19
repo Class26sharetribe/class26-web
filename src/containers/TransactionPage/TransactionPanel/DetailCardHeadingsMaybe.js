@@ -18,6 +18,7 @@ const DetailCardHeadingsMaybe = props => {
     intl,
     tags,
     courseHighlight,
+    sessionInfo,
   } = props;
 
   return showDetailCardHeadings ? (
@@ -37,6 +38,7 @@ const DetailCardHeadingsMaybe = props => {
       {subTitle ? <p className={css.detailCardSubtitle}>{subTitle}</p> : null}
       {tags}
       {courseHighlight}
+      {sessionInfo}
     </div>
   ) : null;
 };

@@ -46,6 +46,7 @@ const PanelHeading = props => {
     isCustomerBanned,
     tags,
     courseHighlight,
+    sessionInfo,
   } = props;
 
   const isProvider = transactionRole === 'provider';
@@ -79,6 +80,7 @@ const PanelHeading = props => {
 
       {tags}
       {courseHighlight}
+      {sessionInfo}
 
       {isCustomer && listingDeleted ? (
         <p className={css.transactionInfoMessage}>
