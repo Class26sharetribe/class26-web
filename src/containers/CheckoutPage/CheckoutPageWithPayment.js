@@ -599,51 +599,85 @@ export const CheckoutPageWithPayment = props => {
     </div>
   );
 
-  const sessionInfo =
-    sessionDates?.length && listingType === LISTING_TYPE_GROUP_COACHING
-      ? (() => {
-          const sorted = [...sessionDates].sort((a, b) => a.date.localeCompare(b.date));
-          return (
-            <div className={css.firstSessionInfo}>
-              {sorted.map((session, index) => {
-                const { date, startTime } = session;
-                const [year, month, day] = date.split('-').map(Number);
-                const dateObj = new Date(year, month - 1, day, 12, 0, 0);
-                const formattedDate = intl.formatDate(dateObj, {
-                  month: 'long',
-                  day: 'numeric',
-                  year: 'numeric',
-                  timeZone: timeZone || undefined,
-                });
-                let formattedTime = null;
-                if (startTime) {
-                  const [hours, minutes] = startTime.split(':').map(Number);
-                  const timeObj = new Date(year, month - 1, day, hours, minutes || 0);
-                  formattedTime = intl.formatTime(timeObj, {
-                    hour: 'numeric',
-                    hour12: true,
-                    timeZone: timeZone || undefined,
-                    timeZoneName: 'short',
-                  });
-                }
-                const label = intl.formatMessage(
-                  { id: 'OrderPanel.sessionLabel' },
-                  { index: index + 1 }
-                );
-                return (
-                  <div key={index} className={css.sessionRow}>
-                    <p className={css.firstSessionLabel}>{label}</p>
-                    <p className={css.firstSessionDate}>
-                      {formattedDate}
-                      {formattedTime ? ` – ${formattedTime}` : ''}
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
-          );
-        })()
-      : null;
+  const sessionInfo = (() => {
+    if (listingType === LISTING_TYPE_GROUP_COACHING && sessionDates?.length) {
+      const sorted = [...sessionDates].sort((a, b) => a.date.localeCompare(b.date));
+      return (
+        <div className={css.firstSessionInfo}>
+          {sorted.map((session, index) => {
+            const { date, startTime } = session;
+            const [year, month, day] = date.split('-').map(Number);
+            const dateObj = new Date(year, month - 1, day, 12, 0, 0);
+            const formattedDate = intl.formatDate(dateObj, {
+              month: 'long',
+              day: 'numeric',
+              year: 'numeric',
+              timeZone: timeZone || undefined,
+            });
+            let formattedTime = null;
+            if (startTime) {
+              const [hours, minutes] = startTime.split(':').map(Number);
+              const timeObj = new Date(year, month - 1, day, hours, minutes || 0);
+              formattedTime = intl.formatTime(timeObj, {
+                hour: 'numeric',
+                hour12: true,
+                timeZone: timeZone || undefined,
+                timeZoneName: 'short',
+              });
+            }
+            const label = intl.formatMessage(
+              { id: 'OrderPanel.sessionLabel' },
+              { index: index + 1 }
+            );
+            return (
+              <div key={index} className={css.sessionRow}>
+                <p className={css.firstSessionLabel}>{label}</p>
+                <p className={css.firstSessionDate}>
+                  {formattedDate}
+                  {formattedTime ? ` – ${formattedTime}` : ''}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+      );
+    }
+
+    if (listingType === LISTING_TYPE_INDIVIDUAL_COACHING) {
+      const bookingStart = orderData?.bookingDates?.bookingStart;
+      if (!bookingStart) return null;
+      const startDate = new Date(bookingStart);
+      const formattedDate = intl.formatDate(startDate, {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+        timeZone: timeZone || undefined,
+      });
+      const formattedTime = intl.formatTime(startDate, {
+        hour: 'numeric',
+        hour12: true,
+        timeZone: timeZone || undefined,
+        timeZoneName: 'short',
+      });
+      const label = intl.formatMessage({ id: 'OrderPanel.sessionLabel' }, { index: 1 });
+      return (
+        <div className={css.firstSessionInfo}>
+          <div className={css.sessionRow}>
+            <p className={css.firstSessionLabel}>{label}</p>
+            <p className={css.firstSessionDate}>
+              {formattedDate}
+              {formattedTime ? ` – ${formattedTime}` : ''}
+            </p>
+          </div>
+          <p className={css.firstSessionNote}>
+            <FormattedMessage id="BookingFixedDurationForm.sessionScheduleNote" />
+          </p>
+        </div>
+      );
+    }
+
+    return null;
+  })();
 
   const courseHighlight = (
     <div className={css.courseHighlight}>

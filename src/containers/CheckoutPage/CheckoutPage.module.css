@@ -559,6 +559,13 @@
   margin: 0;
 }
 
+.firstSessionNote {
+  font-size: 13px;
+  line-height: 18px;
+  color: #0369a1;
+  margin: 8px 0 0;
+}
+
 .sessionRow {
   padding: 6px 0;
 }

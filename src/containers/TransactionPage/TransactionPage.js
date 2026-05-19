@@ -693,6 +693,7 @@ export const TransactionPageComponent = props => {
       protectedData={transaction?.attributes?.protectedData}
       metadata={transaction?.attributes?.metadata}
       isCompleted={booking?.attributes?.end ? new Date(booking.attributes.end) < new Date() : null}
+      bookingStart={booking?.attributes?.start}
       messages={messages}
       savePaymentMethodFailed={savePaymentMethodFailed}
       fetchMessagesError={fetchMessagesError}
