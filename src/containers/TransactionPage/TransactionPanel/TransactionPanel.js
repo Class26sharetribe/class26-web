@@ -13,7 +13,7 @@ import { isMobileSafari } from '../../../util/userAgent';
 import { createSlug } from '../../../util/urlHelpers';
 import { displayPrice } from '../../../util/configHelpers';
 
-import { AvatarLarge, NamedLink, UserDisplayName } from '../../../components';
+import { AvatarLarge, IconsCollection, NamedLink, UserDisplayName } from '../../../components';
 
 import { stateDataShape } from '../TransactionPage.stateData';
 import SendMessageForm from '../SendMessageForm/SendMessageForm';
@@ -317,11 +317,16 @@ export class TransactionPanelComponent extends Component {
               );
               return (
                 <div key={index} className={css.sessionRow}>
+                  <div>
                   <p className={css.firstSessionLabel}>{label}</p>
                   <p className={css.firstSessionDate}>
                     {formattedDate}
                     {formattedTime ? ` – ${formattedTime}` : ''}
                   </p>
+                  </div>
+                  <span>
+                    <IconsCollection iconName="calendar-icon" />
+                  </span>
                 </div>
               );
             })}
@@ -346,11 +351,14 @@ export class TransactionPanelComponent extends Component {
         return (
           <div className={css.firstSessionInfo}>
             <div className={css.sessionRow}>
-              <p className={css.firstSessionLabel}>{label}</p>
-              <p className={css.firstSessionDate}>
-                {formattedDate}
-                {formattedTime ? ` – ${formattedTime}` : ''}
-              </p>
+              <div>
+                <p className={css.firstSessionLabel}>{label}</p>
+                <p className={css.firstSessionDate}>
+                  {formattedDate}
+                  {formattedTime ? ` – ${formattedTime}` : ''}
+                </p>
+                </div>
+              <span><IconsCollection iconName="calendar-icon" /></span>
             </div>
             <p className={css.firstSessionNote}>
               <FormattedMessage id="BookingFixedDurationForm.sessionScheduleNote" />

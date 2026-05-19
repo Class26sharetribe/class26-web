@@ -117,6 +117,47 @@ const IconsCollection = props => {
         </span>
       );
     }
+    case 'calendar-icon': {
+      return (
+        <span className={rootClass}>
+          <svg style={{ fill: 'transparent' }} width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g filter="url(#filter0_d_3329_41038)">
+              <path d="M2 5C2 2.79086 3.79086 1 6 1H34C36.2091 1 38 2.79086 38 5V33C38 35.2091 36.2091 37 34 37H6C3.79086 37 2 35.2091 2 33V5Z" fill="white" />
+              <path d="M6 1.5H34C35.933 1.5 37.5 3.067 37.5 5V33C37.5 34.933 35.933 36.5 34 36.5H6C4.067 36.5 2.5 34.933 2.5 33V5C2.5 3.067 4.067 1.5 6 1.5Z" stroke="#D5D7DA" />
+              <g filter="url(#filter1_d_3329_41038)">
+                <g clip-path="url(#clip0_3329_41038)">
+                  <path d="M23.3333 10.6667V14M16.6667 10.6667V14M12.5 17.3334H27.5M14.1667 12.3334H25.8333C26.7538 12.3334 27.5 13.0795 27.5 14V25.6667C27.5 26.5872 26.7538 27.3334 25.8333 27.3334H14.1667C13.2462 27.3334 12.5 26.5872 12.5 25.6667V14C12.5 13.0795 13.2462 12.3334 14.1667 12.3334Z" stroke="#101828" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" />
+                </g>
+              </g>
+            </g>
+            <defs>
+              <filter id="filter0_d_3329_41038" x="0" y="0" width="40" height="40" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
+                <feOffset dy="1" />
+                <feGaussianBlur stdDeviation="1" />
+                <feColorMatrix type="matrix" values="0 0 0 0 0.0392157 0 0 0 0 0.0496732 0 0 0 0 0.0705882 0 0 0 0.05 0" />
+                <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_3329_41038" />
+                <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_3329_41038" result="shape" />
+              </filter>
+              <filter id="filter1_d_3329_41038" x="8" y="8" width="24" height="24" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
+                <feOffset dy="1" />
+                <feGaussianBlur stdDeviation="1" />
+                <feColorMatrix type="matrix" values="0 0 0 0 0.0392157 0 0 0 0 0.0496732 0 0 0 0 0.0705882 0 0 0 0.05 0" />
+                <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_3329_41038" />
+                <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_3329_41038" result="shape" />
+              </filter>
+              <clipPath id="clip0_3329_41038">
+                <rect x="10" y="9" width="20" height="20" rx="4" fill="white" />
+              </clipPath>
+            </defs>
+          </svg>
+
+        </span>
+      );
+    }
     default:
       return null;
   }

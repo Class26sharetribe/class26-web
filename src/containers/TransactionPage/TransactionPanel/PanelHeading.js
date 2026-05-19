@@ -78,9 +78,11 @@ const PanelHeading = props => {
         ) : null}
       </H2>
 
-      {tags}
+ <div className={css.mobileInfo}>
+ {tags}
       {courseHighlight}
       {sessionInfo}
+ </div>
 
       {isCustomer && listingDeleted ? (
         <p className={css.transactionInfoMessage}>
