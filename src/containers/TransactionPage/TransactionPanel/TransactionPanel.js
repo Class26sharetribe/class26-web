@@ -332,7 +332,7 @@ export class TransactionPanelComponent extends Component {
 
     const courseHighlight = (
       <div className={css.courseHighlight}>
-        <GreenCheckIcon />
+        {/* <GreenCheckIcon /> */}
         <span className={css.courseHighlightText}>
           {listingType === LISTING_TYPE_INDIVIDUAL_COACHING ? (
             <FormattedMessage

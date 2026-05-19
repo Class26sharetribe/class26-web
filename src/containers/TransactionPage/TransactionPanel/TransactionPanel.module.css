@@ -289,7 +289,7 @@
 
   @media (--viewportLarge) {
     display: block;
-    margin: 24px 48px 32px 48px;
+    margin: 56px 48px 24px 48px;
 
     &.noListingImage {
       margin-top: 32px;
@@ -314,7 +314,7 @@
 
   @media (--viewportLarge) {
     margin-top: 0;
-    margin-bottom: 0;
+    margin-bottom: 32px;
   }
 }
 
@@ -594,7 +594,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 4px;
+  margin-bottom: 32px;
 }
 
 .tag {
