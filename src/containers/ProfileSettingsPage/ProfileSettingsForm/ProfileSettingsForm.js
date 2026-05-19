@@ -51,33 +51,34 @@ const DisplayNameMaybe = props => {
 
   const validateMaybe = isRequired
     ? {
-      validate: validators.required(
-        intl.formatMessage({
-          id: 'ProfileSettingsForm.displayNameRequired',
-        })
-      ),
-    }
+        validate: validators.required(
+          intl.formatMessage({
+            id: 'ProfileSettingsForm.displayNameRequired',
+          })
+        ),
+      }
     : {};
 
   return (
     <div className={css.sectionContainer}>
       <div className={css.usernameContainer}>
-        <h2 className={css.sectionTitle}>{intl.formatMessage({
-          id: 'ProfileSettingsForm.displayNameLabel',
-        })}</h2>
+        <h2 className={css.sectionTitle}>
+          {intl.formatMessage({
+            id: 'ProfileSettingsForm.displayNameLabel',
+          })}
+        </h2>
         <FieldTextInput
           className={css.row}
           type="text"
           id="displayName"
           name="displayName"
-          label={""}
+          label={''}
           placeholder={intl.formatMessage({
             id: 'ProfileSettingsForm.displayNamePlaceholder',
           })}
           {...validateMaybe}
         />
       </div>
-
     </div>
   );
 };
@@ -412,7 +413,6 @@ class ProfileSettingsFormComponent extends Component {
               </div>
               <div className={css.sectionContainer}>
                 <div className={css.usernameContainer}>
-
                   <h2 className={css.sectionTitle}>{firstNameLabel}</h2>
 
                   <FieldTextInput
@@ -420,7 +420,7 @@ class ProfileSettingsFormComponent extends Component {
                     type="text"
                     id="firstName"
                     name="firstName"
-                    label={""}
+                    label={''}
                     placeholder={firstNamePlaceholder}
                     validate={firstNameRequired}
                   />
@@ -428,8 +428,6 @@ class ProfileSettingsFormComponent extends Component {
 
                 {/* <div className={css.nameContainer}>
                 </div> */}
-
-
               </div>
               <div className={css.sectionContainer}>
                 <div className={css.usernameContainer}>
@@ -439,7 +437,7 @@ class ProfileSettingsFormComponent extends Component {
                     type="text"
                     id="lastName"
                     name="lastName"
-                    label={""}
+                    label={''}
                     placeholder={lastNamePlaceholder}
                     validate={lastNameRequired}
                   />
@@ -456,7 +454,7 @@ class ProfileSettingsFormComponent extends Component {
                       type="textarea"
                       id="bio"
                       name="bio"
-                      label={"Description"}
+                      label={'Description'}
                       placeholder={bioPlaceholder}
                       maxLength={BIO_MAX_LENGTH}
                     />
@@ -469,8 +467,6 @@ class ProfileSettingsFormComponent extends Component {
               </div>
               <div className={css.sectionContainer}>
                 <div className={css.usernameContainer}>
-
-
                   <H4 as="h2" className={css.sectionTitle}>
                     <FormattedMessage id="ProfileSettingsForm.socialLinksLabel" />
                   </H4>
@@ -509,7 +505,7 @@ class ProfileSettingsFormComponent extends Component {
                 </div>
               </div>
               <div className={classNames(css.sectionContainer, css.lastSection)}>
-              {userFieldProps.length && <h1>Languages</h1>} 
+                {!!userFieldProps.length && <h1>Languages</h1>}
                 {userFieldProps.map(({ key, ...fieldProps }) => (
                   <CustomExtendedDataField key={key} {...fieldProps} formId={formId} />
                 ))}
