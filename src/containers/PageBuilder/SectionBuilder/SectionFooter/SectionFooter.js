@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import classNames from 'classnames';
 import { LinkedLogo } from '../../../../components';
 
@@ -84,6 +85,47 @@ const SectionFooter = props => {
     linkLogoToExternalSite,
   } = props;
 
+  const currentUser = useSelector(state => state.user.currentUser);
+  const userType = currentUser?.attributes?.profile?.publicData?.userType;
+
+  // Build role-specific legal links for the terms-and-privacy block
+  const BASE_LEGAL_LINKS = [
+    '[Terms of Service](/terms-of-service)',
+    '[Additional Policy Compliance Protocols](/p/additional-policy-compliance-protocols)',
+    '[Privacy Policy](/privacy-policy)',
+    '[Cookie Policy](/p/cookie-policy)',
+    '[Refund and Cancellation Policy](/p/refund-and-cancellation-policy)',
+  ];
+  const EXPERT_EXTRA_LINKS = [
+    '[Expert Collaboration Agreement](/p/expert-collaboration-agreement)',
+    '[Expert Conduct Policy](/p/expert-conduct-policy)',
+    '[Quality Assurance Expert Review Cycle](/p/quality-assurance-expert-review-cycle)',
+    '[Community Guidelines](/p/community-guidelines)',
+    '[Complaints And Incidents Protocol](/p/complaints-and-incidents-protocol)',
+    '[Checkout Consents & Legal Confirmations](/p/checkout-consents-legal-confirmations)',
+  ];
+  const CUSTOMER_EXTRA_LINKS = [
+    '[User Agreements](/p/user-agreement)',
+    '[Community Guidelines](/p/community-guidelines)',
+    '[Complaints And Incidents Protocol](/p/complaints-and-incidents-protocol)',
+    '[Checkout Consents & Legal Confirmations](/p/checkout-consents-legal-confirmations)',
+  ];
+
+  const legalLinks =
+    userType === 'provider'
+      ? [...BASE_LEGAL_LINKS, ...EXPERT_EXTRA_LINKS]
+      : userType === 'customer'
+      ? [...BASE_LEGAL_LINKS, ...CUSTOMER_EXTRA_LINKS]
+      : BASE_LEGAL_LINKS;
+
+  const legalMarkdown = `Legal\n${legalLinks.map(l => `- ${l}`).join('\n')}`;
+
+  const resolvedBlocks = blocks.map(block =>
+    block.blockId === 'terms-and-privacy'
+      ? { ...block, text: { ...block.text, content: legalMarkdown } }
+      : block
+  );
+
   // If external mapping has been included for fields
   // E.g. { h1: { component: MyAwesomeHeader } }
   const fieldComponents = options?.fieldComponents;
@@ -101,8 +143,6 @@ const SectionFooter = props => {
     ? window.matchMedia(`(max-width: ${MAX_MOBILE_SCREEN_WIDTH}px)`)?.matches
     : true;
   const logoLayout = isMobileLayout ? 'mobile' : 'desktop';
-
-  // use block builder instead of mapping blocks manually
 
   return (
     <SectionContainer
@@ -160,12 +200,10 @@ const SectionFooter = props => {
             <div className={css.sloganDesktop}>
               <Field data={slogan} className={css.slogan} />
             </div>
-
           </div>
           <div className={classNames(css.grid, getGridCss(numberOfColumns))}>
-            <BlockBuilder blocks={blocks} sectionId={sectionId} options={options} />
+            <BlockBuilder blocks={resolvedBlocks} sectionId={sectionId} options={options} />
           </div>
-
         </div>
         <div className={css.copyrightContainer}>
           <Field data={copyright} className={css.copyright} />
@@ -174,7 +212,6 @@ const SectionFooter = props => {
               <BlockBuilder blocks={linksWithBlockId} sectionId={sectionId} options={options} />
             </div>
           ) : null}
-
         </div>
       </div>
     </SectionContainer>
