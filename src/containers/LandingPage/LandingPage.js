@@ -5,7 +5,6 @@ import { array, bool, object } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import { mockSellerUsers } from '../../config/configMockSellers';
 import { camelize } from '../../util/string';
 import { getFeaturedListingsProps } from '../../util/data';
 import { propTypes } from '../../util/types';
@@ -30,7 +29,6 @@ export const LandingPageComponent = props => {
     sellerFetchInProgress,
     sellerFetchError,
   } = props;
-  // const experts = [...mockSellerUsers, ...realSellers];
 
   return (
     <PageBuilder

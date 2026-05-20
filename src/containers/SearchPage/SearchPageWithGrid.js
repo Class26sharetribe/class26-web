@@ -2,7 +2,6 @@ import React, { Component, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import classNames from 'classnames';
 
-import { mockSellerUsers } from '../../config/configMockSellers';
 import { getUsersById } from '../../ducks/marketplaceData.duck';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 
@@ -122,7 +121,7 @@ const SearchPage = props => {
       sellerRefs.filter(ref => ref.type === 'user').map(ref => ref.id)
     )
   );
-  const sellers = useMemo(() => [...realSellers, ...mockSellerUsers], [realSellers]);
+  const sellers = useMemo(() => [...realSellers], [realSellers]);
   const scrollingDisabled = useSelector(state => isScrollingDisabled(state));
 
   return (
