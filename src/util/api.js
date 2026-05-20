@@ -233,3 +233,9 @@ export const deleteMuxAsset = body => {
 export const setupVideoConferenceRoom = body => {
   return post('/api/video-conference/setup-room', body);
 };
+
+// Update a transaction's metadata via the Integration SDK.
+// body: { transactionId: string, metadata: Object }
+export const updateTransactionMetadata = body => {
+  return post('/api/update-transaction-metadata', body);
+};

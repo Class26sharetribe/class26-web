@@ -40,6 +40,9 @@ import { initializeCardPaymentData } from '../../ducks/stripe.duck.js';
 import {
   H4,
   IconSpinner,
+  Button,
+  InlineTextButton,
+  Modal,
   NamedLink,
   NamedRedirect,
   Page,
@@ -48,7 +51,6 @@ import {
   OrderPanel,
   LayoutSingleColumn,
 } from '../../components';
-
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
@@ -67,6 +69,7 @@ import ReviewModal from './ReviewModal/ReviewModal';
 import RequestChangesModal from './RequestChangesModal/RequestChangesModal';
 import MakeCounterOfferModal from './MakeCounterOfferModal/MakeCounterOfferModal';
 import TransactionPanel from './TransactionPanel/TransactionPanel';
+import AcceptBookingModal from './AcceptBookingModal/AcceptBookingModal';
 
 import {
   makeTransition,
@@ -269,6 +272,7 @@ export const TransactionPageComponent = props => {
   const [changeRequestSubmitted, setChangeRequestSubmitted] = useState(false);
   const [isMakeCounterOfferModalOpen, setMakeCounterOfferModalOpen] = useState(false);
   const [counterOfferSubmitted, setCounterOfferSubmitted] = useState(false);
+  const [isAcceptBookingModalOpen, setAcceptBookingModalOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -445,6 +449,20 @@ export const TransactionPageComponent = props => {
     setMakeCounterOfferModalOpen(true);
   };
 
+  // Open accept booking modal (individual coaching)
+  const onOpenAcceptBookingModal = () => {
+    setAcceptBookingModalOpen(true);
+  };
+
+  const handleAcceptBookingSubmit = sessionDates => {
+    const acceptTransitionName = process?.transitions?.ACCEPT;
+    onTransition(transaction?.id, acceptTransitionName, {})
+      .then(() => setAcceptBookingModalOpen(false))
+      .catch(e => {
+        console.error('Accept booking transition failed', e);
+      });
+  };
+
   // Submit review and close the review modal
   const onSubmitReview = values => {
     const { reviewRating, reviewContent } = values;
@@ -585,6 +603,7 @@ export const TransactionPageComponent = props => {
           onOpenReviewModal,
           onOpenRequestChangesModal,
           onOpenMakeCounterOfferModal,
+          onOpenAcceptBookingModal,
           onCheckoutRedirect: handleSubmitOrderRequest,
           onMakeOfferRedirect: onMakeOffer,
           intl,
@@ -897,6 +916,23 @@ export const TransactionPageComponent = props => {
             changeRequestError={transitionError}
           />
         ) : null}
+        {isAcceptBookingModalOpen && (
+          <Modal
+            id="AcceptBookingModal"
+            isOpen={isAcceptBookingModalOpen}
+            onClose={() => setAcceptBookingModalOpen(false)}
+            onManageDisableScrolling={onManageDisableScrolling}
+            usePortal
+          >
+            <AcceptBookingModal
+              transactionId={transaction?.id?.uuid}
+              totalSessions={listing?.attributes?.publicData?.totalSessions}
+              bookingStart={booking?.attributes?.start}
+              onSubmit={handleAcceptBookingSubmit}
+              onClose={() => setAcceptBookingModalOpen(false)}
+            />
+          </Modal>
+        )}
         {showMakeCounterOfferModal ? (
           <MakeCounterOfferModal
             id="MakeCounterOfferModal"

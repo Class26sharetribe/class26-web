@@ -4,6 +4,7 @@ import {
   CONDITIONAL_RESOLVER_WILDCARD,
   ConditionalResolver,
 } from '../../transactions/transaction';
+import { LISTING_TYPE_INDIVIDUAL_COACHING } from '../../util/types';
 
 /**
  * Get state data against booking process for TransactionPage's UI.
@@ -13,7 +14,7 @@ import {
  * @param {*} processInfo  details about process
  */
 export const getStateDataForBookingProcess = (txInfo, processInfo) => {
-  const { transaction, transactionRole, nextTransitions } = txInfo;
+  const { transaction, transactionRole, nextTransitions, onOpenAcceptBookingModal } = txInfo;
   const isProviderBanned = transaction?.provider?.attributes?.banned;
   const isCustomerBanned = transaction?.provider?.attributes?.banned;
   const _ = CONDITIONAL_RESOLVER_WILDCARD;
@@ -45,7 +46,13 @@ export const getStateDataForBookingProcess = (txInfo, processInfo) => {
       return { processName, processState, showDetailCardHeadings: true, showExtraInfo: true };
     })
     .cond([states.PREAUTHORIZED, PROVIDER], () => {
-      const primary = isCustomerBanned ? null : actionButtonProps(transitions.ACCEPT, PROVIDER);
+      const listingType = transaction?.listing?.attributes?.publicData?.listingType;
+      const isIndividualCoaching = listingType === LISTING_TYPE_INDIVIDUAL_COACHING;
+      const primary = isCustomerBanned
+        ? null
+        : isIndividualCoaching && onOpenAcceptBookingModal
+        ? actionButtonProps(transitions.ACCEPT, PROVIDER, { onAction: onOpenAcceptBookingModal })
+        : actionButtonProps(transitions.ACCEPT, PROVIDER);
       const secondary = isCustomerBanned ? null : actionButtonProps(transitions.DECLINE, PROVIDER);
       return {
         processName,

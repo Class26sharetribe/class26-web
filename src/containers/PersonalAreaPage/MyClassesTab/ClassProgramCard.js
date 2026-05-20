@@ -246,10 +246,11 @@ const ClassProgramCard = ({ tx, tags, imageUrl }) => {
   const { displayName: providerName } = provider.attributes.profile;
   const {
     title,
-    publicData: { sessionDates },
+    publicData: { sessionDates: listingSessionDates },
     availabilityPlan: { timezone },
   } = listing.attributes;
-  console.log('Rendering ClassProgramCard with tx:', tx);
+
+  const sessionDates = listingSessionDates || metadata?.sessionDates;
 
   const handleVideoCall = () => {
     history.push(`/video-meeting?roomCode=${metadata.customerCode}`);

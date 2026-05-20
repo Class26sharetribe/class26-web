@@ -1,0 +1,86 @@
+.acceptBookingForm {
+  padding: 8px 0;
+}
+
+.acceptBookingTitle {
+  font-family: Nohemi;
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--marketplaceColor);
+  margin: 0 0 16px;
+}
+
+.acceptSessionRow {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 0;
+  border-top: 1px solid var(--colorGrey100);
+}
+
+.acceptSessionRow:first-of-type {
+  border-top: none;
+}
+
+.acceptSessionLabel {
+  font-family: Nohemi;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: var(--marketplaceColor);
+  letter-spacing: 0.05em;
+}
+
+.acceptSessionInputs {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.acceptSessionLocked {
+  font-family: Nohemi;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--colorGrey600);
+  margin: 0;
+  background: var(--colorGrey50);
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--colorGrey100);
+}
+
+.acceptSessionDatePicker {
+  flex: 1;
+  min-width: 160px;
+}
+
+.acceptSessionTimeSelect {
+  height: 40px;
+  padding: 0 10px;
+  border: 1px solid var(--colorGrey200);
+  border-radius: 6px;
+  font-size: 14px;
+  color: var(--colorGrey900);
+  background: var(--colorWhite);
+  cursor: pointer;
+}
+
+.acceptBookingActions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.acceptSessionError {
+  font-size: 12px;
+  color: var(--colorFail);
+  margin-top: 2px;
+}
+
+.acceptSessionTimeSelectError {
+  border-color: var(--colorFail);
+}
