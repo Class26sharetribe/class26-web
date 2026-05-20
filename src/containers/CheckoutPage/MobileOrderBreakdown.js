@@ -24,9 +24,11 @@ const MobileOrderBreakdown = props => {
       ) : null}
       {speculateTransactionErrorMessage}
 
-      {tags}
-      {courseHighlight}
-      {sessionInfo}
+      <div className={css.mobileInfo}>
+        {tags}
+        {courseHighlight}
+        {sessionInfo}
+      </div>
       {breakdown}
     </div>
   );

@@ -508,7 +508,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 4px;
+  margin-bottom: 32px;
 }
 
 .tag {
@@ -519,6 +519,18 @@
   line-height: 20px;
   padding: 4px 10px;
   border-radius: 999px;
+}
+
+.mobileInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+  padding: 0 24px;
+  margin-top: 24px;
+  @media (--viewportLarge) {
+    display: none;
+  }
 }
 
 .tagGreen {
@@ -532,46 +544,62 @@
 }
 
 .firstSessionInfo {
-  margin-top: 12px;
-  padding: 12px 14px;
-  border-radius: 8px;
-  background: #f0f9ff;
-  border: 1px solid #bae6fd;
+  margin-top: 24px;
 }
 
 .firstSessionLabel {
-  font-family: Nohemi;
-  font-weight: 600;
-  font-size: 12px;
-  line-height: 16px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: #0369a1;
-  margin: 0 0 2px;
+  font-family: Nunito Sans;
+  font-weight: 700;
+  font-style: Bold;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: spacing/3;
+  letter-spacing: 0%;
+
+  color: #101828;
+  margin: 0 0 4px;
+  padding: 0;
 }
 
 .firstSessionDate {
-  font-family: Nohemi;
-  font-weight: 600;
-  font-size: 15px;
-  line-height: 22px;
-  color: #0c4a6e;
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: spacing/3;
+  letter-spacing: 0%;
+
+  color: #101828;
   margin: 0;
+  padding: 0;
 }
 
 .firstSessionNote {
-  font-size: 13px;
-  line-height: 18px;
-  color: #0369a1;
-  margin: 8px 0 0;
+  font-family: Nunito Sans;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 14px;
+  leading-trim: NONE;
+  line-height: spacing/2,5;
+  letter-spacing: 0%;
+  
+  color: #414651;
+  padding: 0;
+  margin: 0;
 }
 
 .sessionRow {
-  padding: 6px 0;
+  padding: 0px 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
 }
 
-.sessionRow + .sessionRow {
-  border-top: 1px solid #bae6fd;
+.sessionRow+.sessionRow {
+  /* border-top: 1px solid #bae6fd; */
 }
 
 .courseHighlight {
@@ -579,6 +607,7 @@
   flex-direction: row;
   align-items: flex-start;
   gap: 8px;
+  margin-bottom: 24px;
 }
 
 .courseCheckIcon {

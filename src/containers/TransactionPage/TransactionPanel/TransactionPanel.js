@@ -318,11 +318,11 @@ export class TransactionPanelComponent extends Component {
               return (
                 <div key={index} className={css.sessionRow}>
                   <div>
-                  <p className={css.firstSessionLabel}>{label}</p>
-                  <p className={css.firstSessionDate}>
-                    {formattedDate}
-                    {formattedTime ? ` – ${formattedTime}` : ''}
-                  </p>
+                    <p className={css.firstSessionLabel}>{label}</p>
+                    <p className={css.firstSessionDate}>
+                      {formattedDate}
+                      {formattedTime ? ` – ${formattedTime}` : ''}
+                    </p>
                   </div>
                   <span>
                     <IconsCollection iconName="calendar-icon" />
@@ -357,7 +357,7 @@ export class TransactionPanelComponent extends Component {
                   {formattedDate}
                   {formattedTime ? ` – ${formattedTime}` : ''}
                 </p>
-                </div>
+              </div>
               <span><IconsCollection iconName="calendar-icon" /></span>
             </div>
             <p className={css.firstSessionNote}>

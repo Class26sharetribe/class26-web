@@ -26,7 +26,7 @@ import {
 } from '../../transactions/transaction';
 
 // Import shared components
-import { H3, H4, NamedLink, OrderBreakdown, Page, TopbarSimplified } from '../../components';
+import { H3, H4, IconsCollection, NamedLink, OrderBreakdown, Page, TopbarSimplified } from '../../components';
 
 import {
   bookingDatesMaybe,
@@ -67,8 +67,8 @@ const paymentFlow = (selectedPaymentMethod, saveAfterOnetimePayment) => {
   return selectedPaymentMethod === 'defaultCard'
     ? USE_SAVED_CARD
     : saveAfterOnetimePayment
-    ? PAY_AND_SAVE_FOR_LATER_USE
-    : ONETIME_PAYMENT;
+      ? PAY_AND_SAVE_FOR_LATER_USE
+      : ONETIME_PAYMENT;
 };
 
 const capitalizeString = s => `${s.charAt(0).toUpperCase()}${s.substr(1)}`;
@@ -197,8 +197,8 @@ const fetchSpeculatedTransactionIfNeeded = (orderParams, pageData, fetchSpeculat
     const requestTransition = isInquiryInPaymentProcess
       ? process.transitions.REQUEST_PAYMENT_AFTER_INQUIRY
       : isOfferPendingInNegotiationProcess
-      ? process.transitions.REQUEST_PAYMENT_TO_ACCEPT_OFFER
-      : process.transitions.REQUEST_PAYMENT;
+        ? process.transitions.REQUEST_PAYMENT_TO_ACCEPT_OFFER
+        : process.transitions.REQUEST_PAYMENT;
     const isPrivileged = process.isPrivileged(requestTransition);
 
     fetchSpeculatedTransaction(
@@ -322,8 +322,8 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     selectedPaymentFlow === USE_SAVED_CARD && hasDefaultPaymentMethodSaved
       ? { paymentMethod: stripePaymentMethodId }
       : selectedPaymentFlow === PAY_AND_SAVE_FOR_LATER_USE
-      ? { setupPaymentMethodForSaving: true }
-      : {};
+        ? { setupPaymentMethodForSaving: true }
+        : {};
 
   // These are the order parameters for the first payment-related transition
   // which is either initiate-transition or initiate-transition-after-enquiry
@@ -631,11 +631,16 @@ export const CheckoutPageWithPayment = props => {
             );
             return (
               <div key={index} className={css.sessionRow}>
-                <p className={css.firstSessionLabel}>{label}</p>
-                <p className={css.firstSessionDate}>
-                  {formattedDate}
-                  {formattedTime ? ` – ${formattedTime}` : ''}
-                </p>
+                <div>
+                  <p className={css.firstSessionLabel}>{label}</p>
+                  <p className={css.firstSessionDate}>
+                    {formattedDate}
+                    {formattedTime ? ` – ${formattedTime}` : ''}
+                  </p>
+                </div>
+                <span>
+                  <IconsCollection iconName="calendar-icon" />
+                </span>
               </div>
             );
           })}
@@ -663,11 +668,16 @@ export const CheckoutPageWithPayment = props => {
       return (
         <div className={css.firstSessionInfo}>
           <div className={css.sessionRow}>
-            <p className={css.firstSessionLabel}>{label}</p>
-            <p className={css.firstSessionDate}>
-              {formattedDate}
-              {formattedTime ? ` – ${formattedTime}` : ''}
-            </p>
+            <div>
+              <p className={css.firstSessionLabel}>{label}</p>
+              <p className={css.firstSessionDate}>
+                {formattedDate}
+                {formattedTime ? ` – ${formattedTime}` : ''}
+              </p>
+            </div>
+            <span>
+              <IconsCollection iconName="calendar-icon" />
+            </span>
           </div>
           <p className={css.firstSessionNote}>
             <FormattedMessage id="BookingFixedDurationForm.sessionScheduleNote" />
@@ -681,7 +691,7 @@ export const CheckoutPageWithPayment = props => {
 
   const courseHighlight = (
     <div className={css.courseHighlight}>
-      <GreenCheckIcon />
+     
       <span className={css.courseHighlightText}>
         {listingType === LISTING_TYPE_INDIVIDUAL_COACHING ? (
           <FormattedMessage
