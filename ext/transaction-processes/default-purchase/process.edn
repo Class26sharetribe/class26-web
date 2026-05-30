@@ -140,7 +140,8 @@
    :to :state/completed}
   {:name :transition/review-1-by-provider,
    :actor :actor.role/provider,
-   :actions [{:name :action/post-review-by-provider}],
+   :actions [{:name :action/post-review-by-provider}
+   {:name :action/publish-reviews}],
    :from :state/completed,
    :to :state/reviewed-by-provider}
   {:name :transition/review-2-by-provider,
@@ -152,7 +153,8 @@
    :to :state/reviewed}
   {:name :transition/review-1-by-customer,
    :actor :actor.role/customer,
-   :actions [{:name :action/post-review-by-customer}],
+   :actions [{:name :action/post-review-by-customer}
+   {:name :action/publish-reviews}],
    :from :state/completed,
    :to :state/reviewed-by-customer}
   {:name :transition/review-2-by-customer,
@@ -175,7 +177,6 @@
    {:fn/plus
     [{:fn/timepoint [:time/first-entered-state :state/received]}
      {:fn/period ["P7D"]}]},
-   :actions [{:name :action/publish-reviews}],
    :from :state/reviewed-by-customer,
    :to :state/reviewed}
   {:name :transition/expire-customer-review-period,
@@ -183,7 +184,6 @@
    {:fn/plus
     [{:fn/timepoint [:time/first-entered-state :state/received]}
      {:fn/period ["P7D"]}]},
-   :actions [{:name :action/publish-reviews}],
    :from :state/reviewed-by-provider,
    :to :state/reviewed}],
  :notifications

@@ -86,6 +86,14 @@ export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
         primaryButtonProps: leaveReviewProps,
       };
     })
+    .cond([states.REVIEWED_BY_PROVIDER, PROVIDER], () => {
+      return {
+        processName,
+        processState,
+        showDetailCardHeadings: true,
+        showReviews: true,
+      };
+    })
     .cond([states.REVIEWED_BY_PROVIDER, CUSTOMER], () => {
       return {
         processName,
@@ -94,6 +102,7 @@ export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
         showReviewAsSecondLink: true,
         showActionButtons: true,
         primaryButtonProps: leaveReviewProps,
+        showReviews: true,
       };
     })
     .cond([states.REVIEWED_BY_CUSTOMER, PROVIDER], () => {
@@ -104,6 +113,15 @@ export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
         showReviewAsSecondLink: true,
         showActionButtons: true,
         primaryButtonProps: leaveReviewProps,
+        showReviews: true,
+      };
+    })
+    .cond([states.REVIEWED_BY_CUSTOMER, CUSTOMER], () => {
+      return {
+        processName,
+        processState,
+        showDetailCardHeadings: true,
+        showReviews: true,
       };
     })
     .cond([states.REVIEWED, _], () => {
