@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -30,7 +30,9 @@ import {
   isBookingProcess,
   isPurchaseProcess,
   isNegotiationProcess,
+  BOOKING_PROCESS_NAME,
 } from '../../transactions/transaction';
+import { states, transitions } from '../../transactions/transactionProcessBooking';
 
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
@@ -44,6 +46,7 @@ import {
   TimeRange,
   UserDisplayName,
   LayoutSingleColumn,
+  IconArrowHead,
 } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
@@ -52,7 +55,78 @@ import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
 import InboxSearchForm from './InboxSearchForm/InboxSearchForm';
 
 import { stateDataShape, getStateData } from './InboxPage.stateData';
+import {
+  CalendarIcon,
+  EllipsisIcon,
+  StarIcon,
+  SESSION_STATUS,
+  getSessionStatus,
+} from '../PersonalAreaPage/MyClassesTab/ClassProgramCard';
 import css from './InboxPage.module.css';
+
+const SessionRow = ({ session, index, status, handleVideoCall, timezone }) => {
+  const intl = useIntl();
+  const isCompleted = status === SESSION_STATUS.COMPLETED;
+  const isActive = status === SESSION_STATUS.ACTIVE;
+  const { date, startTime } = session;
+  const [year, month, day] = date.split('-').map(Number);
+  const dateObj = new Date(year, month - 1, day, 12, 0, 0);
+  const formattedDate = intl.formatDate(dateObj, {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+    timeZone: timezone || undefined,
+  });
+  let formattedTime = null;
+  if (startTime) {
+    const [h, m] = startTime.split(':').map(Number);
+    const timeObj = new Date(year, month - 1, day, h, m || 0);
+    formattedTime = intl.formatTime(timeObj, {
+      hour: 'numeric',
+      hour12: true,
+      timeZone: timezone || undefined,
+      timeZoneName: 'short',
+    });
+  }
+  const label = intl.formatMessage({ id: 'OrderPanel.sessionLabel' }, { index: index + 1 });
+  const dateTimeStr = `${formattedDate}${formattedTime ? ` – ${formattedTime}` : ''}`;
+  return (
+    <li className={css.sessionRow}>
+      <div className={css.sessionMain}>
+        <div className={css.sessionTitleRow}>
+          <p className={css.sessionTitle}>{label}</p>
+          <span
+            className={classNames(css.sessionCompletedDate, {
+              [css.sessionMetaItemActive]: isActive,
+            })}
+          >
+            <CalendarIcon className={css.sessionIconMuted} />
+            {dateTimeStr}
+          </span>
+        </div>
+      </div>
+      <div className={css.sessionAction}>
+        {isCompleted ? (
+          <span className={css.sessionStatusCompleted}>
+            <FormattedMessage id="MyClassesTab.sessionCompleted" />
+          </span>
+        ) : (
+          <button
+            type="button"
+            className={classNames(css.enterButton, {
+              [css.enterButtonActive]: isActive,
+              [css.enterButtonDisabled]: !isActive,
+            })}
+            disabled={!isActive}
+            onClick={isActive ? handleVideoCall : undefined}
+          >
+            <FormattedMessage id="MyClassesTab.enterSession" />
+          </button>
+        )}
+      </div>
+    </li>
+  );
+};
 
 // Check if the transaction line-items use booking-related units
 const getUnitLineItem = lineItems => {
@@ -95,8 +169,8 @@ const BookingTimeInfoMaybe = props => {
   const hasLineItems = transaction?.attributes?.lineItems?.length > 0;
   const unitLineItem = hasLineItems
     ? transaction.attributes?.lineItems?.find(
-      item => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal
-    )
+        item => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal
+      )
     : null;
 
   const lineItemUnitType = unitLineItem ? unitLineItem.code : null;
@@ -149,6 +223,9 @@ const handleSortSelect = (tab, routeConfiguration, history) => urlParam => {
  * @returns {JSX.Element} inbox item component
  */
 export const InboxItem = props => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   const {
     transactionRole,
     tx,
@@ -158,8 +235,15 @@ export const InboxItem = props => {
     isPurchase,
     availabilityType,
     stockType = STOCK_MULTIPLE_ITEMS,
+    routes,
+    history,
   } = props;
-  const { customer, provider, listing } = tx;
+  const {
+    customer,
+    provider,
+    listing,
+    attributes: { metadata = {} },
+  } = tx;
   const {
     processName,
     processState,
@@ -169,6 +253,7 @@ export const InboxItem = props => {
     isFinal,
   } = stateData;
   const isCustomer = transactionRole === TX_TRANSITION_ACTOR_CUSTOMER;
+  const isProvider = !isCustomer;
 
   const lineItems = tx.attributes?.lineItems;
   const hasPricingData = lineItems.length > 0;
@@ -181,6 +266,29 @@ export const InboxItem = props => {
 
   const showNotificationDot = isSaleNotification || isOrderNotification;
   const otherPartyLabelId = isCustomer ? 'InboxPage.teacherLabel' : 'InboxPage.studentLabel';
+
+  // Provider expand data
+  const isCancelled = processState === 'canceled';
+  const showReview = processState === 'delivered';
+  const start = tx.booking?.attributes?.start;
+  const canCancel = start ? new Date() < new Date(new Date(start) - 48 * 60 * 60 * 1000) : false;
+  const listingSessionDates = listing?.attributes?.publicData?.sessionDates;
+  const sessionDates = listingSessionDates || metadata?.sessionDates;
+  const timezone = listing?.attributes?.availabilityPlan?.timezone;
+
+  const sorted = [...(sessionDates || [])].sort((a, b) =>
+    `${a.date}T${a.startTime || '00:00'}`.localeCompare(`${b.date}T${b.startTime || '00:00'}`)
+  );
+  let hasActive = false;
+  const sessionsWithStatus = sorted.map(session => {
+    const status = getSessionStatus(session, hasActive);
+    if (status === SESSION_STATUS.ACTIVE) hasActive = true;
+    return { session, status };
+  });
+
+  const handleVideoCall = () => {
+    history.push(`/video-meeting?roomCode=${metadata?.customerCode}`);
+  };
 
   const linkClasses = classNames(css.itemLink, {
     [css.bannedUserLink]: isOtherUserBanned,
@@ -199,50 +307,127 @@ export const InboxItem = props => {
 
   return (
     <div className={css.item}>
-      <div className={css.itemAvatar}>
-        <Avatar user={otherUser} />
-        {showNotificationDot ? <div className={css.avatarNotificationDot} /> : null}
-      </div>
-      <NamedLink
-        className={linkClasses}
-        name={isCustomer ? 'OrderDetailsPage' : 'SaleDetailsPage'}
-        params={{ id: tx.id.uuid }}
-      >
-        <div className={css.itemContent}>
-          <div className={css.itemRow}>
-            <span className={css.itemLabel}>
-              <FormattedMessage id={otherPartyLabelId} />
-            </span>
-            <span className={css.itemValue}>{otherUserDisplayName}</span>
-          </div>
-          <div className={css.itemRow}>
-            <span className={css.itemLabel}>
-              <FormattedMessage id="InboxPage.classLabel" />
-            </span>
-            <span className={css.itemValue}>{listing?.attributes?.title}</span>
-          </div>
-          <div className={css.itemDetails}>
-            {isBooking ? (
-              <BookingTimeInfoMaybe transaction={tx} />
-            ) : isPurchase && hasPricingData && showStock ? (
-              <FormattedMessage id="InboxPage.quantity" values={{ quantity }} />
-            ) : null}
-          </div>
-          {availabilityType == AVAILABILITY_MULTIPLE_SEATS && unitLineItem?.seats ? (
-            <div className={css.itemSeats}>
-              <FormattedMessage id="InboxPage.seats" values={{ seats: unitLineItem.seats }} />
+      <div className={css.itemMainRow}>
+        <div className={css.itemAvatar}>
+          <Avatar user={otherUser} />
+          {showNotificationDot ? <div className={css.avatarNotificationDot} /> : null}
+        </div>
+        <NamedLink
+          className={linkClasses}
+          name={isCustomer ? 'OrderDetailsPage' : 'SaleDetailsPage'}
+          params={{ id: tx.id.uuid }}
+        >
+          <div className={css.itemContent}>
+            <div className={css.itemRow}>
+              <span className={css.itemLabel}>
+                <FormattedMessage id={otherPartyLabelId} />
+              </span>
+              <span className={css.itemValue}>{otherUserDisplayName}</span>
             </div>
-          ) : null}
-        </div>
-        <div className={css.itemState}>
-          <div className={stateClasses}>
-            <FormattedMessage
-              id={`InboxPage.${processName}.${processState}.status`}
-              values={{ transactionRole }}
-            />
+            <div className={css.itemRow}>
+              <span className={css.itemLabel}>
+                <FormattedMessage id="InboxPage.classLabel" />
+              </span>
+              <span className={css.itemValue}>{listing?.attributes?.title}</span>
+            </div>
+            <div className={css.itemDetails}>
+              {isBooking ? (
+                <BookingTimeInfoMaybe transaction={tx} />
+              ) : isPurchase && hasPricingData && showStock ? (
+                <FormattedMessage id="InboxPage.quantity" values={{ quantity }} />
+              ) : null}
+            </div>
           </div>
+        </NamedLink>
+        <div className={css.itemState}>
+          {isProvider &&
+          [states.ACCEPTED, states.DELIVERED].includes(processState) &&
+          processName === BOOKING_PROCESS_NAME ? (
+            <button
+              type="button"
+              className={classNames(stateClasses, css.expandToggle)}
+              onClick={() => setIsExpanded(p => !p)}
+            >
+              <FormattedMessage
+                id={`InboxPage.${processName}.${processState}.status`}
+                values={{ transactionRole }}
+              />
+              <IconArrowHead
+                direction={isExpanded ? 'up' : 'down'}
+                size="small"
+                className={css.stateArrow}
+              />
+            </button>
+          ) : (
+            <div className={stateClasses}>
+              <FormattedMessage
+                id={`InboxPage.${processName}.${processState}.status`}
+                values={{ transactionRole }}
+              />
+            </div>
+          )}
         </div>
-      </NamedLink>
+      </div>
+
+      {isProvider && isExpanded && (
+        <div className={css.expandedSection}>
+          {!isCancelled && sessionsWithStatus.length > 0 && (
+            <ul className={css.sessionList}>
+              {sessionsWithStatus.map(({ session, status }, i) => (
+                <SessionRow
+                  key={session.date + i}
+                  session={session}
+                  index={i}
+                  status={status}
+                  handleVideoCall={handleVideoCall}
+                  timezone={timezone}
+                />
+              ))}
+            </ul>
+          )}
+          {!isCancelled && (canCancel || showReview) && (
+            <footer className={css.cardFooter}>
+              {canCancel && (
+                <div className={css.footerLeft}>
+                  <button
+                    type="button"
+                    className={css.menuButton}
+                    aria-expanded={isMenuOpen}
+                    onClick={() => setIsMenuOpen(prev => !prev)}
+                  >
+                    <EllipsisIcon />
+                  </button>
+                  {isMenuOpen && (
+                    <button
+                      type="button"
+                      className={css.cancelClassButton}
+                      onClick={() => {
+                        const path = createResourceLocatorString(
+                          'SaleDetailsPage',
+                          routes,
+                          { id: tx.id.uuid },
+                          {}
+                        );
+                        history.push(path);
+                      }}
+                    >
+                      <FormattedMessage id="MyClassesTab.cancelClass" />
+                    </button>
+                  )}
+                </div>
+              )}
+              {showReview && (
+                <div className={css.footerActions}>
+                  <button type="button" className={css.footerOutlineButton} disabled>
+                    <StarIcon />
+                    <FormattedMessage id="MyClassesTab.leaveReview" />
+                  </button>
+                </div>
+              )}
+            </footer>
+          )}
+        </div>
+      )}
     </div>
   );
 };
@@ -328,6 +513,8 @@ export const InboxPageComponent = props => {
           availabilityType={availabilityType}
           isBooking={isBooking}
           isPurchase={isPurchase}
+          routes={routeConfiguration}
+          history={history}
         />
       </li>
     ) : null;
@@ -357,7 +544,7 @@ export const InboxPageComponent = props => {
           <div className={css.pageHeader}>
             <div className={css.pageHeaderText}>
               <H2 as="h1" className={css.title}>
-              Your Messages
+                Your Inquiries
               </H2>
               <p className={css.subtitle}>
                 <FormattedMessage id="InboxPage.subtitle" />

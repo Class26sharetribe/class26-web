@@ -17,6 +17,8 @@ export const getStateDataForBookingProcess = (txInfo, processInfo) => {
   const { transaction, transactionRole, nextTransitions, onOpenAcceptBookingModal } = txInfo;
   const isProviderBanned = transaction?.provider?.attributes?.banned;
   const isCustomerBanned = transaction?.provider?.attributes?.banned;
+  const bookingStart = transaction?.booking?.attributes?.start;
+
   const _ = CONDITIONAL_RESOLVER_WILDCARD;
 
   const {
@@ -28,6 +30,10 @@ export const getStateDataForBookingProcess = (txInfo, processInfo) => {
     actionButtonProps,
     leaveReviewProps,
   } = processInfo;
+
+  const canCancel = bookingStart
+    ? new Date() < new Date(new Date(bookingStart) - 48 * 60 * 60 * 1000)
+    : false;
 
   return new ConditionalResolver([processState, transactionRole])
     .cond([states.INQUIRY, CUSTOMER], () => {
@@ -43,7 +49,18 @@ export const getStateDataForBookingProcess = (txInfo, processInfo) => {
       return { processName, processState, showDetailCardHeadings: true };
     })
     .cond([states.PREAUTHORIZED, CUSTOMER], () => {
-      return { processName, processState, showDetailCardHeadings: true, showExtraInfo: true };
+      const primary = isCustomerBanned
+        ? null
+        : actionButtonProps(transitions.CUSTOMER_CANCEL, CUSTOMER);
+
+      return {
+        processName,
+        processState,
+        showDetailCardHeadings: true,
+        showExtraInfo: true,
+        showActionButtons: true,
+        primaryButtonProps: primary,
+      };
     })
     .cond([states.PREAUTHORIZED, PROVIDER], () => {
       const listingType = transaction?.listing?.attributes?.publicData?.listingType;
@@ -64,10 +81,21 @@ export const getStateDataForBookingProcess = (txInfo, processInfo) => {
       };
     })
     .cond([states.ACCEPTED, CUSTOMER], () => {
-      const bookingStart = transaction?.booking?.attributes?.start;
-      const canCancel = bookingStart ? new Date() < new Date(bookingStart) : false;
       const primary =
         canCancel && !isCustomerBanned ? actionButtonProps(transitions.CANCEL, CUSTOMER) : null;
+      return {
+        processName,
+        processState,
+        showDetailCardHeadings: true,
+        showActionButtons: canCancel,
+        primaryButtonProps: primary,
+      };
+    })
+    .cond([states.ACCEPTED, PROVIDER], () => {
+      const primary =
+        canCancel && !isCustomerBanned
+          ? actionButtonProps(transitions.PROVIDER_CANCEL, PROVIDER)
+          : null;
       return {
         processName,
         processState,

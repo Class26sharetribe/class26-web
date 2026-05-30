@@ -154,12 +154,17 @@
 
 .item {
   display: flex;
-  flex-direction: row;
-  /* align-items: center; */
+  flex-direction: column;
   padding: 32px 24px;
   border: 1px solid var(--border-border-primary, #D5D7DA);
   border-radius: 8px;
   background-color: var(--colorWhite);
+}
+
+.itemMainRow {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
 }
 
 .itemAvatar {
@@ -287,6 +292,213 @@
 
 .stateAccepted {
   color: #067647;
+}
+
+.stateArrow {
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+.expandToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #067647;
+}
+
+/* ================ Expanded session section ================ */
+
+.expandedSection {
+  margin-top: 16px;
+  margin-left: -24px;
+  margin-right: -24px;
+  margin-bottom: -32px;
+  border-top: 1px solid #e9eaeb;
+}
+
+.sessionList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sessionRow {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 24px;
+  border-bottom: 1px solid #e9eaeb;
+
+  @media (--viewportMedium) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+}
+
+.sessionMain {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sessionTitleRow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px 12px;
+}
+
+.sessionTitle {
+  font-family: Nohemi;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px;
+  color: #101828;
+  margin: 0;
+  padding: 0;
+}
+
+.sessionCompletedDate {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: Nohemi;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #717680;
+  & svg { fill: transparent; }
+}
+
+.sessionMetaItemActive {
+  color: #067647;
+  & svg { fill: transparent; }
+}
+
+.sessionIconMuted {
+  flex-shrink: 0;
+  color: #717680;
+}
+
+.sessionAction {
+  flex-shrink: 0;
+  align-self: flex-end;
+  @media (--viewportMedium) { align-self: center; }
+}
+
+.sessionStatusCompleted {
+  font-family: Nohemi;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #a4a7ae;
+}
+
+.enterButton {
+  font-family: Nohemi;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 8px 18px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.enterButtonActive {
+  background: #006647;
+  color: #fff;
+  &:hover { background: #005238; }
+}
+
+.enterButtonDisabled {
+  background: #e9eaeb;
+  color: #fff;
+  cursor: not-allowed;
+}
+
+/* ================ Expanded footer ================ */
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 24px;
+  background: #fafafa;
+  flex-wrap: wrap;
+}
+
+.footerLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.menuButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 6px;
+  &:hover { background: #f3f4f6; }
+}
+
+.cancelClassButton {
+  font-family: Nohemi;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 8px 14px;
+  border: 1px solid #d5d7da;
+  border-radius: 6px;
+  background: transparent;
+  color: #101828;
+  cursor: pointer;
+  white-space: nowrap;
+  &:hover { background: #f9fafb; }
+}
+
+.footerActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+.footerOutlineButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 1px solid #d5d7da;
+  border-radius: 6px;
+  background: var(--colorWhite);
+  color: #101828;
+  font-family: Nohemi;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  & svg { flex-shrink: 0; stroke: currentColor; fill: transparent; }
+  &:hover { background: #f9fafb; }
 }
 
 .stateExpired,

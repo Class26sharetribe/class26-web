@@ -48,6 +48,12 @@ export const transitions = {
   // Admin can also cancel the transition.
   CANCEL: 'transition/cancel',
 
+  // Customer can cancel from preauthorized state
+  CUSTOMER_CANCEL: 'transition/customer-cancel',
+
+  // Provider can cancel from accepted state
+  PROVIDER_CANCEL: 'transition/provider-cancel',
+
   // The backend will mark the transaction completed.
   COMPLETE: 'transition/complete',
   OPERATOR_COMPLETE: 'transition/operator-complete',
@@ -136,6 +142,7 @@ export const graph = {
         [transitions.EXPIRE]: states.EXPIRED,
         [transitions.ACCEPT]: states.ACCEPTED,
         [transitions.OPERATOR_ACCEPT]: states.ACCEPTED,
+        [transitions.CUSTOMER_CANCEL]: states.CANCELED,
       },
     },
 
@@ -144,6 +151,7 @@ export const graph = {
     [states.ACCEPTED]: {
       on: {
         [transitions.CANCEL]: states.CANCELED,
+        [transitions.PROVIDER_CANCEL]: states.CANCELED,
         [transitions.COMPLETE]: states.DELIVERED,
         [transitions.OPERATOR_COMPLETE]: states.DELIVERED,
       },
@@ -182,6 +190,8 @@ export const isRelevantPastTransition = transition => {
     transitions.ACCEPT,
     transitions.OPERATOR_ACCEPT,
     transitions.CANCEL,
+    transitions.CUSTOMER_CANCEL,
+    transitions.PROVIDER_CANCEL,
     transitions.COMPLETE,
     transitions.OPERATOR_COMPLETE,
     transitions.CONFIRM_PAYMENT,
@@ -242,6 +252,8 @@ export const isRefunded = transition => {
     transitions.EXPIRE_PAYMENT,
     transitions.EXPIRE,
     transitions.CANCEL,
+    transitions.CUSTOMER_CANCEL,
+    transitions.PROVIDER_CANCEL,
     transitions.DECLINE,
   ];
   return txRefundedTransitions.includes(transition);

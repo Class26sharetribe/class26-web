@@ -9,7 +9,7 @@ import css from './ClassProgramCard.module.css';
 import { useHistory } from 'react-router-dom';
 import { transitions } from '../../../transactions/transactionProcessBooking';
 
-const CalendarIcon = ({ className }) => (
+export const CalendarIcon = ({ className }) => (
   <svg
     className={className}
     width="16"
@@ -63,7 +63,7 @@ const ClockIcon = ({ className }) => (
   </svg>
 );
 
-const EllipsisIcon = () => (
+export const EllipsisIcon = () => (
   <svg
     width="20"
     height="20"
@@ -115,7 +115,7 @@ const CertificateIcon = () => (
   </svg>
 );
 
-const StarIcon = () => (
+export const StarIcon = () => (
   <svg
     width="20"
     height="20"
@@ -134,7 +134,7 @@ const StarIcon = () => (
   </svg>
 );
 
-const SESSION_STATUS = {
+export const SESSION_STATUS = {
   COMPLETED: 'completed',
   ACTIVE: 'active',
   UPCOMING: 'upcoming',
@@ -146,7 +146,7 @@ const SESSION_STATUS = {
  * Active if it is the first non-completed session.
  * Upcoming otherwise.
  */
-const getSessionStatus = (session, hasActiveAlready) => {
+export const getSessionStatus = (session, hasActiveAlready) => {
   const { date, startTime } = session;
   const [year, month, day] = date.split('-').map(Number);
   const [hours, minutes] = (startTime || '00:00').split(':').map(Number);
@@ -266,7 +266,7 @@ const ClassProgramCard = ({ tx, tags, imageUrl }) => {
     return { session, status };
   });
 
-  const canCancel = start ? new Date() < new Date(start) : false;
+  const canCancel = start ? new Date() < new Date(new Date(start) - 48 * 60 * 60 * 1000) : false;
   const isCancelled = lastTransition === transitions.CANCEL;
   const showReview = lastTransition === transitions.COMPLETE;
 
@@ -311,7 +311,7 @@ const ClassProgramCard = ({ tx, tags, imageUrl }) => {
         </ul>
       )}
 
-      {!isCancelled && (
+      {!isCancelled && (canCancel || showReview) && (
         <footer className={css.cardFooter}>
           {canCancel && (
             <div className={css.footerLeft}>

@@ -524,7 +524,7 @@
   "InboxPage.sortBy.createdAt": "Newest",
   "InboxPage.sortBy.lastMessageAt": "Latest message",
   "InboxPage.sortBy.lastTransitionedAt": "Latest status change",
-  "InboxPage.title": "Your Messages",
+  "InboxPage.title": "Your Inquiries",
   "InboxPage.subtitle": "Manage all your class bookings and inquiries in one place.",
   "InboxPage.teacherLabel": "Teacher:",
   "InboxPage.studentLabel": "Student:",
@@ -1823,5 +1823,9 @@
   "OrderPanel.sessionLabel": "{index, select, 1 {First} 2 {Second} 3 {Third} 4 {Fourth} 5 {Fifth} 6 {Sixth} 7 {Seventh} 8 {Eighth} 9 {Ninth} 10 {Tenth} other {{index}th}} session",
   "CheckoutPageWithPayment.firstSessionLabel": "First session",
   "TransactionPage.default-booking.customer.transition-cancel.actionButton": "Cancel sessions",
-  "TransactionPage.default-booking.customer.transition-cancel.actionError": "Oops, failed to cancel the sessions. Please refresh the page and try again."
+  "TransactionPage.default-booking.customer.transition-cancel.actionError": "Oops, failed to cancel the sessions. Please refresh the page and try again.",
+  "TransactionPage.default-booking.customer.transition-customer-cancel.actionButton": "Cancel sessions",
+  "TransactionPage.default-booking.customer.transition-customer-cancel.actionError": "Oops, failed to cancel the sessions. Please refresh the page and try again.",
+  "TransactionPage.default-booking.provider.transition-provider-cancel.actionButton": "Cancel sessions",
+  "TransactionPage.default-booking.provider.transition-provider-cancel.actionError": "Oops, failed to cancel the sessions. Please refresh the page and try again."
 }
