@@ -26,7 +26,7 @@ import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 // Pagination page size might need to be dynamic on responsive page layouts
 // Current design has max 3 columns 12 is divisible by 2 and 3
 // So, there's enough cards to fill all columns on full pagination pages
-const RESULT_PAGE_SIZE = 24;
+const RESULT_PAGE_SIZE = 100;
 const SELLER_RESULT_PAGE_SIZE = 100;
 
 export const SEARCH_PAGE_TYPE_COURSES = 'courses';
@@ -474,6 +474,7 @@ export const loadData = (params, search, config) => (dispatch, getState) => {
         'deleted',
         'state',
         'publicData',
+        'availabilityPlan',
       ],
       'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
       'fields.image': [

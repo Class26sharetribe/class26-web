@@ -64,6 +64,7 @@ import {
   resolveEnumLabels,
 } from './ProfilePage.helper';
 import css from './ProfilePage.module.css';
+import { isGroupCoachingListingActive } from '../SearchPage/SearchPageForCourses';
 
 const MAX_MOBILE_SCREEN_WIDTH = 768;
 /** Set to false when live profile reviews should replace demo cards. */
@@ -186,16 +187,16 @@ export const AsideContent = props => {
             </ul>
           ) : null}
           <div className={css.profileHeroProviderinfoDesktop}>
-          {bioMaybe}
-          {socialRow}
+            {bioMaybe}
+            {socialRow}
           </div>
         </div>
         <div className={css.profileHeroProviderPhoto}>
           <AvatarLarge className={css.profileHeroAvatarProvider} user={user} disableProfileLink />
         </div>
         <div className={css.profileHeroProviderinfoMobile}>
-        {bioMaybe}
-        {socialRow}
+          {bioMaybe}
+          {socialRow}
         </div>
       </div>
     );
@@ -422,7 +423,7 @@ export const MainContent = props => {
     userShowError,
     bio,
     displayName,
-    listings,
+    listings: l,
     queryListingsError,
     reviews = [],
     queryReviewsError,
@@ -437,6 +438,7 @@ export const MainContent = props => {
   const isProviderProfile = userTypeRoles?.provider === true;
   const customFieldOmitKeys = isProviderProfile ? ['expertise', 'languages'] : [];
 
+  const listings = l.filter(isGroupCoachingListingActive);
   const hasListings = listings.length > 0;
   const hasMatchMedia = typeof window !== 'undefined' && window?.matchMedia;
   const isMobileLayout =

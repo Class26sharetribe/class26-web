@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import moment from 'moment-timezone';
 import { useSelector } from 'react-redux';
 
 import { parse } from '../../util/urlHelpers';
@@ -10,6 +11,32 @@ import SearchPageShell from './SearchPageShell';
 import SearchResultsPanel from './SearchResultsPanel/SearchResultsPanel';
 
 import css from './SearchPage.module.css';
+import { LISTING_TYPE_GROUP_COACHING } from '../../util/types';
+
+export const isGroupCoachingListingActive = listing => {
+  const { publicData: { listingType, sessionDates } = {}, availabilityPlan } =
+    listing.attributes || {};
+
+  if (listingType !== LISTING_TYPE_GROUP_COACHING) return true;
+  if (!sessionDates || sessionDates.length === 0) return false;
+
+  const timezone = availabilityPlan?.timezone || 'Asia/Calcutta';
+  const now = moment().tz(timezone);
+
+  const earliestSession = sessionDates.reduce((min, s) => {
+    const dt = moment.tz(`${s.date} ${s.startTime || '00:00'}`, 'YYYY-MM-DD HH:mm', timezone);
+    const minDt = moment.tz(`${min.date} ${min.startTime || '00:00'}`, 'YYYY-MM-DD HH:mm', timezone);
+    return dt.isBefore(minDt) ? s : min;
+  });
+
+  const earliestDateTime = moment.tz(
+    `${earliestSession.date} ${earliestSession.startTime || '00:00'}`,
+    'YYYY-MM-DD HH:mm',
+    timezone
+  );
+
+  return earliestDateTime.isAfter(now);
+};
 
 const SearchPageForCoursesComponent = props => {
   const {
@@ -27,6 +54,8 @@ const SearchPageForCoursesComponent = props => {
     params: currentPathParams = {},
   } = props;
 
+  const filteredListings = listings.filter(isGroupCoachingListingActive);
+
   return (
     <SearchPageShell
       intl={intl}
@@ -39,14 +68,14 @@ const SearchPageForCoursesComponent = props => {
       searchListingsError={searchListingsError}
       searchParams={searchParams}
       pagination={pagination}
-      listings={listings}
+      listings={filteredListings}
       currentPathParams={currentPathParams}
       titleMessageId="SearchPageForCourses.title"
       subtitleMessageId="SearchPageForCourses.subtitle"
     >
       <SearchResultsPanel
         className={css.searchListingsPanel}
-        listings={listings}
+        listings={filteredListings}
         pagination={pagination}
         search={parse(location.search)}
         isMapVariant={false}
