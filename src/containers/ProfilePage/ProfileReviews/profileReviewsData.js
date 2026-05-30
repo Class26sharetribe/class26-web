@@ -96,21 +96,6 @@ export const getContextListingForAttribution = listing => {
 };
 
 /**
- * Returns reviews for ProfileReviews: demo set or live API reviews.
- *
- * @param {Array} reviews - Reviews from ProfilePage duck (propTypes.review)
- * @param {Object} options
- * @param {boolean} [options.useDemoReviews=false] - When true, returns PROFILE_REVIEWS_DEMO
- * @returns {Array} reviews to render
- */
-export const getProfileReviewsForDisplay = (reviews = [], { useDemoReviews = false } = {}) => {
-  if (useDemoReviews) {
-    return PROFILE_REVIEWS_DEMO;
-  }
-  return reviews;
-};
-
-/**
  * @param {Object} review
  * @param {Object} [contextListing] - Page listing (ListingPage); overrides review.listing for attribution when set
  * @returns {{ authorName: string, listing: { id: string, title: string } | null }}

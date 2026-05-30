@@ -56,7 +56,6 @@ import {
 } from '../PageBuilder/Primitives/Link/Icons';
 
 import ProfileReviews from './ProfileReviews/ProfileReviews';
-import { getProfileReviewsForDisplay } from './ProfileReviews/profileReviewsData';
 import {
   asStringList,
   buildSocialUrl,
@@ -248,12 +247,8 @@ export const MobileReviews = props => {
   const { reviews, queryReviewsError, useDemoReviews = false } = props;
   const reviewsOfProvider = reviews.filter(r => r.attributes.type === REVIEW_TYPE_OF_PROVIDER);
   const reviewsOfCustomer = reviews.filter(r => r.attributes.type === REVIEW_TYPE_OF_CUSTOMER);
-  const providerReviewsForDisplay = getProfileReviewsForDisplay(reviewsOfProvider, {
-    useDemoReviews,
-  });
-  const customerReviewsForDisplay = getProfileReviewsForDisplay(reviewsOfCustomer, {
-    useDemoReviews,
-  });
+  const providerReviewsForDisplay = reviewsOfProvider;
+  const customerReviewsForDisplay = reviewsOfCustomer;
 
   return (
     <div className={css.mobileReviews}>
@@ -288,12 +283,8 @@ export const DesktopReviews = props => {
 
   const reviewsOfProvider = reviews.filter(r => r.attributes.type === REVIEW_TYPE_OF_PROVIDER);
   const reviewsOfCustomer = reviews.filter(r => r.attributes.type === REVIEW_TYPE_OF_CUSTOMER);
-  const providerReviewsForDisplay = getProfileReviewsForDisplay(reviewsOfProvider, {
-    useDemoReviews,
-  });
-  const customerReviewsForDisplay = getProfileReviewsForDisplay(reviewsOfCustomer, {
-    useDemoReviews,
-  });
+  const providerReviewsForDisplay = reviewsOfProvider;
+  const customerReviewsForDisplay = reviewsOfCustomer;
   const isReviewTypeProviderSelected = showReviewsType === REVIEW_TYPE_OF_PROVIDER;
   const isReviewTypeCustomerSelected = showReviewsType === REVIEW_TYPE_OF_CUSTOMER;
   const providerReviewsMaybe = isProviderUserType
@@ -342,7 +333,7 @@ export const DesktopReviews = props => {
 
         <ReviewsErrorMaybe queryReviewsError={queryReviewsError} />
 
-        {isReviewTypeProviderSelected ? (
+        {isProviderUserType ? (
           <ProfileReviews reviews={reviewsOfProvider} useDemoReviews={useDemoReviews} />
         ) : (
           <ProfileReviews reviews={reviewsOfCustomer} useDemoReviews={useDemoReviews} />
@@ -459,6 +450,7 @@ export const MainContent = props => {
       </p>
     );
   }
+
   return (
     <div>
       {/* {displayName ? (
@@ -471,19 +463,14 @@ export const MainContent = props => {
         />
       ) : null} */}
 
-      {hideReviews || !isProviderProfile ? null : isMobileLayout ? (
-        <MobileReviews
-          reviews={reviews}
-          queryReviewsError={queryReviewsError}
-          useDemoReviews={USE_DEMO_PROFILE_REVIEWS}
-        />
+      {hideReviews ? null : isMobileLayout ? (
+        <MobileReviews reviews={reviews} queryReviewsError={queryReviewsError} />
       ) : (
         <DesktopReviews
           reviews={reviews}
           queryReviewsError={queryReviewsError}
           userTypeRoles={userTypeRoles}
           intl={intl}
-          useDemoReviews={USE_DEMO_PROFILE_REVIEWS}
         />
       )}
 

@@ -2,10 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 
 import { ReviewRating } from '../../../components';
-import {
-  getProfileReviewsForDisplay,
-  getProfileReviewDisplayMeta,
-} from '../../ProfilePage/ProfileReviews/profileReviewsData';
+import { getProfileReviewDisplayMeta } from '../../ProfilePage/ProfileReviews/profileReviewsData';
 
 import css from './DashboardReviews.module.css';
 
@@ -36,7 +33,7 @@ const DashboardReviewCard = props => {
  */
 const DashboardReviews = props => {
   const { className, rootClassName, reviews = [] } = props;
-  const displayReviews = getProfileReviewsForDisplay(reviews);
+  const displayReviews = reviews;
   const classes = classNames(rootClassName || css.root, className);
 
   if (!displayReviews.length) {

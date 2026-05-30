@@ -17,7 +17,7 @@ import css from './IconReviewStar.module.css';
 const IconReviewStar = props => {
   const { className, rootClassName, isFilled, ariaLabel } = props;
   const filledOrDefault = isFilled ? css.filled : css.root;
-  const classes = classNames(rootClassName || filledOrDefault, className);
+  const classes = classNames(rootClassName || filledOrDefault, className, { filled: isFilled });
   const ariaLabelMaybe = ariaLabel ? { ['aria-label']: ariaLabel } : {};
 
   return (
